@@ -296,8 +296,7 @@ namespace dcpu16_ASM
                         {
                             
                             opParamResult.nextWord = true;
-                            opParamResult.labelName = Param.Replace("[", "").Replace("]", "").Trim();
-                            int d = 0;
+                            opParamResult.labelName = Param.Replace("[", "").Replace("]", "").Trim();                            
                         }
                     }
                 }
@@ -368,7 +367,6 @@ namespace dcpu16_ASM
                 }
             }
 
-            int d = 0;
         }
 
         private void AssembleLine(string _line)
