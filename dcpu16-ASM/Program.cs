@@ -14,11 +14,7 @@
  * 
  * Will take in ASM code, and throw out a .OBJ file. 
  * 
- * NOTE: this hates Tabs around data blocks.. I'll fix later on 
- * so 
- * :data<Tab>dat 0x123, 0x23,"Der["
- * will break unless you remove the tab with a space or enter onto the next line :p Sorry!
- *    
+ * NOTE:Fixed tab issues, 4:55pm 9th April 2012. 
  */
 using System;
 using System.Collections.Generic;
@@ -224,6 +220,14 @@ namespace dcpu16_ASM
             m_regDictionary.Add("[+j]", dcpuRegisterCodes.J_NextWord);
         }
 
+        private string[] SafeSplit(string data)
+        {
+            string inString = data.Replace("\t", " ").Replace(",", " ");
+            string[] tmp = inString.Split(' ');
+            List<string> dat = new List<string>();
+            foreach (string t in tmp) if (t.Trim() != "") dat.Add(t);
+            return dat.ToArray();
+        }
 
         private OpParamResult ParseParam(string _param)
         {
@@ -242,7 +246,7 @@ namespace dcpu16_ASM
                 {
                     if (Param.Contains("+") != false)
                     {
-                        string[] psplit = Param.Replace("[","").Replace("]","").Split('+');
+                        string[] psplit = Param.Replace("[","").Replace("]","").Replace(" ","").Split('+');
                         if (psplit.Length < 2)
                         {
                             throw new Exception(string.Format("malformated memory reference '{0}'",Param));
@@ -377,10 +381,14 @@ namespace dcpu16_ASM
 
             if (line[0] == ':')
             {  // this is awful
-                int sIndex = line.IndexOf(' ');                
+                int sIndex = -1;
+                int sIndex1 = line.IndexOf(' ');
+                int sIndex2 = line.IndexOf('\t');
+                if (sIndex1 < sIndex2 || sIndex2 == -1) sIndex = sIndex1;
+                else if (sIndex2 < sIndex1 || sIndex1 != -1) sIndex = sIndex2;
                 string labelName = line.Substring(1, line.Length-1);
                 if (sIndex > 1)
-                    labelName = line.Substring(1, sIndex);                
+                    labelName = line.Substring(1, sIndex-1);                
 
                 if (m_labelAddressDitionary.ContainsKey(labelName) != false)
                 {                    
@@ -392,9 +400,9 @@ namespace dcpu16_ASM
 
                 line = line.Remove(0, sIndex).Trim();
                 if (line.Length < 1) return;
-            }            
-            
-            string[] splitLine = line.Replace(",","").Split(' ');
+            }
+
+            string[] splitLine = SafeSplit(line);
             uint opCode = 0x0;
 
             string opCommand = splitLine[0].Trim();
@@ -532,7 +540,7 @@ namespace dcpu16_ASM
             }
             catch (Exception E)
             {
-                Console.WriteLine(string.Format("Exception: {0}",E.Message));
+                Console.WriteLine(string.Format("Exception: {0}\n\tStackTrace: {1}",E.Message,E.StackTrace));
                 return false;
             }
             return true;
@@ -575,12 +583,12 @@ namespace dcpu16_ASM
         static void Main(string[] args)
         {
             Console.WriteLine();
-            Console.WriteLine("DCPU-16 ASM.NET Assembler Version 0.2 Super-ALPHA");
+            Console.WriteLine("DCPU-16 ASM.NET Assembler Version 0.3 Super-ALPHA");
             Console.WriteLine();
 
             /*
             CDCPU16Assemble dd = new CDCPU16Assemble();
-            dd.Assemble("test2.txt");
+            dd.Assemble("test3.txt");
             Console.ReadLine();
             return;
             */
