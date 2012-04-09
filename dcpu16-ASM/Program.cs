@@ -304,6 +304,36 @@ namespace dcpu16_ASM
             return opParamResult;
         }
 
+        private void ParseData(string _data)
+        {
+            string[] dataFields = _data.Substring(3,_data.Length-3).Trim().Split(',');
+
+            foreach (string dat in dataFields)
+            {
+                string valStr = dat.Trim();
+                if (valStr.IndexOf('"') > -1)
+                {
+                    string asciiLine = dat.Replace("\"", "").Trim();
+                    for (int i = 0; i < asciiLine.Length; i++)
+                    {
+                        machineCode.Add((ushort)asciiLine[i]);
+                    }
+                }
+                else
+                {
+                    ushort val = 0;
+                    if (valStr.Contains("0x") != false)
+                        val = Convert.ToUInt16(valStr, 16);
+                    else
+                        val = Convert.ToUInt16(valStr, 10);
+
+                    machineCode.Add((ushort)val);
+                }
+            }
+
+            int d = 0;
+        }
+
         private void AssembleLine(string _line)
         {
             if (_line.Trim().Length == 0) return;
@@ -332,9 +362,18 @@ namespace dcpu16_ASM
             string[] splitLine = line.Replace(",","").Split(' ');
             uint opCode = 0x0;
 
-            string opCommand = splitLine[0];
-            string opParam1 = splitLine[1];
+            string opCommand = splitLine[0].Trim();
+
+            if (opCommand.ToLower() == "dat")
+            {
+                ParseData(line);
+                return;
+            }
+
+            string opParam1 = splitLine[1].Trim();
             string opParam2 = "";
+
+
 
             if (m_opDictionary.ContainsKey(opCommand) != true)
             {                
@@ -508,12 +547,15 @@ namespace dcpu16_ASM
             {
                 Console.WriteLine("usage: dcpu16-ASM <filename>");
                 Console.WriteLine();
-                return; 
+                //return; 
             }
-
-            string filename = args[0];
             CDCPU16Assemble test = new CDCPU16Assemble();
-            Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
+            test.Assemble("test.txt");
+            Console.ReadLine();
+            return;
+            string filename = args[0];
+            //CDCPU16Assemble test = new CDCPU16Assemble();
+            //Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
 
             test.Assemble(filename);
 

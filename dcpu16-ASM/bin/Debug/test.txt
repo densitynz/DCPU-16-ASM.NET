@@ -22,3 +22,8 @@
                       SET PC, POP              ; 61c1
         ; Hang forever. X should now be 0x40 if everything went right.
         :crash        SET PC, crash            ; 7dc1 001a [*]
+
+:testData dat 0x123, 0x123,0x4Fe,0x1
+
+
+
