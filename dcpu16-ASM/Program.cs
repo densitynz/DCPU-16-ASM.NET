@@ -575,7 +575,7 @@ namespace dcpu16_ASM
         static void Main(string[] args)
         {
             Console.WriteLine();
-            Console.WriteLine("DCPU-16 ASM.NET Assember Version 0.2 Super-ALPHA");
+            Console.WriteLine("DCPU-16 ASM.NET Assembler Version 0.2 Super-ALPHA");
             Console.WriteLine();
 
             /*
