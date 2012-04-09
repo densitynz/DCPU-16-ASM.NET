@@ -547,7 +547,7 @@ namespace dcpu16_ASM
             {
                 Console.WriteLine("usage: dcpu16-ASM <filename>");
                 Console.WriteLine();
-                //return; 
+                return; 
             }
 
             string filename = args[0];
