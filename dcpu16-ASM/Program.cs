@@ -13,6 +13,11 @@
  * http://0x10c.com/doc/dcpu-16.txt
  * 
  * Will take in ASM code, and throw out a .OBJ file. 
+ * 
+ * NOTE: this hates Tabs around data blocks.. I'll fix later on 
+ * so 
+ * :data<Tab>dat 0x123, 0x23,"Der["
+ * will break unless you remove the tab with a space or enter onto the next line :p Sorry!
  *    
  */
 using System;
@@ -249,19 +254,51 @@ namespace dcpu16_ASM
                         }
                         opParamResult.Param = (ushort)m_regDictionary["[+" + psplit[1] + "]"];
                         opParamResult.nextWord = true;
-                        if (psplit[0].Contains("0x") != false)
-                            opParamResult.NextWordValue = Convert.ToUInt16(psplit[0], 16);
-                        else
-                            opParamResult.NextWordValue = Convert.ToUInt16(psplit[0], 10);                                                
+                        try
+                        {
+                            if (psplit[0].Contains("0x") != false)
+                            {
+                                ushort val = Convert.ToUInt16(psplit[0].Trim(), 16);
+                                opParamResult.NextWordValue = (ushort)val;
+                            }
+                            else
+                            {
+                                ushort val = Convert.ToUInt16(psplit[0].Trim(), 10);
+                                opParamResult.NextWordValue = (ushort)val;
+                            }
+                        }
+                        catch
+                        {
+
+                            opParamResult.nextWord = true;
+                            opParamResult.labelName = psplit[0].Trim();                            
+                        }
                     }
                     else
                     {
                         opParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Mem;
                         opParamResult.nextWord = true;
-                        if(Param.Contains("0x") != false)
-                            opParamResult.NextWordValue = Convert.ToUInt16(Param.Replace("[","").Replace("]",""), 16);
-                        else
-                            opParamResult.NextWordValue = Convert.ToUInt16(Param.Replace("[", "").Replace("]", ""), 10);
+                        try
+                        {
+
+                            if (Param.Contains("0x") != false)
+                            {
+                                ushort val = (ushort)Convert.ToUInt16(Param.Replace("[", "").Replace("]", "").Trim(), 16);
+                                opParamResult.NextWordValue = val;
+                            }
+                            else
+                            {
+                                ushort val = (ushort)Convert.ToUInt16(Param.Replace("[", "").Replace("]", "").Trim(), 10);
+                                opParamResult.NextWordValue = val;
+                            }
+                        }
+                        catch
+                        {
+                            
+                            opParamResult.nextWord = true;
+                            opParamResult.labelName = Param.Replace("[", "").Replace("]", "").Trim();
+                            int d = 0;
+                        }
                     }
                 }
                 else
@@ -540,9 +577,15 @@ namespace dcpu16_ASM
         static void Main(string[] args)
         {
             Console.WriteLine();
-            Console.WriteLine("DCPU-16 ASM.NET Assember Version 0.1 Super-ALPHA");
+            Console.WriteLine("DCPU-16 ASM.NET Assember Version 0.2 Super-ALPHA");
             Console.WriteLine();
 
+            /*
+            CDCPU16Assemble dd = new CDCPU16Assemble();
+            dd.Assemble("test2.txt");
+            Console.ReadLine();
+            return;
+            */
             if (args.Length < 1)
             {
                 Console.WriteLine("usage: dcpu16-ASM <filename>");
