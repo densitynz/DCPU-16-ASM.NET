@@ -4,3 +4,9 @@ c:\users\timothy\documents\visual studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\bin
 c:\users\timothy\documents\visual studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\ResolveAssemblyReference.cache
 c:\users\timothy\documents\visual studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\dcpu16-ASM.exe
 c:\users\timothy\documents\visual studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\dcpu16-ASM.pdb
+E:\Dev\Projects\DCPU-16-ASM.NET\dcpu16-ASM\bin\Debug\dcpu16-ASM.exe.config
+E:\Dev\Projects\DCPU-16-ASM.NET\dcpu16-ASM\obj\x86\Debug\dcpu16-ASM.exe
+E:\Dev\Projects\DCPU-16-ASM.NET\dcpu16-ASM\obj\x86\Debug\dcpu16-ASM.pdb
+E:\Dev\Projects\DCPU-16-ASM.NET\dcpu16-ASM\bin\Debug\dcpu16-ASM.exe
+E:\Dev\Projects\DCPU-16-ASM.NET\dcpu16-ASM\bin\Debug\dcpu16-ASM.pdb
+E:\Dev\Projects\DCPU-16-ASM.NET\dcpu16-ASM\obj\x86\Debug\ResolveAssemblyReference.cache
