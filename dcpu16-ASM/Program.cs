@@ -549,13 +549,10 @@ namespace dcpu16_ASM
                 Console.WriteLine();
                 //return; 
             }
-            CDCPU16Assemble test = new CDCPU16Assemble();
-            test.Assemble("test.txt");
-            Console.ReadLine();
-            return;
+
             string filename = args[0];
-            //CDCPU16Assemble test = new CDCPU16Assemble();
-            //Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
+            CDCPU16Assemble test = new CDCPU16Assemble();
+            Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
 
             test.Assemble(filename);
 
