@@ -267,7 +267,31 @@ namespace dcpu16_ASM
 
         private void ParseData(string _data)
         {
-            string[] dataFields = _data.Substring(3, _data.Length - 3).Trim().Split(',');
+            List<String> dataFields = new List<string>();
+
+            foreach (var field in _data.Substring(3, _data.Length - 3).Trim().Split(','))
+            {
+                if (dataFields.Count == 0)
+                {
+                    dataFields.Add(field);
+                }
+                else
+                {
+                    int count = 0;
+                    int last = -1;
+                    String lastStr = dataFields[dataFields.Count - 1];
+
+                    while ((last = lastStr.IndexOf('\"', last+1)) != -1)
+                    {
+                        count++;
+                    }
+
+                    if (count == 1)
+                        dataFields[dataFields.Count - 1] += "," + field;
+                    else
+                        dataFields.Add(field);
+                }
+            }
 
             foreach (string dat in dataFields)
             {
@@ -319,6 +343,7 @@ namespace dcpu16_ASM
 
                 if (sIndex < 0) return;
 
+                _line = _line.Remove(0, sIndex).Trim();
                 line = line.Remove(0, sIndex).Trim();
                 if (line.Length < 1) return;
             }
@@ -330,7 +355,7 @@ namespace dcpu16_ASM
 
             if (opCommand.ToLower() == "dat")
             {
-                ParseData(line);
+                ParseData(_line);
                 return;
             }
 
