@@ -30,9 +30,13 @@
  * 
  * NOTE: Fixed tab issues, 4:55 PM, 9 April 2012.
  * NOTE: Cleaned and sorted it a bit, 01:17 PM, 9 April 2012 UTC/GMT+2.
+ * 
+ * UPDATE: 10th April 2012. Now with Startings of an Emulator - DensitY
  */
 
 using System;
+
+using dcpu16_ASM.Emulator;
 
 namespace dcpu16_ASM
 {
@@ -44,15 +48,27 @@ namespace dcpu16_ASM
         static void Main(string[] args)
         {
             Console.WriteLine();
-            Console.WriteLine("DCPU-16 ASM.NET Assembler Version 0.3 Super-ALPHA");
+            Console.WriteLine("DCPU-16 ASM.NET Assembler/Emulator Version 0.4 Super-ALPHA");
             Console.WriteLine();
+            
+            /**
+             * Still testing stuff. This'll be cleaned up soon. 
+             * 
+             * TODO: commandline args.. 
+             * specifically 
+             * -emu to start up a Winform dialog, leaving the assembler console/command line based
+             */
+            
+            CDCPU16Emulator emu = new CDCPU16Emulator();
+            emu.LoadProgram("test.obj");
 
-            /*
+            emu.RunProgram();
+            return; 
             CDCPU16Assemble dd = new CDCPU16Assemble();
-            dd.Assemble("test3.txt");
+            dd.Assemble("test.txt");
             Console.ReadLine();
             return;
-            */
+            
             if (args.Length < 1)
             {
                 Console.WriteLine("Usage: dcpu16-ASM <filename>");
