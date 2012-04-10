@@ -1,0 +1,24 @@
+DCPU-16 ASM.NET
+ 
+Copyright (c) 2012 Tim "DensitY" Hancock (densitynz@orcon.net.nz)
+
+Ok, I highly recommend you modify program.cs, I've messed with it to test out my Emulator in progress!
+
+
+This will Assemble most dcpu16 code out there.. The only thing I don't handle is the RESERVE keyword. 
+
+This can handle some extra features, for example
+
+character as operators! 
+SET X, 'a' 
+
+SET I, ['A'+B] 
+
+etc. 
+
+There are still some limitations.. But based on suggestions I'll work around them. 
+
+
+My core goal right now is to get the emulator up to a reasonable standard, including WinForm interface, and
+when it is available. Fully support the offical Memory Address space. 
+
