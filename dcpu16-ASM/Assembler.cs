@@ -168,7 +168,12 @@ namespace dcpu16_ASM
                         opParamResult.nextWord = true;
                         try
                         {
-                            if (psplit[0].Contains("0x") != false)
+                            if (psplit[0][0] == '\'' && psplit[0][psplit[0].Length - 1] == '\'' && psplit[0].Length == 3) // nasty
+                            {
+                                ushort val = (ushort)psplit[0][1];
+                                opParamResult.NextWordValue = (ushort)val;
+                            }
+                            else if (psplit[0].Contains("0x") != false)
                             {
                                 ushort val = Convert.ToUInt16(psplit[0].Trim(), 16);
                                 opParamResult.NextWordValue = (ushort)val;
@@ -192,8 +197,12 @@ namespace dcpu16_ASM
                         opParamResult.nextWord = true;
                         try
                         {
-
-                            if (Param.Contains("0x") != false)
+                            if (Param[1] == '\'' && Param[Param.Length - 2] == '\'' && Param.Length == 5) // nasty
+                            { 
+                                ushort val = (ushort)Param[1];
+                                opParamResult.NextWordValue = (ushort)val;
+                            }
+                            else if (Param.Contains("0x") != false)
                             {
                                 ushort val = (ushort)Convert.ToUInt16(Param.Replace("[", "").Replace("]", "").Trim(), 16);
                                 opParamResult.NextWordValue = val;
@@ -221,7 +230,11 @@ namespace dcpu16_ASM
                     UInt16 literalValue = 0;
                     try
                     {
-                        if (Param.Contains("0x") != false)
+                        if (Param[0] == '\'' && Param[Param.Length - 1] == '\'' && Param.Length == 3)
+                        {
+                            literalValue = (ushort)Param[1];                            
+                        }
+                        else if (Param.Contains("0x") != false)
                             literalValue = Convert.ToUInt16(Param, 16);
                         else
                             literalValue = Convert.ToUInt16(Param, 10);
