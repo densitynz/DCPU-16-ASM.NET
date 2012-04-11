@@ -70,11 +70,36 @@ namespace dcpu16_ASM.Emulator
         private cpuRegisters m_registers;
         private cpuMemory m_memory;
 
-        private long m_cycles = 0; 
+        /* 
+         * Cycle counting notes
+         * 
+         * From the Notch Bible: 
+         * 
+         * "
+         * SET, AND, BOR and XOR take 1 cycle, plus the cost of a and b
+         * ADD, SUB, MUL, SHR, and SHL take 2 cycles, plus the cost of a and b
+         * DIV and MOD take 3 cycles, plus the cost of a and b
+         * IFE, IFN, IFG, IFB take 2 cycles, plus the cost of a and b, plus 1 if the test fails
+         * JSR takes 2 cycles, plus the cost of a.
+         * 
+         * All values that read a word (0x10-0x17, 0x1e, and 0x1f) take 1 cycle to look up. The rest take 0 cycles.
+         * "
+         * Some operations require 2 WORD reads. one or next value, one for memory lookup. I'm assuming that BOTH
+         * tasks take 1 cycle each (for a total of 2), else it simply won't make any sense.
+         */
+        private long m_cycles = 0;
+
+
+        enum ParamType
+        {
+            Memory,
+            Register,
+            Literal
+        }
 
         struct readParamValue
-        {
-            public bool Mem;
+        {            
+            public ParamType ParmType;
             public ushort Location;
             public ushort Value;
         }
@@ -124,12 +149,18 @@ namespace dcpu16_ASM.Emulator
 
         private void SetResultValue(readParamValue _resultValue)
         {
-            if (_resultValue.Mem != false)
+            if (_resultValue.ParmType == ParamType.Memory)
             {
                 // write to memory location
                 m_memory.RAM[_resultValue.Location] = _resultValue.Value;
+
+                /**
+                 * Notch's spec doesn't say anything (that I can find) regarding cost of write backs. So I'm assuming
+                 * they are the same as reads. Meaning registers are free, Memory/word writebacks cost 1 cycle
+                 */
+                m_cycles++; 
             }
-            else
+            else if (_resultValue.ParmType == ParamType.Register)
             {
                 // Write to respective register
                 switch (_resultValue.Location)
@@ -157,11 +188,11 @@ namespace dcpu16_ASM.Emulator
                         m_registers.O = _resultValue.Value;
                         break;
 
-                    default:
+                    default:                     
                         break;
                 }
             }
-                
+            // ignore literal assignment as per Notch's spec                
         }
 
         private readParamValue ReadParamValue(ushort _opParam)
@@ -178,8 +209,8 @@ namespace dcpu16_ASM.Emulator
                 case (ushort)dcpuRegisterCodes.Y:
                 case (ushort)dcpuRegisterCodes.Z:
                 case (ushort)dcpuRegisterCodes.I:
-                case (ushort)dcpuRegisterCodes.J:                    
-                    result.Mem = false;
+                case (ushort)dcpuRegisterCodes.J:
+                    result.ParmType = ParamType.Register;
                     result.Location = _opParam;
                     result.Value = m_registers.GP[result.Location];
                     break;
@@ -192,10 +223,11 @@ namespace dcpu16_ASM.Emulator
                 case (ushort)dcpuRegisterCodes.Y_Mem:
                 case (ushort)dcpuRegisterCodes.Z_Mem:
                 case (ushort)dcpuRegisterCodes.I_Mem:
-                case (ushort)dcpuRegisterCodes.J_Mem:                    
-                    result.Mem = true;
+                case (ushort)dcpuRegisterCodes.J_Mem:
+                    result.ParmType = ParamType.Memory;
                     result.Location = m_registers.GP[_opParam - (ushort)dcpuRegisterCodes.A_Mem];
                     result.Value = m_memory.RAM[result.Location];
+                    m_cycles++;
                     break;
 
                 case (ushort)dcpuRegisterCodes.A_NextWord:
@@ -205,52 +237,56 @@ namespace dcpu16_ASM.Emulator
                 case (ushort)dcpuRegisterCodes.Y_NextWord:
                 case (ushort)dcpuRegisterCodes.Z_NextWord:
                 case (ushort)dcpuRegisterCodes.I_NextWord:
-                case (ushort)dcpuRegisterCodes.J_NextWord:                                        
-                    result.Mem = true;
+                case (ushort)dcpuRegisterCodes.J_NextWord:
+                    result.ParmType = ParamType.Memory;
                     result.Location = (ushort)(m_registers.GP[_opParam - (ushort)dcpuRegisterCodes.A_NextWord] + ReadNextWord());
                     result.Value = m_memory.RAM[result.Location];
+                    m_cycles += 2; // we read 2 words so this must cost 2 cycles. 
                     break;
 
                 case (ushort)dcpuRegisterCodes.POP:
-                    result.Mem = true;
+                    result.ParmType = ParamType.Memory;
                     result.Location = m_registers.SP++;
-                    result.Value = m_memory.RAM[result.Location];     
+                    result.Value = m_memory.RAM[result.Location];
+                    m_cycles++;
                     break;
 
                 case (ushort)dcpuRegisterCodes.PEEK:
-                    result.Mem = true;
+                    result.ParmType = ParamType.Memory;
                     result.Location = m_registers.SP;
-                    result.Value = m_memory.RAM[result.Location];                     
+                    result.Value = m_memory.RAM[result.Location];
+                    m_cycles++; 
                     break;
 
                 case (ushort)dcpuRegisterCodes.PUSH:
-                    result.Mem = true;
+                    result.ParmType = ParamType.Memory;
                     result.Location = --m_registers.SP;
                     result.Value = m_memory.RAM[result.Location]; 
                     break;
 
                 case (ushort)dcpuRegisterCodes.O:
-                    result.Mem = false;
+                    result.ParmType = ParamType.Register;
                     result.Location = _opParam;
                     result.Value = m_registers.O;
                     break;
 
                 case (ushort)dcpuRegisterCodes.PC:
-                    result.Mem = false;
+                    result.ParmType = ParamType.Register;
                     result.Location = _opParam;
                     result.Value = m_registers.PC;
                     break;
 
                 case (ushort)dcpuRegisterCodes.SP:
-                    result.Mem = false;
+                    result.ParmType = ParamType.Register;
                     result.Location = _opParam;
                     result.Value = m_registers.SP;
                     break;
 
                 case (ushort)dcpuRegisterCodes.NextWord_Literal_Mem:
-                    result.Mem = true;
+                    result.ParmType = ParamType.Memory;
                     result.Location = ReadNextWord();
-                    result.Value = m_memory.RAM[result.Location];                    
+                    result.Value = m_memory.RAM[result.Location];     
+                    m_cycles += 2; // we read 2 words so this must cost 2 cycles. 
                     break;
 
                 /*
@@ -268,11 +304,19 @@ namespace dcpu16_ASM.Emulator
                  * and 
                  * SET I, [0x8000]
                  * Will work properly! (first putting 0x8000 into the register I, second reading data from the memory location 0x8000 into register I)
+                 * 
+                 * ----------------------------------------------------------------------------------
+                 * UPDATE: DensitY 11th April 2012
+                 * From Notch's Bible
+                 * "If any instruction tries to assign a literal value, the assignment fails silently. Other than that, the instruction behaves as normal."
+                 *  Basically what I decided on doing above was against Notch's spec, so I'm taking it out.
+                 *  ---------------------------------------------------------------------------------
                  */
                 case (ushort)dcpuRegisterCodes.NextWord_Literal_Value:
-                    result.Mem = true; // Read above to see why I'm doing this!
+                    result.ParmType = ParamType.Literal;
                     result.Location = ReadNextWord();
                     result.Value = result.Location;
+                    m_cycles++;
                     break;
 
                 default:
@@ -281,9 +325,10 @@ namespace dcpu16_ASM.Emulator
             // Special Case for literal Values that are stored in the byte's param and not next word. used for values < 0x1F. 
             if (_opParam >= 0x20 && _opParam < 0x3F)
             {
-                result.Mem = true; // See the large comment above to why I'm doing this. Although values this low are going to overwrite program memory <_<
+                result.ParmType = ParamType.Literal; 
                 result.Location = (ushort)(_opParam - 0x20);
                 result.Value = result.Location;
+                // cycle free!
             }
 
             return result;
@@ -309,6 +354,9 @@ namespace dcpu16_ASM.Emulator
             if (m_ignoreNextInstruction != false)
             {
                 m_ignoreNextInstruction = false;
+
+                // branch failure generates a 1 cycle penality.
+                m_cycles++;
                 return;
             }
 
@@ -328,6 +376,7 @@ namespace dcpu16_ASM.Emulator
                         case ((ushort)dcpuOpCode.JSR_OP >> 4):                            
                             m_memory.RAM[--m_registers.SP] = m_registers.PC;                            
                             m_registers.PC = (ushort)(B.Value);
+                            m_cycles += 3; // 2 for JSR, 1 for RAM lookup. 
                             break;
                         default:
                             Console.WriteLine(string.Format("Illegal Non-Basic instruction {0} at Address {1}", opP1.ToString("X"), m_registers.PC.ToString("X")));
@@ -339,6 +388,7 @@ namespace dcpu16_ASM.Emulator
                 case (ushort)dcpuOpCode.SET_OP:                    
                     A.Value = B.Value;
                     SetResultValue(A);
+                    m_cycles++;
                     break;
 
                 // Basic Arithmetic instructions
@@ -347,17 +397,20 @@ namespace dcpu16_ASM.Emulator
                     if (tmpVal > 0xFFFF) m_registers.O = 0x0001;
                     A.Value = (ushort)tmpVal;
                     SetResultValue(A);
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.SUB_OP:                    
                     tmpVal = A.Value - B.Value;
                     if (tmpVal < 0) m_registers.O = 0xFFFF;
                     A.Value = (ushort)tmpVal;
                     SetResultValue(A);
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.MUL_OP:
                     A.Value *= B.Value;
                     m_registers.O = (ushort)((A.Value >> 16) & 0xFFFF);
                     SetResultValue(A);
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.DIV_OP:
                     if (B.Value == 0)
@@ -370,6 +423,7 @@ namespace dcpu16_ASM.Emulator
                         A.Value /= B.Value;
                     }
                     SetResultValue(A);
+                    m_cycles += 3; // seems too cheap
                     break;
 
                 // Boolean Instructions
@@ -384,28 +438,34 @@ namespace dcpu16_ASM.Emulator
                     }
 
                     SetResultValue(A);
+                    m_cycles += 3; // seems too cheap
                     break;
                 case (ushort)dcpuOpCode.SHL_OP:
                     A.Value <<= B.Value;
                     m_registers.O = (ushort)(((A.Value << B.Value) >> 16) & 0xFFFF);
                     SetResultValue(A);
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.SHR_OP:
                     A.Value >>= B.Value;
                     m_registers.O = (ushort)(((A.Value << 16) >> B.Value) & 0xFFFF);
                     SetResultValue(A);
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.AND_OP:
                     A.Value &= B.Value;
                     SetResultValue(A);
+                    m_cycles++;
                     break;
                 case (ushort)dcpuOpCode.BOR_OP:
                     A.Value |= B.Value;
                     SetResultValue(A);
+                    m_cycles++;
                     break;
                 case (ushort)dcpuOpCode.XOR_OP:
                     A.Value ^= B.Value;
                     SetResultValue(A);
+                    m_cycles++;
                     break;
 
                 // Branch Instructions
@@ -414,15 +474,19 @@ namespace dcpu16_ASM.Emulator
                  */
                 case (ushort)dcpuOpCode.IFE_OP:
                     if ((A.Value == B.Value) != true) m_ignoreNextInstruction = true;
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.IFN_OP:
                     if ((A.Value != B.Value) != true) m_ignoreNextInstruction = true;
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.IFG_OP:
                     if ((A.Value > B.Value) != true) m_ignoreNextInstruction = true;
+                    m_cycles += 2;
                     break;
                 case (ushort)dcpuOpCode.IFB_OP:
                     if (((A.Value & B.Value) != 0) != true) m_ignoreNextInstruction = true;
+                    m_cycles += 2;
                     break;
 
                 default:
@@ -430,12 +494,6 @@ namespace dcpu16_ASM.Emulator
                     break;
             }
 
-            int d = 0; // I throw break points on these.
-
-            // DEBUG! 
-            DebugShowRegisters();
-            // TODO: show memory map
-            // END DEBUG
         }
 
         public bool ProgramLoaded
