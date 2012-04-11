@@ -1,0 +1,427 @@
+:main
+set a, 0x800e
+set c, 0
+set x, 0
+set y, 0
+set pc, printTitle
+
+:printTitle
+set b, [data+c]
+ife b, 0
+    set pc, resetTitleLine
+add c, 1
+bor b, 0x7000
+set [a], b
+add a, 1
+set pc, printTitle
+
+:resetTitleLine
+set push, pc
+set pc, wait
+set push, pc
+set pc, wait
+sub a, c
+add a, 32
+add x, 1
+set y, 0
+set pc, moveTitle
+
+:moveTitle
+ifg x, 16
+    set pc, cleartitle
+ife y, 4
+    set pc, resetTitleLine
+sub a, 32
+set b, [a]
+set [a], 0
+add a, 32
+set [a], b
+add a, 1
+add y, 1
+set pc, moveTitle
+
+:clearTitle
+set x, a
+sub a, c
+set [a], 0
+ife a, x
+    set pc, drawboard
+add a, 1
+sub pc, 4
+
+:wait
+set [waittime], [speed]
+mul [waittime], 233
+set y, 0
+:wait2
+add y, 1
+ifg [waittime], y
+    set pc, wait2
+set y, pop
+add y, 2
+set pc, y
+
+:drawboard
+;; set score
+;;set a, [speed]
+;;bor a, 0x7000
+;;set [0x8000], a
+set a, [score]
+bor a, 0x7000
+set [0x800e], a
+set a, score
+add a, 1
+set a, [a]
+bor a, 0x7000
+set [0x8011], a
+
+;; delete old ball
+set a, ballPos
+add a, 1
+set a, [a]
+mul a, 32
+add a, [ballPos]
+add a, 0x8000
+set [a], 0x0000
+
+;; draw ball
+set [ballPos], [tempBallPos]
+set a, ballPos
+add a, 1
+set b, tempballpos
+add b, 1
+set [a], [b]
+set a, [a]
+mul a, 32
+add a, [ballPos]
+add a, 0x8000
+set [a], 0x0700
+
+;;delete user
+ife [tempuser], [user]
+    set pc, drawuser
+set b, [user]
+mul b, 32
+add b, 0x8000
+set [b], 0x0000
+add b, 32
+set [b], 0x0000
+add b, 32
+set [b], 0x0000
+
+;; draw user
+:drawuser
+set [user], [tempuser]
+set b, [user]
+mul b, 32
+add b, 0x8000
+set [b], 0x0700
+add b, 32
+set [b], 0x0700
+add b, 32
+set [b], 0x0700
+
+;;delete ai
+:deleteai
+ife [tempai], [ai]
+    set pc, drawai
+set b, [ai]
+mul b, 32
+add b, 31
+add b, 0x8000
+set [b], 0x0000
+add b, 32
+set [b], 0x0000
+add b, 32
+set [b], 0x0000
+
+;; draw ai
+:drawai
+set [ai], [tempai]
+set b, [ai]
+mul b, 32
+add b, 31
+add b, 0x8000
+set [b], 0x0700
+add b, 32
+set [b], 0x0700
+add b, 32
+set [b], 0x0700
+
+:game
+set x, 0
+
+:updateball
+set push, pc
+set pc, wait
+set b, balldirection
+add b, 1
+set c, tempBallPos
+add c, 1
+set z, [tempuser]
+set y, [tempai]
+
+ife [speed], [speedmax]
+    set pc, userscored
+
+set [tempyangle], [yangle]
+:moveball
+ife [balldirection], 0
+    sub [tempballPos], 1
+ife [balldirection], 1
+    add [tempballpos], 1
+
+;;check direction change
+:checkdirection
+ife [c], 0
+    set [b], 2
+ife [c], 15
+    set [b], 0
+
+ife [b], 1
+    set pc, checkifaiscores
+ifn [b], 0
+    set pc, other
+ifg [c], 0
+    sub [c], 1
+
+:other
+ifn [b], 2
+    set pc, checkifaiscores
+ifg 15, [c]
+    add [c], 1
+sub [tempyangle], 1
+ife [tempyangle], 1
+    set pc, checkdirection
+;; check if ai is going to score
+:checkifaiscores
+ifn [balldirection], 0
+    set pc, checkifuserscores
+ifn [tempballPos], 1
+    set pc, changeuser
+ifn [b], 2
+    add pc, 5
+sub z, 1
+ife [c], z
+    set pc, changedirectionupdouble
+add z, 1
+ife [c], z
+    set pc, changedirectionup
+add z, 1
+ife [c], z
+    set pc, changedirectioneven
+add z, 1
+ife [c], z
+    set pc, changedirectiondown
+ifn [b], 0
+    add pc, 5
+add z, 1
+ife [c], z
+   set pc, changedirectiondowndouble
+sub z, 1
+set pc, aiscored
+;;check is user is going to score
+:checkifuserscores
+set y, [tempai]
+ifn [tempballpos], 30
+    set pc, changeuser ;;ball is not going to hit a paddle
+ifn [b], 2
+    add pc, 5
+sub y, 1
+ife [c], y
+    set pc, changedirectionupdouble
+add y, 1
+ife [c], y
+    set pc, changedirectionup
+add y, 1
+ife [c], y
+    set pc, changedirectioneven
+add y, 1
+ife [c], y
+    set pc, changedirectiondown
+ifn [b], 0
+    add pc, 5
+add y, 1
+ife [c], y
+   set pc, changedirectiondowndouble
+sub y, 1
+set pc, userscored
+;;change direction
+:changedirectionupdouble
+set [b], 0
+set [yangle], 2
+set pc, change
+
+:changedirectionup
+set [b], 0
+set [yangle], 1
+set pc, change
+
+:changedirectioneven
+set [b], 1
+set [yangle], 1
+set pc, change
+
+:changedirectiondown
+set [b], 2
+set [yangle], 1
+set pc, change
+
+:changedirectiondowndouble
+set [b], 2
+set [yangle], 2
+set pc, change
+
+:change
+xor [balldirection], 1
+ifn [speed], [speedmax]
+    sub [speed], 1
+
+
+
+:changeuser
+set z, [0x9000]
+ife z, [userup]
+    set pc, moveuserup
+ife z, [userdown]
+    set pc, moveuserdown
+set [0x9000], 0
+
+:changeai
+add y, 1
+ifg y, [c]
+    add pc, 4
+ifg [c], y
+    add [tempai], 1
+add pc, 2
+sub [tempai], 1
+
+
+set pc, drawboard
+
+:moveuserup
+ifn [tempuser], 0
+    sub [tempuser], 1
+set [0x9000], 0
+set pc, changeai
+
+:moveuserdown
+ifg 13, [tempuser]
+    add [tempuser], 1
+set [0x9000], 0
+set pc, changeai
+
+:userscored
+add [score], 1
+ife [score], 57
+    set pc, userwin
+set [balldirection], 1
+set pc, reset
+
+:aiscored
+set j, score
+add j, 1
+add [j], 1
+ife [j], 57
+    set pc, aiwin
+set [balldirection], 0
+set pc, reset
+
+:userwin
+set [user], [tempuser]
+set b, [user]
+mul b, 32
+add b, 31
+add b, 0x8000
+set [b], 0x0200
+add b, 32
+set [b], 0x0200
+add b, 32
+set [b], 0x0200
+set push, pc
+set pc, wait
+set push, pc
+set pc, wait
+set push, pc
+set pc, wait
+set pc, resetscore
+
+:aiwin
+set [ai], [tempai]
+set b, [ai]
+mul b, 32
+add b, 31
+add b, 0x8000
+set [b], 0x0200
+add b, 32
+set [b], 0x0200
+add b, 32
+set [b], 0x0200
+set push, pc
+set pc, wait
+set push, pc
+set pc, wait
+set push, pc
+set pc, wait
+set pc, resetscore
+
+:resetscore
+set j, score
+add j, 1
+set [j], 48
+set [score], 48
+set [tempuser], 0x0006
+set [tempai], 0x0006
+
+:reset
+set [b], 1
+set [yangle], 1
+set [tempballpos], 0x000f
+set [c], 0x0007
+set [speed], [speedmin]
+set [count], 1
+set [rampup], 0
+set pc, drawboard
+
+
+:data dat "PONG\0"
+
+:score dat 48, 48
+
+:userup dat 119
+
+:userdown dat 115
+
+:user dat 0x00000
+
+:tempuser dat 0x0006
+
+:ai dat 0x00000
+
+:rampup dat 0
+
+:yanglelimit dat 2
+
+:count dat 1
+
+:tempai dat 0x0006
+
+:speed dat 30
+
+:speedmin dat 30
+
+:speedmax dat 2
+
+:waittime dat 0
+
+:yangle dat 1
+
+:tempyangle dat 1
+
+:ballPos dat 0x0000, 0x0000
+
+:tempballpos dat 0x000f, 0x0007
+
+;; first is x 0 left(-) 1 right(+) second
+;; second is y 0 is up(-) 1 is none 2 is down (+)
+:ballDirection dat 0, 1

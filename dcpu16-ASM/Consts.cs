@@ -22,50 +22,15 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/**
- * Based on the specs below. 
- * http://0x10c.com/doc/dcpu-16.txt
- * 
- * Will take in ASM code, and throw out a .OBJ file. 
- * 
- * NOTE: Fixed tab issues, 4:55 PM, 9 April 2012.
- * NOTE: Cleaned and sorted it a bit, 01:17 PM, 9 April 2012 UTC/GMT+2.
- * 
- * UPDATE: 10th April 2012. Now with Startings of an Emulator - DensitY
- */
-
 using System;
 
-using System.Windows;
-using System.Windows.Forms;
-
 using dcpu16_ASM.Emulator;
-using dcpu16_ASM.Winforms;
 
 namespace dcpu16_ASM
 {
-   /// <summary>
-   /// Program entry point. 
-   /// </summary>
-    class Program
+    public static class Globals
     {
-        [STAThread]
-        static void Main(string[] args)
-        {
-     
-            // Startup winform. 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
-              
-
-            /*
-            string filename = args[0];
-            CDCPU16Assemble test = new CDCPU16Assemble();
-            Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
-
-            test.Assemble(filename);
-            */
-        }
+        public static String ProgramName = "DCPU-16 ASM.NET Assembler/Emulator";
+        public static String ProgramVersion = "v0.5 Pre-Alpha";
     }
 }

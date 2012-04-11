@@ -16,3 +16,7 @@ C:\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\dcpu16-ASM.pdb
 C:\Projects\dcpu16-ASM\dcpu16-ASM\bin\Debug\dcpu16-ASM.exe
 C:\Projects\dcpu16-ASM\dcpu16-ASM\bin\Debug\dcpu16-ASM.pdb
 C:\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Timothy\Documents\Visual Studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\ResGen.read.1.tlog
+C:\Users\Timothy\Documents\Visual Studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\ResGen.write.1.tlog
+C:\Users\Timothy\Documents\Visual Studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\dcpu16_ASM.Winforms.AssemblerForm.resources
+C:\Users\Timothy\Documents\Visual Studio 2010\Projects\dcpu16-ASM\dcpu16-ASM\obj\x86\Debug\dcpu16_ASM.Winforms.MainForm.resources

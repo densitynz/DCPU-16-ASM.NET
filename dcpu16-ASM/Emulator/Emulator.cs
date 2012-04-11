@@ -66,6 +66,8 @@ namespace dcpu16_ASM.Emulator
         {
             if (m_DCPUComputer.ProgramLoaded != true) return;
 
+            // TODO: proper timer
+
             for(int i = 0; i < 9999;i++) m_DCPUComputer.ExecuteInstruction();
         }
 

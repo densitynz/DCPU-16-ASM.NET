@@ -22,50 +22,42 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/**
- * Based on the specs below. 
- * http://0x10c.com/doc/dcpu-16.txt
- * 
- * Will take in ASM code, and throw out a .OBJ file. 
- * 
- * NOTE: Fixed tab issues, 4:55 PM, 9 April 2012.
- * NOTE: Cleaned and sorted it a bit, 01:17 PM, 9 April 2012 UTC/GMT+2.
- * 
- * UPDATE: 10th April 2012. Now with Startings of an Emulator - DensitY
- */
-
 using System;
-
-using System.Windows;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
-using dcpu16_ASM.Emulator;
-using dcpu16_ASM.Winforms;
-
-namespace dcpu16_ASM
+namespace dcpu16_ASM.Winforms
 {
-   /// <summary>
-   /// Program entry point. 
-   /// </summary>
-    class Program
+    public partial class MainForm : Form
     {
-        [STAThread]
-        static void Main(string[] args)
+        public MainForm()
         {
-     
-            // Startup winform. 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
-              
+            InitializeComponent();
+        }
 
-            /*
-            string filename = args[0];
-            CDCPU16Assemble test = new CDCPU16Assemble();
-            Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
+        
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
-            test.Assemble(filename);
-            */
+        private void loadCompiledBinaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // open compiled binary
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+            }
+        }
+
+        // Load up Assembler dialog. 
+        private void asemblerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AssemblerForm asmDialog = new AssemblerForm();
+            asmDialog.ShowDialog(this);
         }
     }
 }

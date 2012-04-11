@@ -22,6 +22,17 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/**
+ * TODOs: 
+ * - Far Far Better error checking (provide useful messages on compile failure
+ * - 'safer' parsing. Speed coding this has resulted in some bad things
+ * - Allow compile time arithmetic, for things like this: 
+ *   :dataInMemory  0x9000 
+ *   
+ *      SET I, [dataInMemory + 0x1] 
+ *   Right now you can only do something like this if you throw 0x1 into a seperate register :/ 
+ */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,6 +70,16 @@ namespace dcpu16_ASM
         private List<ushort> machineCode = new List<ushort>();
 
         private string m_filename = "";
+
+        private string m_MessageOutput = "";
+
+        public string MessageOuput
+        {
+            get { return m_MessageOutput; }
+        }
+        
+
+        public string SavedFilename = "";            
 
         public CDCPU16Assemble()
         {
@@ -440,22 +461,30 @@ namespace dcpu16_ASM
             }
         }
 
+
         public bool Assemble(string _filename)
+        {
+            if (File.Exists(_filename) != true)
+            {
+                AddMessageLine(string.Format("File '{0}' Not Found", _filename));
+                return false;
+            }
+            m_filename = _filename;
+            string[] lines = File.ReadAllLines(_filename);
+            return Assemble(ref lines);
+        }
+
+        public bool Assemble(ref string[] _lines)
         {
             try
             {
-                if (File.Exists(_filename) != true)
-                {
-                    Console.WriteLine(string.Format("File '{0}' Not Found", _filename));
-                    return false;
-                }
-                m_filename = _filename;
+                m_MessageOutput = "";
                 machineCode.Clear();
                 m_labelReferences.Clear();
 
-                string[] lines = File.ReadAllLines(_filename);
+                
 
-                foreach (string line in lines)
+                foreach (string line in _lines)
                 {
                     if (line.Trim().Length < 1) continue;
                     if (line[0] == ';') continue;
@@ -470,15 +499,15 @@ namespace dcpu16_ASM
                 }
                 SetLabelAddressReferences();
 
-                Console.WriteLine("Debug Dump");
-                Console.WriteLine("*****");
+                AddMessageLine("Debug Dump");
+                AddMessageLine("*****");
                 int count = 1;
                 foreach (ushort code in machineCode)
                 {
                     if (count % 4 == 0)
-                        Console.WriteLine(code.ToString("X"));
+                        AddMessageLine(string.Format("{0:X4}",code));
                     else
-                        Console.Write(code.ToString("X") + " ");
+                        AddMessage(string.Format("{0:X4} ",code));
                     count++;
                 }
 
@@ -486,15 +515,31 @@ namespace dcpu16_ASM
             }
             catch (Exception E)
             {
-                Console.WriteLine(string.Format("Exception: {0}\n\tStackTrace: {1}", E.Message, E.StackTrace));
+                AddMessageLine(string.Format("{0}", E.Message));
                 return false;
             }
             return true;
         }
 
+        public void SetFileName(string _filename) { m_filename = _filename; }
+
+        private void AddMessageLine(string _in)
+        {
+            m_MessageOutput += string.Format("{0}\r\n", _in);
+        }
+        private void AddMessage(string _in)
+        {
+            m_MessageOutput += _in;
+        }
+        private void AddMessageLine()
+        {
+            m_MessageOutput += "\r\n";
+        }
+
         private void SaveOBJ()
         {
-            string saveFileName = m_filename.Split('.')[0] + ".obj";
+            if (m_filename.Trim() == "") SavedFilename = "Default.bin";
+            else SavedFilename = m_filename.Split('.')[0] + ".bin";
 
             try
             {
@@ -507,16 +552,16 @@ namespace dcpu16_ASM
                     outfile.WriteByte(B);
                     outfile.WriteByte(A);
                 }
-                File.WriteAllBytes(saveFileName, outfile.ToArray());
+                File.WriteAllBytes(SavedFilename, outfile.ToArray());
             }
             catch (Exception e)
             {
-                Console.WriteLine(string.Format("EXCEPTION: {0}\nStackTrace: {1} ", e.Message, e.StackTrace));
+                AddMessageLine(string.Format("{0}", e.Message));
                 return;
             }
 
-            Console.WriteLine();
-            Console.WriteLine(string.Format("Saved to '{0}", saveFileName));
+            AddMessageLine();
+            AddMessageLine(string.Format("Saved to '{0}", SavedFilename));
         }
     }
 }

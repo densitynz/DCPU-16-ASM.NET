@@ -40,6 +40,7 @@ namespace dcpu16_ASM.Emulator
 
     struct cpuMemory
     {
+        
         public ushort[] RAM;
 
         public cpuMemory(uint _ramSize)
@@ -68,6 +69,8 @@ namespace dcpu16_ASM.Emulator
 
         private cpuRegisters m_registers;
         private cpuMemory m_memory;
+
+        private long m_cycles = 0; 
 
         struct readParamValue
         {
@@ -100,6 +103,8 @@ namespace dcpu16_ASM.Emulator
             m_registers.SP = 0xFFFF;
             m_registers.PC = 0x0;
             m_registers.O = 0;
+
+            m_cycles = 0;
         }
 
         public void SetProgram(ref List<ushort> _machineCode)
@@ -429,7 +434,6 @@ namespace dcpu16_ASM.Emulator
 
             // DEBUG! 
             DebugShowRegisters();
-            Console.ReadLine();
             // TODO: show memory map
             // END DEBUG
         }
@@ -440,28 +444,33 @@ namespace dcpu16_ASM.Emulator
             set { m_programLoaded = value; }
         }
 
+        public long CycleCount
+        {
+            get { return m_cycles; }
+        }
+
         public void DebugShowRegisters()
         {
             Console.WriteLine("----------------");
             Console.WriteLine("Register Info");
-            Console.WriteLine(string.Format("\tA = {0},\tB = {1},\tC = {2}",
-                m_registers.GP[(int)dcpuRegisterCodes.A].ToString("X"),
-                m_registers.GP[(int)dcpuRegisterCodes.B].ToString("X"),
-                m_registers.GP[(int)dcpuRegisterCodes.C].ToString("X")));
+            Console.WriteLine(string.Format("\tA = {0:X4},\tB = {1:X4},\tC = {2:X4}",
+                m_registers.GP[(int)dcpuRegisterCodes.A],
+                m_registers.GP[(int)dcpuRegisterCodes.B],
+                m_registers.GP[(int)dcpuRegisterCodes.C]));
 
-            Console.WriteLine(string.Format("\tX = {0},\tY = {1},\tZ = {2}",
-                m_registers.GP[(int)dcpuRegisterCodes.X].ToString("X"),
-                m_registers.GP[(int)dcpuRegisterCodes.Y].ToString("X"),
-                m_registers.GP[(int)dcpuRegisterCodes.Z].ToString("X")));
+            Console.WriteLine(string.Format("\tX = {0:X4},\tY = {1:X4},\tZ = {2:X4}",
+                m_registers.GP[(int)dcpuRegisterCodes.X],
+                m_registers.GP[(int)dcpuRegisterCodes.Y],
+                m_registers.GP[(int)dcpuRegisterCodes.Z]));
 
-            Console.WriteLine(string.Format("\tI = {0},\tJ = {1}",
-                m_registers.GP[(int)dcpuRegisterCodes.I].ToString("X"),
-                m_registers.GP[(int)dcpuRegisterCodes.J].ToString("X")));
+            Console.WriteLine(string.Format("\tI = {0:X4},\tJ = {1:X4}",
+                m_registers.GP[(int)dcpuRegisterCodes.I],
+                m_registers.GP[(int)dcpuRegisterCodes.J]));
 
-            Console.WriteLine(string.Format("\tPC = {0},\tSP = {1},\tO = {2}",
-                m_registers.PC.ToString("X"),
-                m_registers.SP.ToString("X"),
-                m_registers.O.ToString("X")));
+            Console.WriteLine(string.Format("\tPC = {0:X4},\tSP = {1:X4},\tO = {2:X4}",
+                m_registers.PC,
+                m_registers.SP,
+                m_registers.O));
     
 
         }
