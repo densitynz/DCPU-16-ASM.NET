@@ -30,7 +30,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace dcpu16_ASM.Winforms
+namespace DCPU16_ASM.Winforms
 {
     public partial class MainForm : Form
     {

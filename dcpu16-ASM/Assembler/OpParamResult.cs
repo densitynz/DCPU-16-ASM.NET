@@ -1,4 +1,4 @@
-﻿namespace dcpu16_ASM
+﻿namespace DCPU16_ASM
 {
     public class OpParamResult
     {

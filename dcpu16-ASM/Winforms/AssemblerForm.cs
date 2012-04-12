@@ -22,19 +22,13 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
-using dcpu16_ASM;
-
-namespace dcpu16_ASM.Winforms
+namespace DCPU16_ASM.Winforms
 {
-    using dcpu16_ASM.Assembler;
+    using DCPU16_ASM.Assembler;
+
+    using System;
+    using System.Windows.Forms;
+    using System.IO;
 
     public partial class AssemblerForm : Form
     {

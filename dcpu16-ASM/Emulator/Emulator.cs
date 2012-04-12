@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace dcpu16_ASM.Emulator
+namespace DCPU16_ASM.Emulator
 {
     
     public class CDCPU16Emulator

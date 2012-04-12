@@ -1,4 +1,4 @@
-﻿namespace dcpu16_ASM.Assembler
+﻿namespace DCPU16_ASM.Assembler
 {
     using System;
     using System.IO;

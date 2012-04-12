@@ -34,7 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace dcpu16_ASM.Emulator
+namespace DCPU16_ASM.Emulator
 {
 
     // Memory map layout

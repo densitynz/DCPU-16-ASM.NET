@@ -33,7 +33,7 @@
  *   Right now you can only do something like this if you throw 0x1 into a seperate register :/ 
  */
 
-namespace dcpu16_ASM
+namespace DCPU16_ASM
 {
     using System;
     using System.Collections.Generic;

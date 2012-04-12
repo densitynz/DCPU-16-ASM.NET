@@ -22,44 +22,106 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace dcpu16_ASM
+namespace DCPU16_ASM
 {
     /// <summary>
     /// DCPU-16 Op codes, Unless extra bytes are required op codes are generally stored
     /// bbbbbbaaaaaaoooo
-    /// 
     /// O = 4bits for cpu OpCode
     /// A = 6bits for Dest Param
     /// B = 6bits for Source Param 
-    /// 
     /// Depending on parm, up to 2 extra words may be required (meaning max instruction length is 3 words long)
     /// </summary>
     public enum dcpuOpCode : ushort
     {
-        NB_OP = 0x0,      // Signals non basic instruction
+        /// <summary>
+        /// Signals non basic instruction
+        /// </summary>
+        NB_OP = 0x0, 
 
-        SET_OP = 0x1,      // Set instruciton          -> A = B 
-        ADD_OP = 0x2,      // Add instruction          -> A = A + B
-        SUB_OP = 0x3,      // Subtract instruciton     -> A = A - B
-        MUL_OP = 0x4,      // Muliply  instruction     -> A = A * B
-        DIV_OP = 0x5,      // Divide instruction       -> A = A / B
-        MOD_OP = 0x6,      // Modulate instruction     -> A = A % B
-        SHL_OP = 0x7,      // Shift Left instruction   -> A = A << B
-        SHR_OP = 0x8,      // Shift right instruction  -> A = A >> B
-        AND_OP = 0x9,      // Boolean AND instruction  -> A = A & B
-        BOR_OP = 0xA,      // Boolean OR instruction   -> A = A | B
-        XOR_OP = 0xB,      // Boolean XOR instruction  -> A = A ^ B
-        IFE_OP = 0xC,      // Branch! if(A == B) run next instruction
-        IFN_OP = 0xD,      // Branch! if(A != B) run next instruction
-        IFG_OP = 0xE,      // Branch! if(A > B) run next instruction
-        IFB_OP = 0xF,      // Branch! if((A & B) != 0) run next instruction
+        /// <summary>
+        /// Set instruciton          -> A = B
+        /// </summary>
+        SET_OP = 0x1,  
 
-        // Non basic instructions
-        // Encoded as follows
-        // AAAAAAoooooo0000 
-        // Basically unlike basic instructions, we lose a register spot and use that for the op code.
-        // the old op code is zeroed out (which signals a non basic instruction). This means 
-        // any non basic instruction, even if its something like derp X, Y will use 2 words (unlike a basic instruction in that case)
+        /// <summary>
+        /// Add instruction          -> A = A + B
+        /// </summary>
+        ADD_OP = 0x2,
+
+        /// <summary>
+        /// Subtract instruciton     -> A = A - B
+        /// </summary>
+        SUB_OP = 0x3,
+
+        /// <summary>
+        /// Muliply  instruction     -> A = A * B
+        /// </summary>
+        MUL_OP = 0x4,
+
+        /// <summary>
+        /// Divide instruction       -> A = A / B
+        /// </summary>
+        DIV_OP = 0x5,
+
+        /// <summary>
+        /// Modulate instruction     -> A = A % B
+        /// </summary>
+        MOD_OP = 0x6,
+
+        /// <summary>
+        /// Shift Left instruction   -> A = A << B
+        /// </summary>
+        SHL_OP = 0x7,
+
+        /// <summary>
+        /// Shift right instruction  -> A = A >> B
+        /// </summary>
+        SHR_OP = 0x8,
+
+        /// <summary>
+        /// Boolean AND instruction  -> A = A & B
+        /// </summary>
+        AND_OP = 0x9,
+
+        /// <summary>
+        /// Boolean OR instruction   -> A = A | B
+        /// </summary>
+        BOR_OP = 0xA,
+
+        /// <summary>
+        /// Boolean XOR instruction  -> A = A ^ B
+        /// </summary>
+        XOR_OP = 0xB,
+
+        /// <summary>
+        /// Branch! if(A == B) run next instruction
+        /// </summary>
+        IFE_OP = 0xC,
+
+        /// <summary>
+        /// ranch! if(A != B) run next instruction
+        /// </summary>
+        IFN_OP = 0xD,
+
+        /// <summary>
+        /// Branch! if(A > B) run next instruction
+        /// </summary>
+        IFG_OP = 0xE,
+
+        /// <summary>
+        /// Branch! if((A & B) != 0) run next instruction
+        /// </summary>
+        IFB_OP = 0xF,
+
+        /// <summary>
+        /// Non basic instructions
+        /// Encoded as follows
+        /// AAAAAAoooooo0000 
+        /// Basically unlike basic instructions, we lose a register spot and use that for the op code.
+        /// the old op code is zeroed out (which signals a non basic instruction). This means 
+        /// any non basic instruction, even if its something like derp X, Y will use 2 words (unlike a basic instruction in that case)
+        /// </summary>
         JSR_OP = 0x10
     }
 }

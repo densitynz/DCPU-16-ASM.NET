@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace dcpu16_ASM
+namespace DCPU16_ASM
 {
     /// <summary>
     /// DCPU-16 Register Codes
@@ -67,9 +67,20 @@ namespace dcpu16_ASM
         PEEK = 0x19,    // [SP]
         PUSH = 0x1A,    // [--SP]
 
-        SP = 0x1B,      // Stack pointer
-        PC = 0x1C,      // Program Counter
-        O = 0x1D,       // Overflow Register
+        /// <summary>
+        /// Stack pointer
+        /// </summary>
+        SP = 0x1B,
+
+        /// <summary>
+        /// Program Counter
+        /// </summary>
+        PC = 0x1C,
+
+        /// <summary>
+        /// Overflow Register
+        /// </summary>
+        O = 0x1D,
 
         NextWord_Literal_Mem = 0x1E,    // IE for "SET A, [0x1000]" B register will be 0x1E and we assume the next word (PC++)'s value is to reference a memory location
         NextWord_Literal_Value = 0x1F   // Same as above but its a literal value, not literal value to a memory location

@@ -34,34 +34,24 @@
  * UPDATE: 10th April 2012. Now with Startings of an Emulator - DensitY
  */
 
-using System;
-using System.Windows.Forms;
-
-using dcpu16_ASM.Winforms;
-
-namespace dcpu16_ASM
+namespace DCPU16_ASM
 {
-   /// <summary>
+    using System;
+    using System.Windows.Forms;
+
+    using DCPU16_ASM.Winforms;
+
+    /// <summary>
    /// Program entry point. 
    /// </summary>
-    class Program
+    public class Program
     {
         [STAThread]
-        static void Main()
+        public static void Main()
         {
-     
-            // Startup winform. 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-
-            /*
-            string filename = args[0];
-            CDCPU16Assemble test = new CDCPU16Assemble();
-            Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
-
-            test.Assemble(filename);
-            */
         }
     }
 }

@@ -22,13 +22,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-using System;
-
-namespace dcpu16_ASM
+namespace DCPU16_ASM
 {
     public static class Globals
     {
-        public static String ProgramName = "DCPU-16 ASM.NET Assembler/Emulator";
-        public static String ProgramVersion = "v0.5 Pre-Alpha";
+        public static readonly string ProgramName = "DCPU-16 ASM.NET Assembler/Emulator";
+        public static readonly string ProgramVersion = "v0.5 Pre-Alpha";
     }
 }
