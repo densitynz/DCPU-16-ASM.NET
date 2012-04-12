@@ -1,8 +1,8 @@
-﻿namespace DCPU16_ASM.Assembler
+namespace DCPU16_ASM.Assembler
 {
-    public class OpParamResult
+    public class OpcodeParamResult
     {
-        public OpParamResult()
+        public OpcodeParamResult()
         {
             this.Param = 0x0;
             this.NextWord = false;
