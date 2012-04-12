@@ -46,9 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assembler\OpcodeParamResult.cs" />
     <Compile Include="Assembler\Generator.cs" />
     <Compile Include="Assembler\Parser.cs" />
-    <Compile Include="Assembler\OpcodeParamResult.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="Emulator\CPU.cs" />
     <Compile Include="Emulator\Emulator.cs" />

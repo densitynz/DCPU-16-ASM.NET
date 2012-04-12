@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dcpu16-ASM", "dcpu16-ASM\dcpu16-ASM.csproj", "{94BDD8DE-8766-431B-892D-0A1187E10B5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCPU16-ASM", "dcpu16-ASM\DCPU16-ASM.csproj", "{94BDD8DE-8766-431B-892D-0A1187E10B5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
