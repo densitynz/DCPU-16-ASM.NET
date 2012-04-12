@@ -34,6 +34,8 @@ using dcpu16_ASM;
 
 namespace dcpu16_ASM.Winforms
 {
+    using dcpu16_ASM.Assembler;
+
     public partial class AssemblerForm : Form
     {
         private string m_fileName = "";
@@ -97,19 +99,29 @@ namespace dcpu16_ASM.Winforms
                 MessageBox.Show("Nothing to compile", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            CDCPU16Assemble Assemble = new CDCPU16Assemble();
-            Assemble.SetFileName(m_fileName);
-            string[] lines = codeTextBox.Text.Split('\n');
-            if (Assemble.Assemble(ref lines) != true)
+
+            var assemble = new Parser();
+            var lines = codeTextBox.Text.Split('\n');
+            ushort[] machineCode = assemble.Parse(ref lines);
+            if (machineCode == null)
             {
-                textBox1.Text = Assemble.MessageOuput;
+                textBox1.Text = assemble.MessageOuput;
                 MessageBox.Show("Issue compiling code, check the 'Messages' box", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            textBox1.Text = Assemble.MessageOuput;
-            MessageBox.Show(string.Format("Code successfully compiled to\n\n'{0}'",Assemble.SavedFilename), Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.None);
-        }
 
+            var generator = new Generator();
+            var output = generator.Generate(machineCode, this.m_fileName);
+            if (output == string.Empty)
+            {
+                textBox1.Text = generator.MessageOuput;
+                MessageBox.Show("Issue compiling code, check the 'Messages' box", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            textBox1.Text = assemble.MessageOuput;
+            MessageBox.Show(string.Format("Code successfully compiled to\n\n'{0}'", output), Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.None);
+        }
 
         private void codeTextBox_TextChanged(object sender, EventArgs e)
         {

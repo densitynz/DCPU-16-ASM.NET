@@ -24,8 +24,6 @@
 
 using System;
 
-using dcpu16_ASM.Emulator;
-
 namespace dcpu16_ASM
 {
     public static class Globals

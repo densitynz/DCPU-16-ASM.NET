@@ -35,11 +35,8 @@
  */
 
 using System;
-
-using System.Windows;
 using System.Windows.Forms;
 
-using dcpu16_ASM.Emulator;
 using dcpu16_ASM.Winforms;
 
 namespace dcpu16_ASM
@@ -50,14 +47,13 @@ namespace dcpu16_ASM
     class Program
     {
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
      
             // Startup winform. 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-              
 
             /*
             string filename = args[0];
