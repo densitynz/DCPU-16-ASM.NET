@@ -231,8 +231,8 @@ namespace DCPU16_ASM.Assembler
             if (opcode > 0x0)
             {
                 var param1 = splitLine[2]; // basic function, has second param.
-                OpcodeParamResult p1 = this.ParseParam(param);
-                OpcodeParamResult p2 = this.ParseParam(param1);
+                var p1 = this.ParseParam(param);
+                var p2 = this.ParseParam(param1);
 
                 opcode |= ((uint)p1.Param << 4) & 0x3F0;
                 opcode |= ((uint)p2.Param << 10) & 0xFC00;
