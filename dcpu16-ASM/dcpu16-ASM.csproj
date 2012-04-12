@@ -8,9 +8,9 @@
     <ProjectGuid>{94BDD8DE-8766-431B-892D-0A1187E10B5E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>dcpu16_ASM</RootNamespace>
-    <AssemblyName>dcpu16-ASM</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>DCPU16_ASM</RootNamespace>
+    <AssemblyName>DCPU16_ASM</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Assembler\Generator.cs" />
     <Compile Include="Assembler\Parser.cs" />
-    <Compile Include="Assembler\OpParamResult.cs" />
+    <Compile Include="Assembler\OpcodeParamResult.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="Emulator\CPU.cs" />
     <Compile Include="Emulator\Emulator.cs" />

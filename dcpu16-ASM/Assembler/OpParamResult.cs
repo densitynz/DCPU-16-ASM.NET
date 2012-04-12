@@ -1,4 +1,4 @@
-﻿namespace DCPU16_ASM
+﻿namespace DCPU16_ASM.Assembler
 {
     public class OpParamResult
     {

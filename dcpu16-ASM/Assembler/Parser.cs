@@ -33,11 +33,11 @@
  *   Right now you can only do something like this if you throw 0x1 into a seperate register :/ 
  */
 
-namespace DCPU16_ASM
+namespace DCPU16_ASM.Assembler
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+    using System.Linq;
 
     public class Parser
     {
@@ -118,11 +118,11 @@ namespace DCPU16_ASM
         {
             try
             {
-                this.MessageOuput = string.Empty;
                 this.machineCode.Clear();
                 this.labelReferences.Clear();
+                this.MessageOuput = string.Empty;
 
-                foreach (string line in lines)
+                foreach (var line in lines)
                 {
                     var currentLine = line.Trim();
 
@@ -131,12 +131,7 @@ namespace DCPU16_ASM
                         continue;
                     }
 
-                    int commentIndex = line.IndexOf(";");
-
-                    if (commentIndex > 0)
-                    {
-                        currentLine = line.Substring(0, commentIndex).Trim();
-                    }
+                    currentLine = this.RemoveLineComments(line);
 
                     if (currentLine.Trim().Length < 1)
                     {
@@ -173,6 +168,20 @@ namespace DCPU16_ASM
                 this.AddMessageLine(string.Format("{0}", ex.Message));
                 return null;
             }
+        }
+
+        private string RemoveLineComments(string line)
+        {
+            var clearedLine = string.Empty;
+
+            var commentIndex = line.IndexOf(";");
+
+            if (commentIndex > 0)
+            {
+                clearedLine = line.Substring(0, commentIndex).Trim();
+            }
+
+            return clearedLine;
         }
 
         private void AssembleLine(string line)
@@ -222,8 +231,8 @@ namespace DCPU16_ASM
             if (opcode > 0x0)
             {
                 var param1 = splitLine[2]; // basic function, has second param.
-                OpParamResult p1 = this.ParseParam(param);
-                OpParamResult p2 = this.ParseParam(param1);
+                OpcodeParamResult p1 = this.ParseParam(param);
+                OpcodeParamResult p2 = this.ParseParam(param1);
 
                 opcode |= ((uint)p1.Param << 4) & 0x3F0;
                 opcode |= ((uint)p2.Param << 10) & 0xFC00;
@@ -253,7 +262,7 @@ namespace DCPU16_ASM
             else
             {
                 opcode = (uint)this.opcodeDictionary[candidateOpcode];
-                OpParamResult p1 = this.ParseParam(param);
+                OpcodeParamResult p1 = this.ParseParam(param);
                 opcode |= ((uint)p1.Param << 10) & 0xFC00;
 
                 this.machineCode.Add((ushort)opcode);
@@ -272,23 +281,23 @@ namespace DCPU16_ASM
 
         private int ParseLabel(string line)
         {
-            var sIndex = -1;
-            var sIndex1 = line.IndexOf(' ');
-            var sIndex2 = line.IndexOf('\t');
+            var index = -1;
+            var index1 = line.IndexOf(' ');
+            var index2 = line.IndexOf('\t');
 
-            if (sIndex1 < sIndex2 || sIndex2 == -1)
+            if (index1 < index2 || index2 == -1)
             {
-                sIndex = sIndex1;
+                index = index1;
             }
-            else if (sIndex2 < sIndex1 || sIndex1 != -1)
+            else if (index2 < index1 || index1 != -1)
             {
-                sIndex = sIndex2;
+                index = index2;
             }
 
             var labelName = line.Substring(1, line.Length - 1);
-            if (sIndex > 1)
+            if (index > 1)
             {
-                labelName = line.Substring(1, sIndex - 1);
+                labelName = line.Substring(1, index - 1);
             }
 
             if (this.labelAddressDitionary.ContainsKey(labelName))
@@ -297,35 +306,25 @@ namespace DCPU16_ASM
             }
 
             this.labelAddressDitionary.Add(labelName.Trim(), (ushort)this.machineCode.Count);
-            return sIndex;
+            return index;
         }
 
         private string[] Tokenize(string data)
         {
-            var inString = data.Replace("\t", " ").Replace(",", " ");
-            var tmp = inString.Split(' ');
-            var dat = new List<string>();
-            foreach (var t in tmp)
-            {
-                if (t.Trim() != string.Empty)
-                {
-                    dat.Add(t);
-                }
-            }
-
-            return dat.ToArray();
+            var tokens = data.Split(new[] { ' ', '\t', ',' });
+            return tokens.Where(t => t.Trim() != string.Empty).ToArray();
         }
 
-        private OpParamResult ParseParam(string param)
+        private OpcodeParamResult ParseParam(string param)
         {
-            OpParamResult opParamResult = new OpParamResult();
+            var opcodeParamResult = new OpcodeParamResult();
 
             var clearedParameter = param.Replace(" ", string.Empty).Trim();
             
             if (this.regiterDictionary.ContainsKey(clearedParameter))
             {
                 // Ok things are really easy in this case. 
-                opParamResult.Param = (ushort)this.regiterDictionary[clearedParameter];
+                opcodeParamResult.Param = (ushort)this.regiterDictionary[clearedParameter];
             }
             else
             {
@@ -345,60 +344,61 @@ namespace DCPU16_ASM
                             throw new Exception(string.Format("Invalid register reference in '{0}'", clearedParameter));
                         }
 
-                        opParamResult.Param = (ushort)this.regiterDictionary["[+" + psplit[1] + "]"];
-                        opParamResult.NextWord = true;
+                        opcodeParamResult.Param = (ushort)this.regiterDictionary["[+" + psplit[1] + "]"];
+                        opcodeParamResult.NextWord = true;
                         try
                         {
-                            if (psplit[0][0] == '\'' && psplit[0][psplit[0].Length - 1] == '\'' && psplit[0].Length == 3) // nasty
+                            // nasty
+                            if (psplit[0][0] == '\'' && psplit[0][psplit[0].Length - 1] == '\'' && psplit[0].Length == 3)
                             {
                                 var val = (ushort)psplit[0][1];
-                                opParamResult.NextWordValue = val;
+                                opcodeParamResult.NextWordValue = val;
                             }
                             else if (psplit[0].Contains("0x"))
                             {
                                 ushort val = Convert.ToUInt16(psplit[0].Trim(), 16);
-                                opParamResult.NextWordValue = val;
+                                opcodeParamResult.NextWordValue = val;
                             }
                             else
                             {
                                 ushort val = Convert.ToUInt16(psplit[0].Trim(), 10);
-                                opParamResult.NextWordValue = val;
+                                opcodeParamResult.NextWordValue = val;
                             }
                         }
                         catch
                         {
-                            opParamResult.NextWord = true;
-                            opParamResult.LabelName = psplit[0].Trim();
+                            opcodeParamResult.NextWord = true;
+                            opcodeParamResult.LabelName = psplit[0].Trim();
                         }
                     }
                     else
                     {
-                        opParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Mem;
-                        opParamResult.NextWord = true;
+                        opcodeParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Mem;
+                        opcodeParamResult.NextWord = true;
                         
                         try
                         {
-                            if (clearedParameter[1] == '\'' && clearedParameter[clearedParameter.Length - 2] == '\'' && clearedParameter.Length == 5) // nasty
+                            // nasty
+                            if (clearedParameter[1] == '\'' && clearedParameter[clearedParameter.Length - 2] == '\'' && clearedParameter.Length == 5)
                             { 
                                 ushort val = clearedParameter[1];
-                                opParamResult.NextWordValue = val;
+                                opcodeParamResult.NextWordValue = val;
                             }
-                            else if (clearedParameter.Contains("0x") != false)
+                            else if (clearedParameter.Contains("0x"))
                             {
-                                ushort val = Convert.ToUInt16(clearedParameter.Replace("[", "").Replace("]", "").Trim(), 16);
-                                opParamResult.NextWordValue = val;
+                                ushort val = Convert.ToUInt16(clearedParameter.Replace("[", string.Empty).Replace("]", string.Empty).Trim(), 16);
+                                opcodeParamResult.NextWordValue = val;
                             }
                             else
                             {
-                                ushort val = Convert.ToUInt16(clearedParameter.Replace("[", "").Replace("]", "").Trim(), 10);
-                                opParamResult.NextWordValue = val;
+                                ushort val = Convert.ToUInt16(clearedParameter.Replace("[", string.Empty).Replace("]", string.Empty).Trim(), 10);
+                                opcodeParamResult.NextWordValue = val;
                             }
                         }
                         catch
                         {
-
-                            opParamResult.NextWord = true;
-                            opParamResult.LabelName = clearedParameter.Replace("[", "").Replace("]", "").Trim();
+                            opcodeParamResult.NextWord = true;
+                            opcodeParamResult.LabelName = clearedParameter.Replace("[", string.Empty).Replace("]", string.Empty).Trim();
                         }
                     }
                 }
@@ -406,7 +406,6 @@ namespace DCPU16_ASM
                 {
                     // if value is < 0x1F we can encode it into the param directly, 
                     // else it has to be next value!
-
                     ushort maxValue = Convert.ToUInt16("0x1F", 16);
 
                     try
@@ -427,32 +426,31 @@ namespace DCPU16_ASM
 
                         if (literalValue < maxValue)
                         {
-                            opParamResult.Param = Convert.ToUInt16("0x20", 16);
-                            opParamResult.Param += literalValue;
+                            opcodeParamResult.Param = Convert.ToUInt16("0x20", 16);
+                            opcodeParamResult.Param += literalValue;
                         }
                         else
                         {
-                            opParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Value;
-                            opParamResult.NextWord = true;
-                            opParamResult.NextWordValue = literalValue;
+                            opcodeParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Value;
+                            opcodeParamResult.NextWord = true;
+                            opcodeParamResult.NextWordValue = literalValue;
                         }
                     }
                     catch
                     {
-                        opParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Value;
-                        opParamResult.NextWord = true;
-                        opParamResult.LabelName = clearedParameter;
+                        opcodeParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Value;
+                        opcodeParamResult.NextWord = true;
+                        opcodeParamResult.LabelName = clearedParameter;
                     }
-
                 }
             }
 
-            return opParamResult;
+            return opcodeParamResult;
         }
 
         private void ParseData(string data)
         {
-            //string[] dataFields = _data.Substring(3, _data.Length - 3).Trim().Split(',');
+            // string[] dataFields = _data.Substring(3, _data.Length - 3).Trim().Split(',');
             var dataFields = new List<string>();
 
             foreach (var field in data.Substring(3, data.Length - 3).Trim().Split(','))
@@ -489,9 +487,9 @@ namespace DCPU16_ASM
                 if (valStr.IndexOf('"') > -1)
                 {
                     var asciiLine = dat.Replace("\"", string.Empty).Trim();
-                    for (var i = 0; i < asciiLine.Length; i++)
+                    foreach (var t in asciiLine)
                     {
-                        this.machineCode.Add(asciiLine[i]);
+                        this.machineCode.Add(t);
                     }
                 }
                 else
