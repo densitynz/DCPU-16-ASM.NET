@@ -33,9 +33,14 @@ using System.IO;
 namespace dcpu16_ASM.Emulator
 {
 
+    /// <summary>
+    /// DCPU-16 Memory struct
+    /// </summary>
     public struct cpuMemory
     {
-        
+        /// <summary>
+        /// unsigned 16bit Ram array.         
+        /// </summary>
         public ushort[] RAM;
 
         public cpuMemory(uint _ramSize)
@@ -44,25 +49,54 @@ namespace dcpu16_ASM.Emulator
         }
     }
 
+    /// <summary>
+    /// DCPU-16 Registers struct
+    /// </summary>
     public struct cpuRegisters
-    {
-        // General purpose registers
+    {        
+        /// <summary>
+        /// General purpose Registers
+        /// </summary>
         public ushort[] GP;
 
-        public ushort SP; // StackPointer
-        public ushort PC; // Program Counter
+        /// <summary>
+        /// Stack Pointer
+        /// </summary>
+        public ushort SP;
+        /// <summary>
+        /// Program Counter
+        /// </summary>
+        public ushort PC;
 
-        public ushort O;  // Overflow Register
+        /// <summary>
+        /// Overflow Register
+        /// </summary>
+        public ushort O;
     }
 
-
+    /// <summary>
+    /// DCPU-16 Computer class    
+    /// </summary>
     public class CDCPU16
     {
+        /// <summary>
+        /// If true, CPU will ignore next instruction
+        /// </summary>
         private bool m_ignoreNextInstruction = false;
 
+        /// <summary>
+        /// IF true, a DCPU-16 Program has been loaded into RAM
+        /// </summary>
         private bool m_programLoaded = false; 
 
+        /// <summary>
+        /// DCPU-16 Registers 
+        /// </summary>
         private cpuRegisters m_registers;
+        
+        /// <summary>
+        /// DCPU-16 Memory
+        /// </summary>
         private cpuMemory m_memory;
 
         public cpuRegisters Registers
@@ -92,34 +126,77 @@ namespace dcpu16_ASM.Emulator
          * Some operations require 2 WORD reads. one or next value, one for memory lookup. I'm assuming that BOTH
          * tasks take 1 cycle each (for a total of 2), else it simply won't make any sense.
          */
+        /// <summary>
+        /// DCPU-16 Cycle counter
+        /// </summary>
         private long m_cycles = 0;
 
 
+        /// <summary>
+        /// Parameter Read and Store location type
+        /// Writing to literal types will be ignored
+        /// </summary>
         enum ParamType
         {
+            /// <summary>
+            /// Parameter is stored in Memory
+            /// </summary>
             Memory,
+            /// <summary>
+            /// Parameter is stored in a Register
+            /// </summary>
             Register,
+            /// <summary>
+            /// Parameter is stored as a literal value 
+            /// (either in the parameter or next word)
+            /// </summary>
             Literal
         }
 
+        /// <summary>
+        /// Read Parameter Values
+        /// </summary>
         struct readParamValue
         {            
+            /// <summary>
+            /// Parameter Read/Store Location type
+            /// </summary>
             public ParamType ParmType;
+            /// <summary>
+            /// Parameter's read location. This could be 
+            /// a Register or Memory location.
+            /// </summary>
             public ushort Location;
+            /// <summary>
+            /// Actual Parameter Value
+            /// </summary>
             public ushort Value;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public CDCPU16()
         {
             InitCPU();
         }
 
+        /// <summary>
+        /// Constructor
+        /// 
+        /// </summary>
+        /// <param name="_machineCode">list array containing DCPU-16 Program</param>
         public CDCPU16(ref List<ushort> _machineCode)
         {
             InitCPU();
             SetProgram(ref _machineCode);
         }
 
+        /// <summary>
+        /// Initialize DCPU-16 CPU.
+        /// 
+        /// Allocates required memory space for RAM and General purpose Registers
+        /// </summary>
         public void InitCPU()
         {
             // Initialize Memory
@@ -137,6 +214,9 @@ namespace dcpu16_ASM.Emulator
             m_cycles = 0;
         }
 
+        /// <summary>
+        /// Resets DCPU-16's Registers.
+        /// </summary>
         public void ResetCPURegisters()
         {
             // Reset registers
@@ -151,6 +231,10 @@ namespace dcpu16_ASM.Emulator
             m_cycles = 0;
         }
 
+        /// <summary>
+        /// Sets DPU-16 up with a program to execute
+        /// </summary>
+        /// <param name="_machineCode">list array containing DCPU-16 Program</param>
         public void SetProgram(ref List<ushort> _machineCode)
         {
             if (_machineCode == null) return;
@@ -165,7 +249,12 @@ namespace dcpu16_ASM.Emulator
             m_programLoaded = true;
         }
 
-
+        /// <summary>
+        /// Stores Read param values back into RAM or Registers.
+        /// This is normally called after resolving a OpCode instruction in
+        /// ExecuteInstruction().
+        /// </summary>
+        /// <param name="_resultValue">read param value</param>
         private void SetResultValue(readParamValue _resultValue)
         {
             if (_resultValue.ParmType == ParamType.Memory)
@@ -214,6 +303,18 @@ namespace dcpu16_ASM.Emulator
             // ignore literal assignment as per Notch's spec                
         }
 
+        /// <summary>
+        /// Read OpCode Parameter value. 
+        /// 
+        /// BBBBBB AAAAAA 0000
+        /// 
+        /// Will decode either A or B (based on what is given in _opParam) and
+        /// populate data into a readParamValue struct. 
+        /// 
+        /// The PC register is automatically incremented based on what needs to be read.
+        /// </summary>
+        /// <param name="_opParam"></param>
+        /// <returns></returns>
         private readParamValue ReadParamValue(ushort _opParam)
         {
             readParamValue result = new readParamValue();            
@@ -353,11 +454,18 @@ namespace dcpu16_ASM.Emulator
             return result;
         }
 
+        /// <summary>
+        /// Read next Word from DCPU-16's ram @ the program counter's Location.
+        /// </summary>
+        /// <returns></returns>
         private ushort ReadNextWord()
         {
             return m_memory.RAM[m_registers.PC++];
         }
 
+        /// <summary>
+        /// Execute a DCPU-16 Instruction
+        /// </summary>
         public void ExecuteInstruction()
         {
             if (m_programLoaded != true) return;
@@ -393,7 +501,7 @@ namespace dcpu16_ASM.Emulator
                     {
                         // JSR instruction
                         case ((ushort)dcpuOpCode.JSR_OP >> 4):                            
-                            m_memory.RAM[--m_registers.SP] = m_registers.PC;                            
+                            m_memory.RAM[--m_registers.SP] = m_registers.PC;
                             m_registers.PC = (ushort)(B.Value);
                             m_cycles += 3; // 2 for JSR, 1 for RAM lookup. 
                             break;
@@ -526,6 +634,9 @@ namespace dcpu16_ASM.Emulator
             get { return m_cycles; }
         }
 
+        /// <summary>
+        /// Write contents of Registers to Console.
+        /// </summary>
         public void DebugShowRegisters()
         {
             Console.WriteLine("----------------");

@@ -30,29 +30,60 @@ using System.Diagnostics;
 using System.Threading;
 
 
-// for debugging
-using System.Windows.Forms;
-
 namespace dcpu16_ASM.Emulator
 {
     // Event handlers
 
     // Execution pre/post step events
     // these are called within the DCPU-16 Thread
+
+    /// <summary>
+    /// On Post step Delegate struct
+    /// </summary>
+    /// <param name="_cpu">Reference to existing DCPU-16 object</param>
     public delegate void OnExecutePostStepHandle(ref CDCPU16 _cpu);
-    public delegate void OnExecutePreStepHandle(ref CDCPU16 _cpu);
+    /// <summary>
+    /// On Error Delegate struct
+    /// </summary>
+    /// <param name="_cpu">Reference to existing DCPU-16 object</param>
     public delegate void OnErrorHandle(ref CDCPU16 _cpu);
 
+    /// <summary>
+    /// On Pause Delegate struct
+    /// </summary>
     public delegate void OnPauseHandle();
+    /// <summary>
+    /// On Start Delegate struct
+    /// </summary>
     public delegate void OnStartHandle();
+    /// <summary>
+    /// On Stop Delegate struct
+    /// </summary>
     public delegate void OnStopHandle();
+    /// <summary>
+    /// On Reset Delegate struct
+    /// </summary>
     public delegate void OnResetHandle();
     
+    //-----------------------------------------------------------------------------------
     
+    /// <summary>
+    /// 
+    /// </summary>
     public class CDCPU16Emulator
     {
+        /// <summary>
+        /// DCPU-16 Computer
+        /// </summary>
         private CDCPU16 m_DCPUComputer = new CDCPU16();
+        /// <summary>
+        /// DCPU Thread 
+        /// </summary>
         private Thread m_DCPUThread = null;
+
+        /// <summary>
+        /// Binary file length.
+        /// </summary>
         private long m_BinaryLength = 0;
         public long BinaryLength { get { return m_BinaryLength; } }        
 
@@ -64,8 +95,14 @@ namespace dcpu16_ASM.Emulator
         public event OnStopHandle OnStopEvent = null;
         public event OnResetHandle OnResetEvent = null; // TODO
 
+        /// <summary>
+        /// Processor Timer 
+        /// </summary>
         private Stopwatch m_StopwatchTimer = new Stopwatch();
 
+        /// <summary>
+        /// Target DCPU-16 Frequence (in khz)
+        /// </summary>
         private int m_TargetKHZ = 100; 
 
         public int TargetFreqKHZ
@@ -73,11 +110,20 @@ namespace dcpu16_ASM.Emulator
             get { return m_TargetKHZ; }
             set { m_TargetKHZ = value; }
         }
-
+        
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public CDCPU16Emulator()
         {
         }
 
+        /// <summary>
+        /// Loads DCPU-16 binary Program from disk into DCPU's ram.
+        /// </summary>
+        /// <param name="_fileName">name of file to load</param>
+        /// <param name="_errorMessage">String storing error messages, empty if no errors found</param>
+        /// <returns>true on success, false in failure</returns>
         public bool LoadProgram(string _fileName, 
                     out string _errorMessage)
         {
@@ -115,11 +161,17 @@ namespace dcpu16_ASM.Emulator
             return true;
         }
 
+        /// <summary>
+        /// Pause DCPU-16 Thread
+        /// </summary>
         public void Pause()
         {
             if (m_DCPUThread == null) return;            
         }
 
+        /// <summary>
+        /// Stop DCPU-16 Thread
+        /// </summary>
         public void Stop()
         {
             if (m_DCPUThread == null) return;
@@ -130,6 +182,9 @@ namespace dcpu16_ASM.Emulator
             if (OnStopEvent != null) OnStopEvent();
         }
 
+        /// <summary>
+        /// Reset the DCPU-16's Registers
+        /// </summary>
         public void Reset()
         {
             if (m_DCPUThread == null) return;
@@ -137,6 +192,9 @@ namespace dcpu16_ASM.Emulator
             m_DCPUComputer.ResetCPURegisters();            
         }
 
+        /// <summary>
+        /// Start DCPU-16 Thread
+        /// </summary>
         public void Start()
         {
             if (m_DCPUComputer.ProgramLoaded != true) return;
@@ -155,7 +213,12 @@ namespace dcpu16_ASM.Emulator
             if (OnStartEvent != null) OnStopEvent();
         }
 
-        public void RunProgram() 
+        /// <summary>
+        /// DCPU-16 thread's Main. 
+        /// 
+        /// Executes DCPU-16 Instructions. 
+        /// </summary>
+        protected void RunProgram() 
         {
             try
             {
@@ -188,7 +251,7 @@ namespace dcpu16_ASM.Emulator
                              * come back to bite if future 'virtual hardware' requires precise timings (And we of course will
                              * have to emulate that else people will write incorrect code). 
                              */
-                            Thread.Sleep(new TimeSpan((int)(totalTicks - elapsedTicks)));                            
+                            Thread.Sleep(new TimeSpan((int)(totalTicks- elapsedTicks)));
                         }
                     }
 

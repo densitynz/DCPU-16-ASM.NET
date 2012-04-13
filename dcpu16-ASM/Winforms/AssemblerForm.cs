@@ -34,16 +34,34 @@ using dcpu16_ASM;
 
 namespace dcpu16_ASM.Winforms
 {
+    /// <summary>
+    /// Main Code Assembler Window
+    /// </summary>
     public partial class AssemblerForm : Form
     {
+        /// <summary>
+        /// opened filename
+        /// </summary>
         private string m_fileName = "";
+
+        /// <summary>
+        /// Has any code been modified
+        /// </summary>
         private bool m_modified = false;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public AssemblerForm()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Close button on click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             if (m_modified != false)
@@ -59,6 +77,9 @@ namespace dcpu16_ASM.Winforms
             this.Close();
         }
 
+        /// <summary>
+        /// Source code Save
+        /// </summary>
         private void SaveSourceCode()
         {
             saveFileDialog1.FileName = m_fileName;
@@ -78,6 +99,11 @@ namespace dcpu16_ASM.Winforms
             }
         }
 
+        /// <summary>
+        /// Open Source code file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -90,6 +116,11 @@ namespace dcpu16_ASM.Winforms
             }
         }
 
+        /// <summary>
+        /// Compile Source code.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             if (codeTextBox.Text.Trim() == "")
@@ -111,6 +142,11 @@ namespace dcpu16_ASM.Winforms
         }
 
 
+        /// <summary>
+        /// Code text box on change event. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void codeTextBox_TextChanged(object sender, EventArgs e)
         {
             m_modified = true;
@@ -120,17 +156,31 @@ namespace dcpu16_ASM.Winforms
                 this.Text = string.Format("Assembler - *MODIFIED* Untitled");
         }
 
-        // save source code. 
+        /// <summary>
+        /// Save source code Button on click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
             SaveSourceCode();
         }
 
+        /// <summary>
+        /// On form load
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AssemblerForm_Load(object sender, EventArgs e)
         {            
             this.Text = string.Format("Assembler - Untitled");
         }
 
+        /// <summary>
+        /// Message textbox right click clear.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";

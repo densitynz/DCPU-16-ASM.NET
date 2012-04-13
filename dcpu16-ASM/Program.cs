@@ -56,16 +56,7 @@ namespace dcpu16_ASM
             // Startup winform. 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
-              
-
-            /*
-            string filename = args[0];
-            CDCPU16Assemble test = new CDCPU16Assemble();
-            Console.WriteLine(string.Format("Assembling ASM file '{0}'",filename));
-
-            test.Assemble(filename);
-            */
+            Application.Run(new MainForm());             
         }
     }
 }

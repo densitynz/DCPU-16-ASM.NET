@@ -36,22 +36,55 @@ namespace dcpu16_ASM.Winforms
 {
     public partial class MainForm : Form
     {
-        // Keep a local copy of the cpu state. 
+        /// <summary>
+        /// DCPU local buffer. 
+        /// 
+        /// A copy of dcpu data currently running in the dcpu thread. updated 
+        /// every 16ms if needed. 
+        /// </summary>
         class cpuDoubleBuffer
         {
+            /// <summary>
+            /// DCPU memory
+            /// </summary>
             public cpuMemory       Memory;
+            /// <summary>
+            /// DCPU Registers
+            /// </summary>
             public cpuRegisters    Registers;
+            /// <summary>
+            /// Cyclce counter
+            /// </summary>
             public long            CycleCount;
         }
 
+        /// <summary>
+        /// DCPU-16 Emulator
+        /// </summary>
         private CDCPU16Emulator m_DPUEmulator = new CDCPU16Emulator();
 
+        /// <summary>
+        /// DCPU-16 Local buffer
+        /// </summary>
         private cpuDoubleBuffer m_CpuDoublebuffer = new cpuDoubleBuffer();  // TODO: support multiple cpu data.
+        /// <summary>
+        /// DCPU-16 buffer copy flag, set to true if we want our local buffer updated.
+        /// </summary>
         private bool m_MakeCpuDoublebuffer = true;
 
+        /// <summary>
+        /// Cycle count on last cpu "frame" 
+        /// </summary>
         private long m_lastCycleCount = 0;
+
+        /// <summary>
+        /// Cycle count on current cpu "frame"
+        /// </summary>
         private long m_cycleCount = 0;
 
+        /// <summary>
+        /// Constructor 
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();
@@ -66,11 +99,24 @@ namespace dcpu16_ASM.Winforms
         }
 
         
+        /// <summary>
+        /// Main Menu
+        /// 
+        /// File->exit menu Close.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Main Menu
+        /// file->Load Compiled Binary
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void loadCompiledBinaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // open compiled binary
@@ -87,19 +133,34 @@ namespace dcpu16_ASM.Winforms
             }
         }
 
-        // Load up Assembler dialog. 
+        /// <summary>
+        /// Main Menu
+        /// Assembler option
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void asemblerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AssemblerForm asmDialog = new AssemblerForm();
             asmDialog.ShowDialog(this);
         }
 
+        /// <summary>
+        /// Start DCPU-16 Emulation button On click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             m_DPUEmulator.Start();
             CycleTimer.Enabled = true;
         }
 
+        /// <summary>
+        /// Stop DCPU-16 Emulation button  On click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             m_DPUEmulator.Stop();
@@ -112,12 +173,12 @@ namespace dcpu16_ASM.Winforms
         //----------------------------------------------------------
         // TODO: test to ensure thread safety! 
 
-        protected void OnCpuExecutePreStep(ref CDCPU16 _cpu)
-        {
-            if (_cpu == null) return;
-
-        }
-
+        /// <summary>
+        /// OnCpuExecutePostStep
+        /// 
+        /// Called after execution of DCPU-16 instruction. 
+        /// </summary>
+        /// <param name="_cpu">Reference to existing DCPU-16 object</param>
         protected void OnCpuExecutePostStep(ref CDCPU16 _cpu)
         {
             if (_cpu == null) return;
@@ -140,12 +201,22 @@ namespace dcpu16_ASM.Winforms
             }          
         }
 
+        /// <summary>
+        /// OnCpuError
+        /// 
+        /// Called on DCPU-16 Error
+        /// </summary>
+        /// <param name="_cpu">Reference to existing DCPU-16 object</param>
         protected void OnCpuError(ref CDCPU16 _cpu)
         {
             if (_cpu == null) return;
 
         }
 
+        /// <summary>
+        /// TEMP function
+        /// Dumps Binary data to BinaryDumptextBox
+        /// </summary>
         private void BinaryMemoryDump() 
         {
             if (m_DPUEmulator.BinaryLength < 1) return;
@@ -174,7 +245,13 @@ namespace dcpu16_ASM.Winforms
             BinaryDumptextBox.Text = bufferString.ToString();
         }
 
-        // Update UI timer
+        /// <summary>
+        /// UI Component update timer. 
+        /// 
+        /// updates every 16ms. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (m_MakeCpuDoublebuffer != false) return;
@@ -203,7 +280,13 @@ namespace dcpu16_ASM.Winforms
 
         }
 
-        // Cycle Timer
+        /// <summary>
+        /// DCPU-16 Cycle timer. 
+        /// 
+        /// Cheap way of calculating DCPU-16's current freq.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CycleTimer_Tick(object sender, EventArgs e)
         {
             long diff = (m_cycleCount - m_lastCycleCount);
@@ -226,12 +309,22 @@ namespace dcpu16_ASM.Winforms
             m_lastCycleCount = m_cycleCount;
         }
 
+        /// <summary>
+        /// DCPU-16 Reset button on click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             m_DPUEmulator.Reset();
             m_lastCycleCount = m_cycleCount = 0;
         }
 
+        /// <summary>
+        /// DCPU-16 Freq Trackbar Scroll event. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             SetCpuFreqLabel.Text = string.Format("{0} Khz",trackBar1.Value);
