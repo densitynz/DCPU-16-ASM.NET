@@ -123,13 +123,10 @@
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
-  <data name="textBox1.Text" xml:space="preserve">
-    <value>This tool was originally Command line based. Not no more.
-
-Yesterday's Commit could do simple emulation (allowing me to watch registers/memory to see code execute). And compile DCPU-16 ASM code into little .obj files. 
-
-For today's commit I've started on a simple UI to contain everything I'm wanting todo. For this commit, only the Assembler function (second option from the top) is working. The emulator will be reactivated tomorrow, which I'm looking forward to doing. 
-
-</value>
-  </data>
+  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>272, 17</value>
+  </metadata>
+  <metadata name="CycleTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>359, 17</value>
+  </metadata>
 </root>

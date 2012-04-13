@@ -25,11 +25,6 @@
 // CPU Emulation code is here. 
 // Again another Speed job so the code isn't terribly flash.
 
-/**
- * WORK IN PROGRESS - 10th April 2012
- * - DensitY
- */
-
 
 using System;
 using System.Collections.Generic;
@@ -38,7 +33,7 @@ using System.IO;
 namespace dcpu16_ASM.Emulator
 {
 
-    struct cpuMemory
+    public struct cpuMemory
     {
         
         public ushort[] RAM;
@@ -49,7 +44,7 @@ namespace dcpu16_ASM.Emulator
         }
     }
 
-    struct cpuRegisters
+    public struct cpuRegisters
     {
         // General purpose registers
         public ushort[] GP;
@@ -61,7 +56,7 @@ namespace dcpu16_ASM.Emulator
     }
 
 
-    class CDCPU16
+    public class CDCPU16
     {
         private bool m_ignoreNextInstruction = false;
 
@@ -69,6 +64,16 @@ namespace dcpu16_ASM.Emulator
 
         private cpuRegisters m_registers;
         private cpuMemory m_memory;
+
+        public cpuRegisters Registers
+        {
+            get { return m_registers; }
+        }
+
+        public cpuMemory Memory
+        {
+            get { return m_memory; }
+        }
 
         /* 
          * Cycle counting notes
@@ -115,7 +120,7 @@ namespace dcpu16_ASM.Emulator
             SetProgram(ref _machineCode);
         }
 
-        private void InitCPU()
+        public void InitCPU()
         {
             // Initialize Memory
             m_memory.RAM = new ushort[0xFFFF];
@@ -123,6 +128,20 @@ namespace dcpu16_ASM.Emulator
 
             // Initialize CPU registers
             m_registers.GP = new ushort[8];
+            Array.Clear(m_registers.GP, 0, 8);
+
+            m_registers.SP = 0xFFFF;
+            m_registers.PC = 0x0;
+            m_registers.O = 0;
+
+            m_cycles = 0;
+        }
+
+        public void ResetCPURegisters()
+        {
+            // Reset registers
+            if (m_registers.GP == null) m_registers.GP = new ushort[8];
+
             Array.Clear(m_registers.GP, 0, 8);
 
             m_registers.SP = 0xFFFF;

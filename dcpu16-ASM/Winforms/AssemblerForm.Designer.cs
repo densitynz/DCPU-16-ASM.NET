@@ -38,10 +38,10 @@
             this.codeTextBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -55,9 +55,9 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 517);
+            this.panel1.Location = new System.Drawing.Point(0, 513);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(885, 42);
+            this.panel1.Size = new System.Drawing.Size(881, 42);
             this.panel1.TabIndex = 0;
             // 
             // button4
@@ -110,7 +110,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(885, 365);
+            this.groupBox1.Size = new System.Drawing.Size(881, 365);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Code View";
@@ -125,7 +125,7 @@
             this.codeTextBox.Multiline = true;
             this.codeTextBox.Name = "codeTextBox";
             this.codeTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.codeTextBox.Size = new System.Drawing.Size(879, 346);
+            this.codeTextBox.Size = new System.Drawing.Size(875, 346);
             this.codeTextBox.TabIndex = 0;
             this.codeTextBox.TabStop = false;
             this.codeTextBox.Text = "; DCPU-16 Assembly code\r\n; Write your test code in here. \r\n\r\n:loopForever \r\n\tSET " +
@@ -137,9 +137,9 @@
             // 
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(0, 363);
+            this.groupBox2.Location = new System.Drawing.Point(0, 359);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(885, 154);
+            this.groupBox2.Size = new System.Drawing.Size(881, 154);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Messages";
@@ -155,20 +155,10 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(879, 135);
+            this.textBox1.Size = new System.Drawing.Size(875, 135);
             this.textBox1.TabIndex = 0;
             this.textBox1.TabStop = false;
             this.textBox1.WordWrap = false;
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.Filter = "Asm (*.dasm16)|*dasm16| Asm (*.asm)|*.asm|Text Files|*.txt";
-            this.openFileDialog1.Title = "Load DCPU-16 Assembly Files";
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.Filter = "Asm (*.dasm16)|*dasm16| Asm (*.asm)|*.asm|Text Files|*.txt";
-            this.saveFileDialog1.Title = "Save DCPU-16 Assembly Files";
             // 
             // contextMenuStrip1
             // 
@@ -184,11 +174,21 @@
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "Asm (*.dasm16)|*dasm16| Asm (*.asm)|*.asm|Text Files|*.txt";
+            this.openFileDialog1.Title = "Load DCPU-16 Assembly Files";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "Asm (*.dasm16)|*dasm16| Asm (*.asm)|*.asm|Text Files|*.txt";
+            this.saveFileDialog1.Title = "Save DCPU-16 Assembly Files";
+            // 
             // AssemblerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(885, 559);
+            this.ClientSize = new System.Drawing.Size(881, 555);
             this.ControlBox = false;
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);

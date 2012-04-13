@@ -31,6 +31,11 @@
  *   
  *      SET I, [dataInMemory + 0x1] 
  *   Right now you can only do something like this if you throw 0x1 into a seperate register :/ 
+ *   
+ *  UPDATE: 13th April 2012. 
+ *      I've noticed an awesome github user 'pedromsantos' is doing a huge re-factor of this code @
+ *      https://github.com/pedromsantos/DCPU-16-ASM.NET. Once he's done I'll merge his work in to the
+ *      master branch. 
  */
 
 using System;
