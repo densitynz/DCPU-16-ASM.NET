@@ -225,7 +225,7 @@ namespace DCPU16_ASM.Assembler
 
             if (opcode > 0x0)
             {
-                var param1 = tokens[2]; // basic function, has second param.
+                var param1 = tokens[2];
                 var p1 = this.ParseParam(param);
                 var p2 = this.ParseParam(param1);
 
