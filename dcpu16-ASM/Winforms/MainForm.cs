@@ -167,9 +167,6 @@ namespace dcpu16_ASM.Winforms
                     {
                         bufferString.Append(string.Format("{0:X4} ", notchByte));
                     }
-                   //bufferString.Append) ( ?
-                        //string.Format("{0:X4}\r\n", notchByte)
-                        //: string.Format("{0:X4} ", notchByte);
                                 
                 }
             }
