@@ -3,16 +3,28 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCPU16-ASM", "dcpu16-ASM\DCPU16-ASM.csproj", "{94BDD8DE-8766-431B-892D-0A1187E10B5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCPU16-ASM_TESTS", "DCPU16-ASM_TESTS\DCPU16-ASM_TESTS.csproj", "{C5FA948B-4985-4BAF-A20B-0DC85EC37C0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
+		Default|Any CPU = Default|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{94BDD8DE-8766-431B-892D-0A1187E10B5E}.Debug|x86.ActiveCfg = Debug|x86
 		{94BDD8DE-8766-431B-892D-0A1187E10B5E}.Debug|x86.Build.0 = Debug|x86
 		{94BDD8DE-8766-431B-892D-0A1187E10B5E}.Release|x86.ActiveCfg = Release|x86
 		{94BDD8DE-8766-431B-892D-0A1187E10B5E}.Release|x86.Build.0 = Release|x86
+		{C5FA948B-4985-4BAF-A20B-0DC85EC37C0B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5FA948B-4985-4BAF-A20B-0DC85EC37C0B}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5FA948B-4985-4BAF-A20B-0DC85EC37C0B}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5FA948B-4985-4BAF-A20B-0DC85EC37C0B}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{C5FA948B-4985-4BAF-A20B-0DC85EC37C0B}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5FA948B-4985-4BAF-A20B-0DC85EC37C0B}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = dcpu16-ASM\DCPU16-ASM.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -114,7 +114,7 @@ namespace DCPU16_ASM.Assembler
 
         public string MessageOuput { get; private set; }
 
-        public ushort[] Parse(ref string[] lines)
+        public ushort[] Parse(string[] lines)
         {
             try
             {
@@ -143,24 +143,16 @@ namespace DCPU16_ASM.Assembler
 
                 this.SetLabelAddressReferences();
 
-                this.AddMessageLine("Debug Dump");
-                this.AddMessageLine("*****");
                 var count = 1;
 
                 foreach (var code in this.machineCode)
                 {
-                    if (count % 4 == 0)
-                    {
-                        this.AddMessageLine(string.Format("{0:X4}", code));
-                    }
-                    else
-                    {
-                        this.AddMessage(string.Format("{0:X4} ", code));
-                    }
-
+                    this.AddMessage(string.Format("{0:X4} ", code));
                     count++;
                 }
-
+				
+				this.MessageOuput = this.MessageOuput.Substring(0, this.MessageOuput.Length - 2);
+				
                 return this.machineCode.ToArray();
             }
             catch (Exception ex)
@@ -219,11 +211,12 @@ namespace DCPU16_ASM.Assembler
                 throw new Exception(string.Format("Illegal cpu opcode --> {0}", tokens[0]));
             }
 
-            var opcode = (uint)this.opcodeDictionary[token] & 0xF;
+            var opcode = (uint)this.opcodeDictionary[token];
             var param = tokens[1].Trim();
 
-            if (opcode > 0x0)
+            if ((opcode & 0xF) > 0x0)
             {
+				opcode &= 0xF;
 				var param1 = tokens[2];
                 GenerateInstruction(opcode, param, param1);
             }
@@ -289,24 +282,29 @@ namespace DCPU16_ASM.Assembler
                 }
             }
 
-            foreach (var dat in dataFields)
-            {
-                var valStr = dat.Trim();
-                if (valStr.IndexOf('"') > -1)
-                {
-                    var asciiLine = dat.Replace("\"", string.Empty).Trim();
-                    foreach (var t in asciiLine)
-                    {
-                        this.machineCode.Add(t);
-                    }
-                }
-                else
-                {
-                    var val = valStr.Contains("0x") ? Convert.ToUInt16(valStr, 16) : Convert.ToUInt16(valStr, 10);
-                    this.machineCode.Add(val);
-                }
-            }
+			GenerateInstructionsForDataFields(dataFields);
         }
+
+		private void GenerateInstructionsForDataFields(IList<string> dataFields)
+		{
+			foreach (var dat in dataFields)
+			{
+			    var valStr = dat.Trim();
+			    if (valStr.IndexOf('"') > -1)
+			    {
+			        var asciiLine = dat.Replace("\"", string.Empty).Trim();
+			        foreach (var t in asciiLine)
+			        {
+			            this.machineCode.Add(t);
+			        }
+			    }
+			    else
+			    {
+			        var val = valStr.Contains("0x") ? Convert.ToUInt16(valStr, 16) : Convert.ToUInt16(valStr, 10);
+			        this.machineCode.Add(val);
+			    }
+			}
+		}
 
 		void GenerateInstruction(uint opcode, string param1, string param2)
 		{
@@ -369,7 +367,6 @@ namespace DCPU16_ASM.Assembler
             }
             else
             {
-				// Memory reference Parameter
                 if (clearedParameter.StartsWith("[")  && clearedParameter.EndsWith("]"))
                 {
 					clearedParameter = clearedParameter.Substring(1, clearedParameter.Length - 2).Replace(" ", string.Empty);
@@ -383,7 +380,6 @@ namespace DCPU16_ASM.Assembler
                         opcodeParamResult = ParseMemoryAddressParameter(opcodeParamResult, clearedParameter);
                     }
                 }
-				// Literal value parameter
                 else
                 {
 					ParseLiteralParameter (opcodeParamResult, clearedParameter);
@@ -467,22 +463,18 @@ namespace DCPU16_ASM.Assembler
 		{
 			ushort literalValue;
         	
-        	// Single char literal parameter
         	if (clearedParameter.StartsWith("\'") && clearedParameter.EndsWith("\'") && clearedParameter.Length == 3)
         	{
         	    literalValue = clearedParameter[1];
         	}
-        	// hex literal parameter
         	else if (clearedParameter.Contains("0x"))
         	{
         	    literalValue = Convert.ToUInt16(clearedParameter, 16);
         	}
-        	// Decimal literal parameter
-        	 else if (clearedParameter.Trim().All(x => char.IsDigit(x)))
-        	 {
-        	     literalValue = Convert.ToUInt16(clearedParameter, 10);
-        	 }
-        	// Something else
+        	else if (clearedParameter.Trim().All(x => char.IsDigit(x)))
+        	{
+        	    literalValue = Convert.ToUInt16(clearedParameter, 10);
+        	}
         	else
         	{
         	    opcodeParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Value;
@@ -491,10 +483,7 @@ namespace DCPU16_ASM.Assembler
         	    return opcodeParamResult;
         	}
         	
-        	//Handle Overflow
         	ushort maxValue = Convert.ToUInt16("0x1F", 16);
-        	// if value is < 0x1F we can encode it into the param directly, 
-        	// else it has to be next value!
         		
         	if (literalValue < maxValue)
         	{
@@ -513,7 +502,6 @@ namespace DCPU16_ASM.Assembler
 		
         private void SetLabelAddressReferences()
         {
-            // lets loop through all the locations where we have label references
             foreach (ushort key in this.labelReferences.Keys)
             {
                 var labelName = this.labelReferences[key];

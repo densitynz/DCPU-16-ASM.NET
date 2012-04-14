@@ -96,7 +96,7 @@ namespace DCPU16_ASM.Winforms
 
             var assemble = new Parser();
             var lines = codeTextBox.Text.Split('\n');
-            ushort[] machineCode = assemble.Parse(ref lines);
+            ushort[] machineCode = assemble.Parse(lines);
             if (machineCode == null)
             {
                 textBox1.Text = assemble.MessageOuput;
