@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadCompiledBinaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,12 +78,21 @@
             this.BinaryDumptextBox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.CycleTimer = new System.Windows.Forms.Timer(this.components);
+            this.FontimageList = new System.Windows.Forms.ImageList(this.components);
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -93,7 +103,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(856, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(970, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -140,6 +150,7 @@
             this.aboutDCPU16ASMNETToolStripMenuItem.Name = "aboutDCPU16ASMNETToolStripMenuItem";
             this.aboutDCPU16ASMNETToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.aboutDCPU16ASMNETToolStripMenuItem.Text = "A&bout DCPU-16 ASM.NET";
+            this.aboutDCPU16ASMNETToolStripMenuItem.Click += new System.EventHandler(this.aboutDCPU16ASMNETToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -165,7 +176,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 24);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(856, 170);
+            this.groupBox1.Size = new System.Drawing.Size(970, 151);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "DCPU-16 Registers and Cycle Counter";
@@ -173,7 +184,7 @@
             // SetCpuFreqLabel
             // 
             this.SetCpuFreqLabel.AutoSize = true;
-            this.SetCpuFreqLabel.Location = new System.Drawing.Point(742, 20);
+            this.SetCpuFreqLabel.Location = new System.Drawing.Point(730, 50);
             this.SetCpuFreqLabel.Name = "SetCpuFreqLabel";
             this.SetCpuFreqLabel.Size = new System.Drawing.Size(46, 13);
             this.SetCpuFreqLabel.TabIndex = 40;
@@ -182,7 +193,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(661, 20);
+            this.label15.Location = new System.Drawing.Point(647, 50);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(84, 13);
             this.label15.TabIndex = 39;
@@ -190,7 +201,7 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(650, 43);
+            this.trackBar1.Location = new System.Drawing.Point(780, 43);
             this.trackBar1.Maximum = 1200;
             this.trackBar1.Minimum = 25;
             this.trackBar1.Name = "trackBar1";
@@ -202,7 +213,7 @@
             // CpuFreqLabel
             // 
             this.CpuFreqLabel.AutoSize = true;
-            this.CpuFreqLabel.Location = new System.Drawing.Point(725, 106);
+            this.CpuFreqLabel.Location = new System.Drawing.Point(742, 75);
             this.CpuFreqLabel.Name = "CpuFreqLabel";
             this.CpuFreqLabel.Size = new System.Drawing.Size(34, 13);
             this.CpuFreqLabel.TabIndex = 37;
@@ -211,7 +222,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(661, 106);
+            this.label14.Location = new System.Drawing.Point(678, 75);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 13);
             this.label14.TabIndex = 36;
@@ -219,7 +230,7 @@
             // 
             // cycleCounttextBox
             // 
-            this.cycleCounttextBox.Location = new System.Drawing.Point(728, 127);
+            this.cycleCounttextBox.Location = new System.Drawing.Point(733, 96);
             this.cycleCounttextBox.Name = "cycleCounttextBox";
             this.cycleCounttextBox.ReadOnly = true;
             this.cycleCounttextBox.Size = new System.Drawing.Size(100, 20);
@@ -228,7 +239,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(647, 130);
+            this.label13.Location = new System.Drawing.Point(664, 99);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(67, 13);
             this.label13.TabIndex = 34;
@@ -460,16 +471,15 @@
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(0, 471);
+            this.groupBox2.Location = new System.Drawing.Point(0, 619);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(856, 81);
+            this.groupBox2.Size = new System.Drawing.Size(970, 54);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Name me good";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(206, 38);
+            this.button3.Location = new System.Drawing.Point(174, 19);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 2;
@@ -479,7 +489,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(125, 38);
+            this.button2.Location = new System.Drawing.Point(93, 19);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 1;
@@ -489,7 +499,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(44, 38);
+            this.button1.Location = new System.Drawing.Point(12, 19);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -501,9 +511,9 @@
             // 
             this.groupBox3.Controls.Add(this.BinaryDumptextBox);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox3.Location = new System.Drawing.Point(527, 194);
+            this.groupBox3.Location = new System.Drawing.Point(641, 175);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(329, 277);
+            this.groupBox3.Size = new System.Drawing.Size(329, 444);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "DCPU-16 Binary Dump";
@@ -517,7 +527,7 @@
             this.BinaryDumptextBox.Name = "BinaryDumptextBox";
             this.BinaryDumptextBox.ReadOnly = true;
             this.BinaryDumptextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.BinaryDumptextBox.Size = new System.Drawing.Size(323, 258);
+            this.BinaryDumptextBox.Size = new System.Drawing.Size(323, 425);
             this.BinaryDumptextBox.TabIndex = 0;
             this.BinaryDumptextBox.WordWrap = false;
             // 
@@ -532,11 +542,70 @@
             this.CycleTimer.Interval = 1000;
             this.CycleTimer.Tick += new System.EventHandler(this.CycleTimer_Tick);
             // 
+            // FontimageList
+            // 
+            this.FontimageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("FontimageList.ImageStream")));
+            this.FontimageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.FontimageList.Images.SetKeyName(0, "font.png");
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.pictureBox1.Location = new System.Drawing.Point(6, 44);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label17);
+            this.groupBox5.Controls.Add(this.label16);
+            this.groupBox5.Controls.Add(this.pictureBox2);
+            this.groupBox5.Controls.Add(this.pictureBox1);
+            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox5.Location = new System.Drawing.Point(0, 175);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(641, 444);
+            this.groupBox5.TabIndex = 6;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "DCPU-16 Text Display";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.pictureBox2.Location = new System.Drawing.Point(243, 44);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(384, 384);
+            this.pictureBox2.TabIndex = 6;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 25);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(141, 13);
+            this.label16.TabIndex = 7;
+            this.label16.Text = "Native Resolution (128x128)";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(240, 25);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(168, 13);
+            this.label17.TabIndex = 8;
+            this.label17.Text = "Blind people Resolution (384x384)";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(856, 552);
+            this.ClientSize = new System.Drawing.Size(970, 673);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -557,6 +626,10 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -612,5 +685,11 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label SetCpuFreqLabel;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ImageList FontimageList;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
     }
 }

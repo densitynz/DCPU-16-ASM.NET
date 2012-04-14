@@ -216,6 +216,8 @@ namespace dcpu16_ASM.Emulator
 
         /// <summary>
         /// Resets DCPU-16's Registers.
+        /// 
+        /// NOTE: we do Video/Keyboard buffer clearing as well. Will shift soon :)
         /// </summary>
         public void ResetCPURegisters()
         {
@@ -229,6 +231,18 @@ namespace dcpu16_ASM.Emulator
             m_registers.O = 0;
 
             m_cycles = 0;
+
+            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.VIDEO_TEXT_START, (int)(dcpuMemoryLayout.VIDEO_TEXT_END - dcpuMemoryLayout.VIDEO_TEXT_START));
+            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.KEYBOARD_START, (int)(dcpuMemoryLayout.KEYBOARD_END - dcpuMemoryLayout.KEYBOARD_START));
+        }
+
+        /// <summary>
+        /// Clears Video/Keyboard (and more to come) buffers
+        /// </summary>
+        public void ClearMemoryBuffers()
+        {
+            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.VIDEO_TEXT_START, (int)(dcpuMemoryLayout.VIDEO_TEXT_END - dcpuMemoryLayout.VIDEO_TEXT_START));
+            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.KEYBOARD_START, (int)(dcpuMemoryLayout.KEYBOARD_END - dcpuMemoryLayout.KEYBOARD_START));
         }
 
         /// <summary>

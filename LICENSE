@@ -1,4 +1,3 @@
-﻿/**
  * DCPU-16 ASM.NET
  * Copyright (c) 2012 Tim "DensitY" Hancock (densitynz@orcon.net.nz)
  *
@@ -20,24 +19,13 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-// IO operations
-
-/**
- * WORK IN PROGRESS - 10th April 2012
- * - DensitY
- */
-
-
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace dcpu16_ASM.Emulator
-{
-    // WTB Offical IO information. 
-
-    
-}
+ *
+ *------------------------------------------------------------------------------
+ * Derived Open Source works are also granted the right to use the following licenses 
+ * in addition to the MIT license: 
+ *
+ * - GPLv2
+ * - GPLv3
+ * - zlib license
+ * - BSD license
+ * - MS-PL license

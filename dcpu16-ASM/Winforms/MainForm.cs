@@ -26,9 +26,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing.Imaging;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 using dcpu16_ASM.Emulator;
 
@@ -36,6 +38,15 @@ namespace dcpu16_ASM.Winforms
 {
     public partial class MainForm : Form
     {
+        // TODO: these need to be shifted to a better location.
+        private const int ScreenTextWidth = 32;
+        private const int ScreenTextHeight = 16;
+        private const int FontWidth = 4;
+        private const int FontHeight = 8;        
+
+        private const int ScreenPixelWidth = ScreenTextWidth * FontWidth;
+        private const int ScreenPixelHeight = ScreenTextHeight * FontHeight;
+
         /// <summary>
         /// DCPU local buffer. 
         /// 
@@ -83,6 +94,39 @@ namespace dcpu16_ASM.Winforms
         private long m_cycleCount = 0;
 
         /// <summary>
+        /// Text mode Frame buffer
+        /// </summary>
+        private Bitmap m_FrameBuffer;
+        /// <summary>
+        /// Font texture buffer
+        /// </summary>
+        private Bitmap m_FontBuffer;
+
+        /// <summary>
+        /// Our text color map
+        /// EGA color goodness
+        /// </summary>
+        private int[] m_TextColorMap = 
+        {
+             0x101010, 
+             0x1000AA, 
+             0x10AA10, 
+             0x10AAAA, 
+             0xAA1010, 
+             0xAA10AA, 
+             0xAA5010,
+             0xAAAAAA, 
+             0x808080, 
+             0x1010ff, 
+             0x10FF10, 
+             0x10FFFF, 
+             0xFF1010, 
+             0xFF10FF,
+             0xFFFF10, 
+             0xFFFFFF         
+        };
+
+        /// <summary>
         /// Constructor 
         /// </summary>
         public MainForm()
@@ -96,9 +140,32 @@ namespace dcpu16_ASM.Winforms
             m_CpuDoublebuffer.Memory.RAM = new ushort[0xFFFF]; // TODO: Define memory size so we don't have to change this is 20 places
             m_CpuDoublebuffer.Registers.GP = new ushort[8];
             m_CpuDoublebuffer.CycleCount = 0;
+
+            m_FrameBuffer = new Bitmap(ScreenPixelWidth, ScreenPixelHeight);
+            LoadFontFromImagelist();
         }
 
-        
+        /// <summary>
+        /// Load Font (Which is stored in FontimageList.Images[0]
+        /// Into a simple int array buffer, as it'll be easier to use. 
+        /// </summary>
+        private void LoadFontFromImagelist()
+        {
+            m_FontBuffer = new Bitmap(FontimageList.Images[0]);
+        }
+
+        /// <summary>
+        /// nasty clear framebuffer via destorying it <_<
+        /// </summary>
+        private void ResetFrameBuffer()
+        {
+            if (m_FrameBuffer != null)
+            {
+                m_FrameBuffer.Dispose();
+                m_FrameBuffer = null;
+            }
+            m_FrameBuffer = new Bitmap(ScreenPixelWidth, ScreenPixelHeight);
+        }
         /// <summary>
         /// Main Menu
         /// 
@@ -130,6 +197,7 @@ namespace dcpu16_ASM.Winforms
                 }
                 m_cycleCount = m_lastCycleCount = 0;
                 BinaryMemoryDump();
+                ResetFrameBuffer();
             }
         }
 
@@ -275,7 +343,12 @@ namespace dcpu16_ASM.Winforms
 
                 cycleCounttextBox.Text = m_CpuDoublebuffer.CycleCount.ToString();
                 m_MakeCpuDoublebuffer = true;
-                m_cycleCount = m_CpuDoublebuffer.CycleCount;             
+                m_cycleCount = m_CpuDoublebuffer.CycleCount;            
+
+                DrawToFrameBuffer();
+
+                pictureBox1.Refresh();
+                pictureBox2.Refresh();
             }
 
         }
@@ -330,6 +403,124 @@ namespace dcpu16_ASM.Winforms
             SetCpuFreqLabel.Text = string.Format("{0} Khz",trackBar1.Value);
 
             m_DPUEmulator.TargetFreqKHZ = trackBar1.Value;
+        }
+
+        /// <summary>
+        /// Main Menu
+        /// Help->About
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutDCPU16ASMNETToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox1 about = new AboutBox1();
+            about.ShowDialog(this);
+        }
+
+        /// <summary>
+        /// Picture box On paint event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                  
+            if(m_FrameBuffer != null) g.DrawImage(m_FrameBuffer, 0, 0,pictureBox1.Width,pictureBox1.Height);
+        }
+
+        private void pictureBox2_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+
+            if (m_FrameBuffer != null) g.DrawImage(m_FrameBuffer, 0, 0, pictureBox2.Width, pictureBox2.Height);
+
+        }
+        //----------------------------------------------------------
+        // Text mode Drawing code. 
+        //----------------------------------------------------------
+
+        /// <summary>
+        /// Draw Text buffer to our bitmap Framebuffer.
+        /// </summary>
+        private void DrawToFrameBuffer()
+        {
+            BitmapData Data = m_FrameBuffer.LockBits(new Rectangle(0, 0, ScreenPixelWidth, ScreenPixelHeight), 
+                        ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            BitmapData fontData = m_FontBuffer.LockBits(new Rectangle(0, 0, m_FontBuffer.Width, m_FontBuffer.Height),
+                        ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+
+
+            /**
+             * Time to bring back some memories *sniff*
+             * This kind of thing was more fun on the Nintendo DS. Although
+             * 4x8 kerneling into 8x8 native tiles was annoying at times, the 
+             * Nintendo DS's tiles were linear 1D arrays which made this really
+             * nice. 
+             */
+            unsafe
+            {
+                IntPtr bmpScan = Data.Scan0;
+                IntPtr fontScan = fontData.Scan0;
+
+                // Slow font kerneling 
+                for (int tx = 0; tx < ScreenTextWidth; tx++)
+                {
+                    for (int ty = 0; ty < ScreenTextHeight; ty++)
+                    {
+                        int screenOffsetX = (tx * FontWidth);
+                        int screenOffsetY = (ty * FontHeight);
+                        int tff = ty * ScreenTextWidth + tx;
+
+                        ushort charData = m_CpuDoublebuffer.Memory.RAM[(int)dcpuMemoryLayout.VIDEO_TEXT_START + tff];
+                        byte c = (byte)(charData & 0xFF);       // character
+                        int b = (int)((charData >> 8) & 0xF);   // background Color
+                        int f = (int)((charData >> 12) & 0xF);  // charcter Color       
+                        if (c == '\0') continue;
+
+                        // calculate pixel position of character in font. 
+                        // image is 128x32, so 128/4 = 32. 
+                        int fOffX = (c % 32) * FontWidth;
+                        int fOffY = (c / 32) * FontHeight;
+
+                        for (int px = 0; px < FontWidth; px++)
+                        {
+                            for (int py = 0; py < FontHeight; py++)
+                            {
+                                int screenOff = ((screenOffsetY + py) * (ScreenPixelWidth) + screenOffsetX + px) *4;
+                                int fontOff = ((fOffY + py) * m_FontBuffer.Width + fOffX + px) * 4;
+                               
+                                if (b > 0 || f > 0)
+                                {
+                                    int fontPixel = (*((int*)(void*)fontScan + fontOff) & 0x00FFFFFF) > 0 ? m_TextColorMap[f] : m_TextColorMap[b];
+
+                                    *((byte*)(void*)bmpScan + screenOff + 0) = (byte)(fontPixel & 0xFF);
+                                    *((byte*)(void*)bmpScan + screenOff + 1) = (byte)((fontPixel >> 8) & 0xFF);
+                                    *((byte*)(void*)bmpScan + screenOff + 2) = (byte)((fontPixel >> 16) & 0xFF);
+                                    *((byte*)(void*)bmpScan + screenOff + 3) = 0xFF;
+                                }
+                                else
+                                {
+                                    *((byte*)(void*)bmpScan + screenOff + 0) = *((byte*)(void*)fontScan + fontOff + 0);
+                                    *((byte*)(void*)bmpScan + screenOff + 1) = *((byte*)(void*)fontScan + fontOff + 1);
+                                    *((byte*)(void*)bmpScan + screenOff + 2) = *((byte*)(void*)fontScan + fontOff + 2);
+                                    *((byte*)(void*)bmpScan + screenOff + 3) = *((byte*)(void*)fontScan + fontOff + 3);
+                                }
+                            
+                            }
+                        }
+
+                    }
+                }
+                
+            }
+            m_FontBuffer.UnlockBits(fontData);
+            m_FrameBuffer.UnlockBits(Data);
+            
         }
 
     }

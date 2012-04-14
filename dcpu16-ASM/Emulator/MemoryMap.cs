@@ -24,20 +24,31 @@
 
 // Memory map/layout definitions.
 
-/**
- * WORK IN PROGRESS - 10th April 2012
- * - DensitY
- */
-
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace dcpu16_ASM.Emulator
 {
+    /// <summary>
+    /// Enumeration defines of Specific areas of the DCPU's memory layout. 
+    /// 
+    /// </summary>
+    public enum dcpuMemoryLayout : ushort
+    {
+        /// <summary>
+        /// Starting memory location for DCPU-16's Text mode 
+        /// Frame buffer
+        /// </summary>
+        VIDEO_TEXT_START    = 0x8000,
+        /// <summary>
+        /// Ending memory location for DCPU-16's Text mode 
+        /// Frame buffer
+        /// </summary>
+        VIDEO_TEXT_END      = 0x81FF,
 
-    // Memory map layout
-    // TODO: nothing really offical has been defined as of yet. implement
 
+        KEYBOARD_START      = 0x9000,
+        KEYBOARD_END        = 0x900F
+    }
 }

@@ -143,8 +143,8 @@ namespace dcpu16_ASM.Emulator
                     programWords.Add(word);
                 }
                 m_BinaryLength = programWords.Count;
-                m_DCPUComputer.SetProgram(ref programWords);
                 m_DCPUComputer.ResetCPURegisters();
+                m_DCPUComputer.SetProgram(ref programWords);                
                 if(OnExecutePostStepEvent!=null)OnExecutePostStepEvent(ref m_DCPUComputer); 
                 programWords.Clear();
             }
@@ -204,7 +204,7 @@ namespace dcpu16_ASM.Emulator
                 m_DCPUThread.Interrupt();
                 m_DCPUThread.Join();
 
-            }           
+            }            
             m_DCPUThread = new Thread(new ThreadStart(RunProgram));
             m_DCPUThread.IsBackground = true;
             m_DCPUThread.Priority = ThreadPriority.BelowNormal;

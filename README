@@ -16,7 +16,7 @@ This project's core objectives are:
 All sub v1.0 commits here will be in-development commits. Parts may/may not work. 
 
 Current TODOs:
-* Finish basic emulation (basically Keyboard & Screen working). 
+* Finish basic emulation (basically Keyboard support). 
 * compile time mathmatical expressions in literal fields. 
 * HUGE clean up of the code, its a mess!
 
