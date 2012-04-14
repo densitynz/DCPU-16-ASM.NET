@@ -45,7 +45,7 @@ namespace DCPU16_ASM.Assembler
         private readonly Dictionary<ushort, string> labelReferences;
         private readonly Dictionary<string, dcpuOpCode> opcodeDictionary;
         private readonly Dictionary<string, ushort> labelAddressDitionary;
-        private readonly Dictionary<string, dcpuRegisterCodes> regiterDictionary;
+        private readonly Dictionary<string, dcpuRegisterCodes> registerDictionary;
 
         public Parser()
         {
@@ -77,7 +77,7 @@ namespace DCPU16_ASM.Assembler
                 };
 
             // Register dictionary, We'll only include the most common ones in here, others have to be constructred. 
-            this.regiterDictionary = new Dictionary<string, dcpuRegisterCodes>
+            this.registerDictionary = new Dictionary<string, dcpuRegisterCodes>
                 {
                     { "a", dcpuRegisterCodes.A },
                     { "b", dcpuRegisterCodes.B },
@@ -183,6 +183,7 @@ namespace DCPU16_ASM.Assembler
 
             return clearedLine;
         }
+        
 
         private void AssembleLine(string line)
         {
@@ -206,71 +207,30 @@ namespace DCPU16_ASM.Assembler
             }
 
             var tokens = this.Tokenize(line);
+            var token = tokens[0].Trim();
 
-            var candidateOpcode = tokens[0].Trim();
-
-            if (candidateOpcode.ToLower() == "dat")
+            if (token.ToLower() == "dat")
             {
                 this.ParseDat(line);
                 return;
             }
 
-            if (!this.opcodeDictionary.ContainsKey(candidateOpcode))
+            if (!this.opcodeDictionary.ContainsKey(token))
             {
                 throw new Exception(string.Format("Illegal cpu opcode --> {0}", tokens[0]));
             }
 
-            var opcode = (uint)this.opcodeDictionary[candidateOpcode] & 0xF;
+            var opcode = (uint)this.opcodeDictionary[token] & 0xF;
             var param = tokens[1].Trim();
 
             if (opcode > 0x0)
             {
-                var param1 = tokens[2];
-                var p1 = this.ParseParam(param);
-                var p2 = this.ParseParam(param1);
-
-                opcode |= ((uint)p1.Param << 4) & 0x3F0;
-                opcode |= ((uint)p2.Param << 10) & 0xFC00;
-
-                this.machineCode.Add((ushort)opcode);
-
-                if (p1.NextWord)
-                {
-                    if (p1.LabelName.Length > 0)
-                    {
-                        this.labelReferences.Add((ushort)this.machineCode.Count, p1.LabelName);
-                    }
-
-                    this.machineCode.Add(p1.NextWordValue);
-                }
-
-                if (p2.NextWord)
-                {
-                    if (p2.LabelName.Length > 0)
-                    {
-                        this.labelReferences.Add((ushort)this.machineCode.Count, p2.LabelName);
-                    }
-
-                    this.machineCode.Add(p2.NextWordValue);
-                }
+				var param1 = tokens[2];
+                GenerateInstruction(opcode, param, param1);
             }
             else
             {
-                opcode = (uint)this.opcodeDictionary[candidateOpcode];
-                OpcodeParamResult p1 = this.ParseParam(param);
-                opcode |= ((uint)p1.Param << 10) & 0xFC00;
-
-                this.machineCode.Add((ushort)opcode);
-
-                if (p1.NextWord)
-                {
-                    if (p1.LabelName.Length > 0)
-                    {
-                        this.labelReferences.Add((ushort)this.machineCode.Count, p1.LabelName);
-                    }
-
-                    this.machineCode.Add(p1.NextWordValue);
-                }
+                GenerateInstruction(opcode, param);
             }
         }
 
@@ -291,7 +251,56 @@ namespace DCPU16_ASM.Assembler
 
             return index;
         }
+		
+		void GenerateInstruction(uint opcode, string param1, string param2)
+		{
+        	var p1 = this.ParseParam(param1);
+        	var p2 = this.ParseParam(param2);
+        	
+        	opcode |= ((uint)p1.Param << 4) & 0x3F0;
+        	opcode |= ((uint)p2.Param << 10) & 0xFC00;
+        	
+        	this.machineCode.Add((ushort)opcode);
+        	
+        	if (p1.NextWord)
+        	{
+        	    if (p1.LabelName.Length > 0)
+        	    {
+        	        this.labelReferences.Add((ushort)this.machineCode.Count, p1.LabelName);
+        	    }
+        	
+        	    this.machineCode.Add(p1.NextWordValue);
+        	}
+        	
+        	if (p2.NextWord)
+        	{
+        	    if (p2.LabelName.Length > 0)
+        	    {
+        	        this.labelReferences.Add((ushort)this.machineCode.Count, p2.LabelName);
+        	    }
+        	
+        	    this.machineCode.Add(p2.NextWordValue);
+        	}
+		}
+		
+		void GenerateInstruction(uint opcode, string param)
+		{
+            OpcodeParamResult p1 = this.ParseParam(param);
+            opcode |= ((uint)p1.Param << 10) & 0xFC00;
 
+            this.machineCode.Add((ushort)opcode);
+
+            if (p1.NextWord)
+            {
+                if (p1.LabelName.Length > 0)
+                {
+                    this.labelReferences.Add((ushort)this.machineCode.Count, p1.LabelName);
+                }
+
+                this.machineCode.Add(p1.NextWordValue);
+            }
+		}
+		
         private string[] Tokenize(string data)
         {
             var tokens = data.Split(new[] { ' ', '\t', ',' });
@@ -304,34 +313,36 @@ namespace DCPU16_ASM.Assembler
 
             var clearedParameter = param.Replace(" ", string.Empty).Trim();
 
-            if (this.regiterDictionary.ContainsKey(clearedParameter))
+            if (this.registerDictionary.ContainsKey(clearedParameter))
             {
-                // Ok things are really easy in this case. 
-                opcodeParamResult.Param = (ushort)this.regiterDictionary[clearedParameter];
+                opcodeParamResult.Param = (ushort)this.registerDictionary[clearedParameter];
             }
             else
             {
-                if (clearedParameter[0] == '[' && clearedParameter[clearedParameter.Length - 1] == ']')
+				// Memory reference Parameter
+                if (clearedParameter.StartsWith("[")  && clearedParameter.EndsWith("]"))
                 {
+					clearedParameter = clearedParameter.Substring(1, clearedParameter.Length - 2).Replace(" ", string.Empty);
+						
+					// Memory address + register parameter
                     if (clearedParameter.Contains("+"))
                     {
-                        var psplit = clearedParameter.Replace("[", string.Empty).Replace("]", string.Empty).Replace(" ", string.Empty).Split('+');
+                        var psplit = clearedParameter.Split('+');
                         if (psplit.Length < 2)
                         {
                             throw new Exception(string.Format("malformated memory reference '{0}'", clearedParameter));
                         }
 
-                        var addressValue = psplit[1];
-                        if (!this.regiterDictionary.ContainsKey("[+" + addressValue + "]"))
+                        var addressValue = "[+" + psplit[1] + "]";
+                        if (!this.registerDictionary.ContainsKey(addressValue))
                         {
                             throw new Exception(string.Format("Invalid register reference in '{0}'", clearedParameter));
                         }
 
-                        opcodeParamResult.Param = (ushort)this.regiterDictionary["[+" + psplit[1] + "]"];
+                        opcodeParamResult.Param = (ushort)this.registerDictionary[addressValue];
                         opcodeParamResult.NextWord = true;
 
-                        // nasty
-                        if (psplit[0][0] == '\'' && psplit[0][psplit[0].Length - 1] == '\'' && psplit[0].Length == 3)
+                        if (psplit[0].StartsWith("\'") && psplit[0].EndsWith("\'") && psplit[0].Length == 3)
                         {
                             var val = (ushort)psplit[0][1];
                             opcodeParamResult.NextWordValue = val;
@@ -352,53 +363,55 @@ namespace DCPU16_ASM.Assembler
                             opcodeParamResult.LabelName = psplit[0].Trim();
                         }
                     }
+					// Plain Memory address parameter
                     else
                     {
                         opcodeParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Mem;
                         opcodeParamResult.NextWord = true;
 
-                        // nasty
-                        if (clearedParameter[1] == '\'' && clearedParameter[clearedParameter.Length - 2] == '\'' && clearedParameter.Length == 5)
+                        if (clearedParameter.StartsWith("\'") && clearedParameter.EndsWith("\'") && clearedParameter.Length == 5)
                         {
                             ushort val = clearedParameter[1];
                             opcodeParamResult.NextWordValue = val;
                         }
                         else if (clearedParameter.Contains("0x"))
                         {
-                            ushort val = Convert.ToUInt16(clearedParameter.Replace("[", string.Empty).Replace("]", string.Empty).Trim(), 16);
+                            ushort val = Convert.ToUInt16(clearedParameter.Trim(), 16);
                             opcodeParamResult.NextWordValue = val;
                         }
                         else if (clearedParameter.Trim().All(x => char.IsDigit(x)))
                         {
-                            ushort val = Convert.ToUInt16(clearedParameter.Replace("[", string.Empty).Replace("]", string.Empty).Trim(), 10);
+                            ushort val = Convert.ToUInt16(clearedParameter.Trim(), 10);
                             opcodeParamResult.NextWordValue = val;
                         }
                         else
                         {
                             opcodeParamResult.NextWord = true;
-                            opcodeParamResult.LabelName = clearedParameter.Replace("[", string.Empty).Replace("]", string.Empty).Trim();
+                            opcodeParamResult.LabelName = clearedParameter.Trim();
                         }
                     }
                 }
+				// Literal value parameter
                 else
                 {
-                    // if value is < 0x1F we can encode it into the param directly, 
-                    // else it has to be next value!
-                    ushort maxValue = Convert.ToUInt16("0x1F", 16);
-
-                    ushort literalValue;
-                    if (clearedParameter[0] == '\'' && clearedParameter[clearedParameter.Length - 1] == '\'' && clearedParameter.Length == 3)
+					ushort literalValue;
+					
+					// Single char literal parameter
+                    if (clearedParameter.StartsWith("\'") && clearedParameter.EndsWith("\'") && clearedParameter.Length == 3)
                     {
                         literalValue = clearedParameter[1];
                     }
+					// hex literal parameter
                     else if (clearedParameter.Contains("0x"))
                     {
                         literalValue = Convert.ToUInt16(clearedParameter, 16);
                     }
+					// Decimal literal parameter
                     else if (clearedParameter.Trim().All(x => char.IsDigit(x)))
                     {
                         literalValue = Convert.ToUInt16(clearedParameter, 10);
                     }
+					// Something else
                     else
                     {
                         opcodeParamResult.Param = (ushort)dcpuRegisterCodes.NextWord_Literal_Value;
@@ -406,7 +419,12 @@ namespace DCPU16_ASM.Assembler
                         opcodeParamResult.LabelName = clearedParameter;
                         return opcodeParamResult;
                     }
-
+					
+					//Handle Overflow
+					ushort maxValue = Convert.ToUInt16("0x1F", 16);
+					// if value is < 0x1F we can encode it into the param directly, 
+                    // else it has to be next value!
+                   	
                     if (literalValue < maxValue)
                     {
                         opcodeParamResult.Param = Convert.ToUInt16("0x20", 16);
