@@ -106,7 +106,7 @@ namespace dcpu16_ASM.Winforms
         /// Our text color map
         /// EGA color goodness
         /// </summary>
-        private int[] m_TextColorMap = 
+        private uint[] m_TextColorMap = 
         {
              0x101010, 
              0x1000AA, 
@@ -480,7 +480,6 @@ namespace dcpu16_ASM.Winforms
                         byte c = (byte)(charData & 0xFF);       // character
                         int b = (int)((charData >> 8) & 0xF);   // background Color
                         int f = (int)((charData >> 12) & 0xF);  // charcter Color       
-                        if (c == '\0') continue;
 
                         // calculate pixel position of character in font. 
                         // image is 128x32, so 128/4 = 32. 
@@ -491,26 +490,19 @@ namespace dcpu16_ASM.Winforms
                         {
                             for (int py = 0; py < FontHeight; py++)
                             {
-                                int screenOff = ((screenOffsetY + py) * (ScreenPixelWidth) + screenOffsetX + px) *4;
+                                int screenOff = ((screenOffsetY + py) * (ScreenPixelWidth) + screenOffsetX + px) * 4;
                                 int fontOff = ((fOffY + py) * m_FontBuffer.Width + fOffX + px) * 4;
-                               
-                                if (b > 0 || f > 0)
-                                {
-                                    int fontPixel = (*((int*)(void*)fontScan + fontOff) & 0x00FFFFFF) > 0 ? m_TextColorMap[f] : m_TextColorMap[b];
 
-                                    *((byte*)(void*)bmpScan + screenOff + 0) = (byte)(fontPixel & 0xFF);
-                                    *((byte*)(void*)bmpScan + screenOff + 1) = (byte)((fontPixel >> 8) & 0xFF);
-                                    *((byte*)(void*)bmpScan + screenOff + 2) = (byte)((fontPixel >> 16) & 0xFF);
-                                    *((byte*)(void*)bmpScan + screenOff + 3) = 0xFF;
-                                }
-                                else
-                                {
-                                    *((byte*)(void*)bmpScan + screenOff + 0) = *((byte*)(void*)fontScan + fontOff + 0);
-                                    *((byte*)(void*)bmpScan + screenOff + 1) = *((byte*)(void*)fontScan + fontOff + 1);
-                                    *((byte*)(void*)bmpScan + screenOff + 2) = *((byte*)(void*)fontScan + fontOff + 2);
-                                    *((byte*)(void*)bmpScan + screenOff + 3) = *((byte*)(void*)fontScan + fontOff + 3);
-                                }
-                            
+                                uint fontPixel = (uint)(*((byte*)(void*)fontScan + fontOff + 0) +
+                                                (*((byte*)(void*)fontScan + fontOff + 1) << 8) +
+                                                (*((byte*)(void*)fontScan + fontOff + 2) << 16));
+
+                                fontPixel = (fontPixel != 0 && c != 0) ? fontPixel = m_TextColorMap[f] : fontPixel = m_TextColorMap[b];
+
+                                *((byte*)(void*)bmpScan + screenOff + 0) = (byte)(fontPixel & 0xFF);
+                                *((byte*)(void*)bmpScan + screenOff + 1) = (byte)((fontPixel >> 8) & 0xFF);
+                                *((byte*)(void*)bmpScan + screenOff + 2) = (byte)((fontPixel >> 16) & 0xFF);
+                                *((byte*)(void*)bmpScan + screenOff + 3) = 0xFF;
                             }
                         }
 
