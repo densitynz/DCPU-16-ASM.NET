@@ -201,7 +201,7 @@ namespace dcpu16_ASM.Emulator
         {
             // Initialize Memory
             m_memory.RAM = new ushort[0x10000];
-            Array.Clear(m_memory.RAM, 0, 0xFFFF);
+            Array.Clear(m_memory.RAM, 0, 0x10000);
 
             // Initialize CPU registers
             m_registers.GP = new ushort[8];
@@ -232,8 +232,8 @@ namespace dcpu16_ASM.Emulator
 
             m_cycles = 0;
 
-            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.VIDEO_TEXT_START, (int)(dcpuMemoryLayout.VIDEO_TEXT_END - dcpuMemoryLayout.VIDEO_TEXT_START));
-            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.KEYBOARD_START, (int)(dcpuMemoryLayout.KEYBOARD_END - dcpuMemoryLayout.KEYBOARD_START));
+            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.VIDEO_TEXT_START, (int)(dcpuMemoryLayout.VIDEO_TEXT_END+1 - dcpuMemoryLayout.VIDEO_TEXT_START));
+            Array.Clear(m_memory.RAM, (int)dcpuMemoryLayout.KEYBOARD_START, (int)(dcpuMemoryLayout.KEYBOARD_END+1 - dcpuMemoryLayout.KEYBOARD_START));
         }
 
         /// <summary>
