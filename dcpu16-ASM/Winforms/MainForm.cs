@@ -497,7 +497,8 @@ namespace dcpu16_ASM.Winforms
                                                 (*((byte*)(void*)fontScan + fontOff + 1) << 8) +
                                                 (*((byte*)(void*)fontScan + fontOff + 2) << 16));
 
-                                fontPixel = (fontPixel != 0 && c != 0) ? fontPixel = m_TextColorMap[f] : fontPixel = m_TextColorMap[b];
+                                fontPixel = (b == 0 && f == 0 && c != 0) ? fontPixel :
+                                    (fontPixel != 0 && c != 0) ? fontPixel = m_TextColorMap[f] : fontPixel = m_TextColorMap[b];
 
                                 *((byte*)(void*)bmpScan + screenOff + 0) = (byte)(fontPixel & 0xFF);
                                 *((byte*)(void*)bmpScan + screenOff + 1) = (byte)((fontPixel >> 8) & 0xFF);
