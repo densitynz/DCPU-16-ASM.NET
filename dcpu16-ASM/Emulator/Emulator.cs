@@ -85,7 +85,9 @@ namespace dcpu16_ASM.Emulator
         /// Binary file length.
         /// </summary>
         private long m_BinaryLength = 0;
-        public long BinaryLength { get { return m_BinaryLength; } }        
+        public long BinaryLength { get { return m_BinaryLength; } }
+        private bool m_Running = false;
+        public bool Running { get { return m_Running; } }
 
         public event OnExecutePostStepHandle OnExecutePostStepEvent = null;
         public event OnErrorHandle OnErrorEvent = null; // TODO
@@ -103,7 +105,7 @@ namespace dcpu16_ASM.Emulator
         /// <summary>
         /// Target DCPU-16 Frequence (in khz)
         /// </summary>
-        private int m_TargetKHZ = 100; 
+        private int m_TargetKHZ = 125; 
 
         public int TargetFreqKHZ
         {
@@ -139,7 +141,7 @@ namespace dcpu16_ASM.Emulator
                 List<ushort> programWords = new List<ushort>();
                 for (int i = 1; i < byteData.Length; i += 2)
                 {
-                    ushort word = (ushort)((byteData[i - 1] << 8) | (byteData[i] & 0xFF));
+                    ushort word = (ushort)((byteData[i - 1] << 8) + (byteData[i] & 0xFF));             
                     programWords.Add(word);
                 }
                 m_BinaryLength = programWords.Count;
@@ -174,6 +176,7 @@ namespace dcpu16_ASM.Emulator
         /// </summary>
         public void Stop()
         {
+            m_Running = false;
             if (m_DCPUThread == null) return;
 
             m_DCPUThread.Abort();
@@ -199,6 +202,8 @@ namespace dcpu16_ASM.Emulator
         {
             if (m_DCPUComputer.ProgramLoaded != true) return;
 
+            if (m_Running != false) return;
+
             if (m_DCPUThread != null)
             {
                 m_DCPUThread.Interrupt();
@@ -210,8 +215,30 @@ namespace dcpu16_ASM.Emulator
             m_DCPUThread.Priority = ThreadPriority.BelowNormal;
             m_DCPUThread.Start();
 
+            m_Running = true;
             if (OnStartEvent != null) OnStopEvent();
         }
+
+        /// <summary>
+        /// Key press
+        /// </summary>
+        /// <param name="_keyPress"></param>
+        public void ProcessKeyPress(ushort _keyPress)
+        {
+            if (m_DCPUComputer.ProgramLoaded != true) return;
+            if (m_DCPUThread == null) return;
+ 
+            for (int i = 0; i < 0xF; i++)
+            {
+                if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + i] == 0x0)
+                {
+                    m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + i] = (ushort)_keyPress;
+                    break;
+                }
+            }
+
+        }
+
 
         /// <summary>
         /// DCPU-16 thread's Main. 
@@ -232,7 +259,10 @@ namespace dcpu16_ASM.Emulator
                     m_StopwatchTimer.Reset();
                     m_StopwatchTimer.Start();
 
-                    m_DCPUComputer.ExecuteInstruction(); // TODO: pull error string
+                    lock (m_DCPUComputer)
+                    {
+                        m_DCPUComputer.ExecuteInstruction(); // TODO: pull error string
+                    }
 
                     long elapsedTicks = m_StopwatchTimer.Elapsed.Ticks;
                     long totalTicks = ticksPerInstruction * (m_DCPUComputer.CycleCount - lastCycles);
@@ -250,14 +280,16 @@ namespace dcpu16_ASM.Emulator
                              * fixing this via Batch processing of instructions (so wait times are longer). I think that'll
                              * come back to bite if future 'virtual hardware' requires precise timings (And we of course will
                              * have to emulate that else people will write incorrect code). 
-                             */
-                            Thread.Sleep(new TimeSpan((int)(totalTicks- elapsedTicks)));
+                             */                            
+                            Thread.SpinWait((int)(totalTicks - elapsedTicks));
                         }
                     }
 
-                    if (OnExecutePostStepEvent != null)
-                        OnExecutePostStepEvent(ref m_DCPUComputer);
-
+                    lock (m_DCPUComputer)
+                    {
+                        if (OnExecutePostStepEvent != null)
+                            OnExecutePostStepEvent(ref m_DCPUComputer);
+                    }
                     m_StopwatchTimer.Stop();
                     lastCycles = m_DCPUComputer.CycleCount;
                 }

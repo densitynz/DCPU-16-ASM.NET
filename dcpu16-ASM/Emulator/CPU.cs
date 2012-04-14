@@ -200,14 +200,14 @@ namespace dcpu16_ASM.Emulator
         public void InitCPU()
         {
             // Initialize Memory
-            m_memory.RAM = new ushort[0xFFFF];
+            m_memory.RAM = new ushort[0x10000];
             Array.Clear(m_memory.RAM, 0, 0xFFFF);
 
             // Initialize CPU registers
             m_registers.GP = new ushort[8];
             Array.Clear(m_registers.GP, 0, 8);
 
-            m_registers.SP = 0xFFFF;
+            m_registers.SP = 0x0;
             m_registers.PC = 0x0;
             m_registers.O = 0;
 
@@ -226,7 +226,7 @@ namespace dcpu16_ASM.Emulator
 
             Array.Clear(m_registers.GP, 0, 8);
 
-            m_registers.SP = 0xFFFF;
+            m_registers.SP = 0x0;
             m_registers.PC = 0x0;
             m_registers.O = 0;
 
@@ -379,9 +379,12 @@ namespace dcpu16_ASM.Emulator
                     break;
 
                 case (ushort)dcpuRegisterCodes.POP:
-                    result.ParmType = ParamType.Memory;
-                    result.Location = m_registers.SP++;
-                    result.Value = m_memory.RAM[result.Location];
+                    if (m_ignoreNextInstruction != true)
+                    {
+                        result.ParmType = ParamType.Memory;
+                        result.Location = m_registers.SP++;
+                        result.Value = m_memory.RAM[result.Location];
+                    }
                     m_cycles++;
                     break;
 
@@ -393,9 +396,13 @@ namespace dcpu16_ASM.Emulator
                     break;
 
                 case (ushort)dcpuRegisterCodes.PUSH:
-                    result.ParmType = ParamType.Memory;
-                    result.Location = --m_registers.SP;
-                    result.Value = m_memory.RAM[result.Location]; 
+                    if (m_ignoreNextInstruction != true)
+                    {
+                        result.ParmType = ParamType.Memory;
+                        result.Location = --m_registers.SP;
+                        result.Value = m_memory.RAM[result.Location];
+                    }
+                    m_cycles++;
                     break;
 
                 case (ushort)dcpuRegisterCodes.O:
@@ -457,7 +464,7 @@ namespace dcpu16_ASM.Emulator
                     break;
             }
             // Special Case for literal Values that are stored in the byte's param and not next word. used for values < 0x1F. 
-            if (_opParam >= 0x20 && _opParam < 0x3F)
+            if (_opParam >= 0x20 && _opParam <= 0x3F)
             {
                 result.ParmType = ParamType.Literal; 
                 result.Location = (ushort)(_opParam - 0x20);
@@ -477,6 +484,7 @@ namespace dcpu16_ASM.Emulator
             return m_memory.RAM[m_registers.PC++];
         }
 
+        static int dd = 0;
         /// <summary>
         /// Execute a DCPU-16 Instruction
         /// </summary>
@@ -484,6 +492,7 @@ namespace dcpu16_ASM.Emulator
         {
             if (m_programLoaded != true) return;
 
+            dd++;
             ushort programWord = ReadNextWord();
             ushort opCode   = (ushort)((int)programWord & 0xF);
             ushort opP1     = (ushort)((int)(programWord >> 4) & 0x3F);     // A = Dest
@@ -497,7 +506,7 @@ namespace dcpu16_ASM.Emulator
                 m_ignoreNextInstruction = false;
 
                 // branch failure generates a 1 cycle penality.
-                m_cycles++;
+                m_cycles++;                
                 return;
             }
 
@@ -513,9 +522,9 @@ namespace dcpu16_ASM.Emulator
                      */
                     switch (opP1)
                     {
-                        // JSR instruction
-                        case ((ushort)dcpuOpCode.JSR_OP >> 4):                            
-                            m_memory.RAM[--m_registers.SP] = m_registers.PC;
+                        // JSR instruction  
+                        case ((ushort)dcpuOpCode.JSR_OP >> 4):
+                            m_memory.RAM[--m_registers.SP] = (ushort)(m_registers.PC);                            
                             m_registers.PC = (ushort)(B.Value);
                             m_cycles += 3; // 2 for JSR, 1 for RAM lookup. 
                             break;
@@ -631,7 +640,7 @@ namespace dcpu16_ASM.Emulator
                     break;
 
                 default:
-                    Console.WriteLine(string.Format("Illegal Basic instruction {0} at Address {1}",opCode.ToString("X"),m_registers.PC.ToString("X")));
+                    Console.WriteLine(string.Format("Illegal Basic instruction {0} at Address {1}",opCode.ToString("X"),m_registers.PC.ToString("X")));                    
                     break;
             }
 

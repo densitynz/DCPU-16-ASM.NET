@@ -36,6 +36,7 @@ using dcpu16_ASM.Emulator;
 
 namespace dcpu16_ASM.Winforms
 {
+
     public partial class MainForm : Form
     {
         // TODO: these need to be shifted to a better location.
@@ -67,6 +68,11 @@ namespace dcpu16_ASM.Winforms
             /// Cyclce counter
             /// </summary>
             public long            CycleCount;
+
+            /// <summary>
+            /// Keyboard cylinder index
+            /// </summary>
+            public int             KeyIndex = 0;
         }
 
         /// <summary>
@@ -137,12 +143,14 @@ namespace dcpu16_ASM.Winforms
             m_DPUEmulator.OnErrorEvent += new OnErrorHandle(OnCpuError);
             
             // initialize buffer
-            m_CpuDoublebuffer.Memory.RAM = new ushort[0xFFFF]; // TODO: Define memory size so we don't have to change this is 20 places
+            m_CpuDoublebuffer.Memory.RAM = new ushort[0x10000]; // TODO: Define memory size so we don't have to change this is 20 places
             m_CpuDoublebuffer.Registers.GP = new ushort[8];
             m_CpuDoublebuffer.CycleCount = 0;
 
             m_FrameBuffer = new Bitmap(ScreenPixelWidth, ScreenPixelHeight);
             LoadFontFromImagelist();
+
+            
         }
 
         /// <summary>
@@ -196,6 +204,7 @@ namespace dcpu16_ASM.Winforms
                     return;
                 }
                 m_cycleCount = m_lastCycleCount = 0;
+                m_CpuDoublebuffer.KeyIndex = 0;
                 BinaryMemoryDump();
                 ResetFrameBuffer();
             }
@@ -222,6 +231,7 @@ namespace dcpu16_ASM.Winforms
         {
             m_DPUEmulator.Start();
             CycleTimer.Enabled = true;
+            m_CpuDoublebuffer.KeyIndex = 0;
         }
 
         /// <summary>
@@ -255,8 +265,9 @@ namespace dcpu16_ASM.Winforms
             {
                 lock (m_CpuDoublebuffer)
                 {
+                    
                     // make a copy of ram. 
-                    Array.Copy(_cpu.Memory.RAM, m_CpuDoublebuffer.Memory.RAM, 0xFFFF);
+                    Array.Copy(_cpu.Memory.RAM, m_CpuDoublebuffer.Memory.RAM, 0x10000);
                     Array.Copy(_cpu.Registers.GP, m_CpuDoublebuffer.Registers.GP, 8);
 
                     m_CpuDoublebuffer.Registers.O = _cpu.Registers.O;
@@ -516,5 +527,29 @@ namespace dcpu16_ASM.Winforms
             
         }
 
+        /// <summary>
+        /// Keypress Event.
+        /// Only triggered by game window!
+        /// </summary>
+        /// <param name="_keyPress"></param>
+        public void ProcessKeyPress(ushort _keyPress)
+        {
+
+            m_DPUEmulator.ProcessKeyPress(_keyPress);
+        }
+
+        /// <summary>
+        /// Launch User window
+        /// this window we can capture key inputs!
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            UserWindowForm gameWindow = new UserWindowForm();
+            MainForm tmp = this;
+            gameWindow.FeedReferences(ref m_FrameBuffer, ref tmp);
+            gameWindow.ShowDialog(this);
+        }
     }
 }

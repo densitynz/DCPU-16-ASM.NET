@@ -81,9 +81,11 @@
             this.FontimageList = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label18 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -184,16 +186,16 @@
             // SetCpuFreqLabel
             // 
             this.SetCpuFreqLabel.AutoSize = true;
-            this.SetCpuFreqLabel.Location = new System.Drawing.Point(730, 50);
+            this.SetCpuFreqLabel.Location = new System.Drawing.Point(730, 34);
             this.SetCpuFreqLabel.Name = "SetCpuFreqLabel";
             this.SetCpuFreqLabel.Size = new System.Drawing.Size(46, 13);
             this.SetCpuFreqLabel.TabIndex = 40;
-            this.SetCpuFreqLabel.Text = "100 Khz";
+            this.SetCpuFreqLabel.Text = "125 Khz";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(647, 50);
+            this.label15.Location = new System.Drawing.Point(647, 34);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(84, 13);
             this.label15.TabIndex = 39;
@@ -201,13 +203,14 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(780, 43);
+            this.trackBar1.Location = new System.Drawing.Point(780, 27);
             this.trackBar1.Maximum = 1200;
             this.trackBar1.Minimum = 25;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(178, 45);
             this.trackBar1.TabIndex = 38;
-            this.trackBar1.Value = 100;
+            this.trackBar1.TabStop = false;
+            this.trackBar1.Value = 125;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // CpuFreqLabel
@@ -235,6 +238,7 @@
             this.cycleCounttextBox.ReadOnly = true;
             this.cycleCounttextBox.Size = new System.Drawing.Size(100, 20);
             this.cycleCounttextBox.TabIndex = 35;
+            this.cycleCounttextBox.TabStop = false;
             // 
             // label13
             // 
@@ -303,6 +307,7 @@
             this.RegAtextBox.ReadOnly = true;
             this.RegAtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegAtextBox.TabIndex = 11;
+            this.RegAtextBox.TabStop = false;
             // 
             // RegBtextBox
             // 
@@ -311,6 +316,7 @@
             this.RegBtextBox.ReadOnly = true;
             this.RegBtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegBtextBox.TabIndex = 12;
+            this.RegBtextBox.TabStop = false;
             // 
             // RegJtextBox
             // 
@@ -319,6 +325,7 @@
             this.RegJtextBox.ReadOnly = true;
             this.RegJtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegJtextBox.TabIndex = 25;
+            this.RegJtextBox.TabStop = false;
             // 
             // RegCtextBox
             // 
@@ -327,6 +334,7 @@
             this.RegCtextBox.ReadOnly = true;
             this.RegCtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegCtextBox.TabIndex = 13;
+            this.RegCtextBox.TabStop = false;
             // 
             // RegItextBox
             // 
@@ -335,6 +343,7 @@
             this.RegItextBox.ReadOnly = true;
             this.RegItextBox.Size = new System.Drawing.Size(100, 20);
             this.RegItextBox.TabIndex = 23;
+            this.RegItextBox.TabStop = false;
             // 
             // label6
             // 
@@ -388,6 +397,7 @@
             this.RegZtextBox.ReadOnly = true;
             this.RegZtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegZtextBox.TabIndex = 19;
+            this.RegZtextBox.TabStop = false;
             // 
             // RegXtextBox
             // 
@@ -396,6 +406,7 @@
             this.RegXtextBox.ReadOnly = true;
             this.RegXtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegXtextBox.TabIndex = 17;
+            this.RegXtextBox.TabStop = false;
             // 
             // RegYtextBox
             // 
@@ -404,6 +415,7 @@
             this.RegYtextBox.ReadOnly = true;
             this.RegYtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegYtextBox.TabIndex = 18;
+            this.RegYtextBox.TabStop = false;
             // 
             // label8
             // 
@@ -421,6 +433,7 @@
             this.RegOtextBox.ReadOnly = true;
             this.RegOtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegOtextBox.TabIndex = 31;
+            this.RegOtextBox.TabStop = false;
             // 
             // RegSPtextBox
             // 
@@ -429,6 +442,7 @@
             this.RegSPtextBox.ReadOnly = true;
             this.RegSPtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegSPtextBox.TabIndex = 30;
+            this.RegSPtextBox.TabStop = false;
             // 
             // RegPCtextBox
             // 
@@ -437,6 +451,7 @@
             this.RegPCtextBox.ReadOnly = true;
             this.RegPCtextBox.Size = new System.Drawing.Size(100, 20);
             this.RegPCtextBox.TabIndex = 29;
+            this.RegPCtextBox.TabStop = false;
             // 
             // label11
             // 
@@ -483,6 +498,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 2;
+            this.button3.TabStop = false;
             this.button3.Text = "Reset";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -493,6 +509,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 1;
+            this.button2.TabStop = false;
             this.button2.Text = "Stop";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -503,6 +520,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
+            this.button1.TabStop = false;
             this.button1.Text = "Run Program";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -529,6 +547,7 @@
             this.BinaryDumptextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.BinaryDumptextBox.Size = new System.Drawing.Size(323, 425);
             this.BinaryDumptextBox.TabIndex = 0;
+            this.BinaryDumptextBox.TabStop = false;
             this.BinaryDumptextBox.WordWrap = false;
             // 
             // timer1
@@ -560,6 +579,8 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.label18);
+            this.groupBox5.Controls.Add(this.button4);
             this.groupBox5.Controls.Add(this.label17);
             this.groupBox5.Controls.Add(this.label16);
             this.groupBox5.Controls.Add(this.pictureBox2);
@@ -572,15 +593,14 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DCPU-16 Text Display";
             // 
-            // pictureBox2
+            // label17
             // 
-            this.pictureBox2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.pictureBox2.Location = new System.Drawing.Point(243, 44);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(384, 384);
-            this.pictureBox2.TabIndex = 6;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(240, 25);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(168, 13);
+            this.label17.TabIndex = 8;
+            this.label17.Text = "Blind people Resolution (384x384)";
             // 
             // label16
             // 
@@ -591,14 +611,35 @@
             this.label16.TabIndex = 7;
             this.label16.Text = "Native Resolution (128x128)";
             // 
-            // label17
+            // pictureBox2
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(240, 25);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(168, 13);
-            this.label17.TabIndex = 8;
-            this.label17.Text = "Blind people Resolution (384x384)";
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.pictureBox2.Location = new System.Drawing.Point(243, 44);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(384, 384);
+            this.pictureBox2.TabIndex = 6;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(6, 189);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(128, 64);
+            this.button4.TabIndex = 9;
+            this.button4.TabStop = false;
+            this.button4.Text = "Launch User window";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(7, 256);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(137, 13);
+            this.label18.TabIndex = 41;
+            this.label18.Text = "User window gets key input";
             // 
             // MainForm
             // 
@@ -691,5 +732,7 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label18;
     }
 }

@@ -1,0 +1,20 @@
+; Screen test program, to test my screen output. 
+; DensitY, 2012
+
+jsr main
+:crash set pc, crash
+
+:main
+set a, 0x8000 ; screen 
+set i, output ; string offset
+:loop
+set [a], [i]
+add a, 0x1
+add i, 0x1
+ifn [i], 0x0
+  set pc, loop
+
+set pc, pop
+
+
+:output dat "Hello there, This is a test 0 0 :D", 0x0
