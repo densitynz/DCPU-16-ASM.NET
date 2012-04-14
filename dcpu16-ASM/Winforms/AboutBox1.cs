@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace dcpu16_ASM.Winforms
+namespace DCPU16_ASM.Winforms
 {
     partial class AboutBox1 : Form
     {

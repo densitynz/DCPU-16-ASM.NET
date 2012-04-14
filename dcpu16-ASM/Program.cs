@@ -39,10 +39,10 @@ using System;
 using System.Windows;
 using System.Windows.Forms;
 
-using dcpu16_ASM.Emulator;
-using dcpu16_ASM.Winforms;
+using DCPU16_ASM.Emulator;
+using DCPU16_ASM.Winforms;
 
-namespace dcpu16_ASM
+namespace DCPU16_ASM
 {
    /// <summary>
    /// Program entry point. 

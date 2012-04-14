@@ -1,4 +1,4 @@
-﻿namespace dcpu16_ASM.Winforms
+﻿namespace DCPU16_ASM.Winforms
 {
     partial class MainForm
     {

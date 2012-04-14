@@ -1,4 +1,4 @@
-﻿namespace dcpu16_ASM.Winforms
+﻿namespace DCPU16_ASM.Winforms
 {
     partial class UserWindowForm
     {
@@ -57,7 +57,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(801, 641);
             this.Controls.Add(this.pictureBox1);
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "UserWindowForm";
             this.ShowIcon = false;

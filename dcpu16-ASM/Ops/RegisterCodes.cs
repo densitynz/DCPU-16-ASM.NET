@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace dcpu16_ASM
+namespace DCPU16_ASM
 {
     /// <summary>
     /// DCPU-16 Register Codes

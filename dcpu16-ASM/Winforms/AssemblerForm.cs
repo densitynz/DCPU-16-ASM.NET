@@ -30,9 +30,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using dcpu16_ASM;
+using DCPU16_ASM.Assembler;
 
-namespace dcpu16_ASM.Winforms
+namespace DCPU16_ASM.Winforms
 {
     /// <summary>
     /// Main Code Assembler Window
@@ -128,6 +128,36 @@ namespace dcpu16_ASM.Winforms
                 MessageBox.Show("Nothing to compile", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+
+            var assemble = new Parser();
+            var lines = codeTextBox.Text.Split('\n');
+            ushort[] machineCode = assemble.Parse(lines);
+            if (machineCode == null)
+            {
+                textBox1.Text = assemble.MessageOuput;
+                MessageBox.Show("Issue compiling code, check the 'Messages' box", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var generator = new Generator();
+            var output = generator.Generate(machineCode, this.m_fileName);
+            if (output == string.Empty)
+            {
+                textBox1.Text = generator.MessageOuput;
+                MessageBox.Show("Issue compiling code, check the 'Messages' box", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            textBox1.Text = assemble.MessageOuput;
+            MessageBox.Show(string.Format("Code successfully compiled to\n\n'{0}'", output), Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.None);
+        }
+        /*
+            return;
+            if (codeTextBox.Text.Trim() == "")
+            {                
+                MessageBox.Show("Nothing to compile", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             CDCPU16Assemble Assemble = new CDCPU16Assemble();
             Assemble.SetFileName(m_fileName);
             string[] lines = codeTextBox.Text.Split('\n');
@@ -139,7 +169,7 @@ namespace dcpu16_ASM.Winforms
             }
             textBox1.Text = Assemble.MessageOuput;
             MessageBox.Show(string.Format("Code successfully compiled to\n\n'{0}'",Assemble.SavedFilename), Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.None);
-        }
+        }*/
 
 
         /// <summary>

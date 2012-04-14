@@ -32,9 +32,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
-using dcpu16_ASM.Emulator;
+using DCPU16_ASM.Emulator;
 
-namespace dcpu16_ASM.Winforms
+namespace DCPU16_ASM.Winforms
 {
 
     public partial class MainForm : Form

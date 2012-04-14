@@ -30,7 +30,7 @@ using System.Diagnostics;
 using System.Threading;
 
 
-namespace dcpu16_ASM.Emulator
+namespace DCPU16_ASM.Emulator
 {
     // Event handlers
 

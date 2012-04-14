@@ -8,9 +8,9 @@
     <ProjectGuid>{94BDD8DE-8766-431B-892D-0A1187E10B5E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>dcpu16_ASM</RootNamespace>
+    <RootNamespace>DCPU16_ASM</RootNamespace>
     <AssemblyName>dcpu16-ASM</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>DCPU16_ASM.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,9 +45,12 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assembler\Assembler.cs" />
+    <Compile Include="Assembler\Generator.cs" />
+    <Compile Include="Assembler\OpcodeParamResult.cs" />
+    <Compile Include="Assembler\Parser.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="Emulator\CPU.cs" />
     <Compile Include="Emulator\Emulator.cs" />
@@ -69,6 +72,12 @@
     </Compile>
     <Compile Include="Winforms\AssemblerForm.Designer.cs">
       <DependentUpon>AssemblerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Winforms\UserWindowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Winforms\UserWindowForm.Designer.cs">
+      <DependentUpon>UserWindowForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Winforms\MainForm.cs">
       <SubType>Form</SubType>
@@ -94,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Winforms\AssemblerForm.resx">
       <DependentUpon>AssemblerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Winforms\UserWindowForm.resx">
+      <DependentUpon>UserWindowForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Winforms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("dcpu16-ASM Emulator")]
+[assembly: AssemblyTitle("DCPU16-ASM .NET Emulator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DensitY")]
-[assembly: AssemblyProduct("dcpu16-ASM Emulator")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("DCPU16-ASM .NET Emulator")]
 [assembly: AssemblyCopyright("Copyright © DensitY 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

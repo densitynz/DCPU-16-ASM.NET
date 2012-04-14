@@ -1,4 +1,4 @@
-﻿namespace dcpu16_ASM.Winforms
+﻿namespace DCPU16_ASM.Winforms
 {
     partial class AssemblerForm
     {
@@ -55,9 +55,9 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 513);
+            this.panel1.Location = new System.Drawing.Point(0, 493);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(881, 42);
+            this.panel1.Size = new System.Drawing.Size(861, 42);
             this.panel1.TabIndex = 0;
             // 
             // button4
@@ -95,7 +95,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(798, 7);
+            this.button1.Location = new System.Drawing.Point(777, 7);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -110,7 +110,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(881, 365);
+            this.groupBox1.Size = new System.Drawing.Size(861, 365);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Code View";
@@ -125,7 +125,7 @@
             this.codeTextBox.Multiline = true;
             this.codeTextBox.Name = "codeTextBox";
             this.codeTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.codeTextBox.Size = new System.Drawing.Size(875, 346);
+            this.codeTextBox.Size = new System.Drawing.Size(855, 346);
             this.codeTextBox.TabIndex = 0;
             this.codeTextBox.TabStop = false;
             this.codeTextBox.Text = "; DCPU-16 Assembly code\r\n; Write your test code in here. \r\n\r\n:loopForever \r\n\tSET " +
@@ -137,9 +137,9 @@
             // 
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(0, 359);
+            this.groupBox2.Location = new System.Drawing.Point(0, 339);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(881, 154);
+            this.groupBox2.Size = new System.Drawing.Size(861, 154);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Messages";
@@ -155,7 +155,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(875, 135);
+            this.textBox1.Size = new System.Drawing.Size(855, 135);
             this.textBox1.TabIndex = 0;
             this.textBox1.TabStop = false;
             this.textBox1.WordWrap = false;
@@ -188,7 +188,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(881, 555);
+            this.ClientSize = new System.Drawing.Size(861, 535);
             this.ControlBox = false;
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
