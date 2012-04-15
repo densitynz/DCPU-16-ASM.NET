@@ -115,6 +115,14 @@ namespace DCPU16_ASM.Emulator
             set { m_TargetKHZ = value; }
         }
 
+        private bool m_UseKeyboardRingBuffer = false;
+
+        public bool UseKeyboardRingBuffer
+        {
+            get { return m_UseKeyboardRingBuffer; }
+            set { m_UseKeyboardRingBuffer = value; }
+        }
+
         /// <summary>
         /// Local copy of Load program, used to clear everything out on reset or restart
         /// </summary>
@@ -239,15 +247,29 @@ namespace DCPU16_ASM.Emulator
         public void ProcessKeyPress(ushort _keyPress)
         {
             if (m_DCPUComputer.ProgramLoaded != true) return;
-            if (m_DCPUThread == null) return;            
+            if (m_DCPUThread == null) return;
 
-            if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] == 0x0)
+            if (m_UseKeyboardRingBuffer != false)
             {
-                m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] = (ushort)_keyPress;
-            }
-            m_keyCounter++;
+                if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] == 0x0)
+                {
+                    m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] = (ushort)_keyPress;
+                }
+                m_keyCounter++;
 
-            if (m_keyCounter > 0xF) m_keyCounter = 0;
+                if (m_keyCounter > 0xF) m_keyCounter = 0;
+            }
+            else
+            {
+                for (int i = 0; i < 0x10; i++)
+                {
+                    if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + i] == 0x0)
+                    {
+                        m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + i] = (ushort)_keyPress;
+                    }
+                }
+            }
+
         }
 
 

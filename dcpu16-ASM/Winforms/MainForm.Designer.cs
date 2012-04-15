@@ -81,11 +81,12 @@
             this.FontimageList = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label18 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -579,6 +580,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.checkBox1);
             this.groupBox5.Controls.Add(this.label18);
             this.groupBox5.Controls.Add(this.button4);
             this.groupBox5.Controls.Add(this.label17);
@@ -592,6 +594,26 @@
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DCPU-16 Text Display";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(7, 256);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(137, 13);
+            this.label18.TabIndex = 41;
+            this.label18.Text = "User window gets key input";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(6, 189);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(128, 64);
+            this.button4.TabIndex = 9;
+            this.button4.TabStop = false;
+            this.button4.Text = "Launch User window";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // label17
             // 
@@ -621,25 +643,15 @@
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
             // 
-            // button4
+            // checkBox1
             // 
-            this.button4.Location = new System.Drawing.Point(6, 189);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(128, 64);
-            this.button4.TabIndex = 9;
-            this.button4.TabStop = false;
-            this.button4.Text = "Launch User window";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(7, 256);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(137, 13);
-            this.label18.TabIndex = 41;
-            this.label18.Text = "User window gets key input";
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(15, 284);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(149, 17);
+            this.checkBox1.TabIndex = 42;
+            this.checkBox1.Text = "Use Keyboard Ring Buffer";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -734,5 +746,6 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

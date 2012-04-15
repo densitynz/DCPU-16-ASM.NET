@@ -150,7 +150,8 @@ namespace DCPU16_ASM.Winforms
             m_FrameBuffer = new Bitmap(ScreenPixelWidth, ScreenPixelHeight);
             LoadFontFromImagelist();
 
-            
+            checkBox1.AutoCheck = false;
+            checkBox1.Click += new EventHandler(checkBox1_Click);
         }
 
         /// <summary>
@@ -229,6 +230,7 @@ namespace DCPU16_ASM.Winforms
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
+            m_DPUEmulator.UseKeyboardRingBuffer = checkBox1.Checked;
             m_DPUEmulator.Start();
             CycleTimer.Enabled = true;
             m_CpuDoublebuffer.KeyIndex = 0;
@@ -241,6 +243,7 @@ namespace DCPU16_ASM.Winforms
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
+            m_DPUEmulator.UseKeyboardRingBuffer = checkBox1.Checked;
             m_DPUEmulator.Stop();
             CycleTimer.Enabled = false;
             m_cycleCount = m_lastCycleCount = 0;
@@ -400,6 +403,7 @@ namespace DCPU16_ASM.Winforms
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
+            m_DPUEmulator.UseKeyboardRingBuffer = checkBox1.Checked;
             m_DPUEmulator.Reset();
             m_lastCycleCount = m_cycleCount = 0;
         }
@@ -552,6 +556,29 @@ namespace DCPU16_ASM.Winforms
             MainForm tmp = this;
             gameWindow.FeedReferences(ref m_FrameBuffer, ref tmp);
             gameWindow.ShowDialog(this);
+        }
+
+        /// <summary>
+        /// Check box change 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            checkBox1.Checked = !checkBox1.Checked;
+
+            if (m_DPUEmulator.Running != true) return;
+
+            if (MessageBox.Show("DCPU-16 Program must be restarted for this to work!\r\n\r\nDo you wish to restart the DCPU-16 Program?",
+                Globals.ProgramName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
+            {
+                checkBox1.Checked = !checkBox1.Checked;
+
+                return;
+            }
+
+            // reset program
+            button3_Click(sender, e);
         }
     }
 }
