@@ -479,12 +479,14 @@ namespace DCPU16_ASM.Winforms
                 IntPtr fontScan = fontData.Scan0;
 
                 // Slow font kerneling 
-                for (int tx = 0; tx < ScreenTextWidth; tx++)
+                for (int ty = 0; ty < ScreenTextHeight; ty++)                
                 {
-                    for (int ty = 0; ty < ScreenTextHeight; ty++)
+                    int screenOffsetY = (ty * FontHeight);
+
+                    for (int tx = 0; tx < ScreenTextWidth; tx++)
                     {
                         int screenOffsetX = (tx * FontWidth);
-                        int screenOffsetY = (ty * FontHeight);
+                        
                         int tff = ty * ScreenTextWidth + tx;
 
                         ushort charData = m_CpuDoublebuffer.Memory.RAM[(int)dcpuMemoryLayout.VIDEO_TEXT_START + tff];
@@ -497,9 +499,9 @@ namespace DCPU16_ASM.Winforms
                         int fOffX = (c % 32) * FontWidth;
                         int fOffY = (c / 32) * FontHeight;
 
-                        for (int px = 0; px < FontWidth; px++)
+                        for (int py = 0; py < FontHeight; py++)                        
                         {
-                            for (int py = 0; py < FontHeight; py++)
+                            for (int px = 0; px < FontWidth; px++)
                             {
                                 int screenOff = ((screenOffsetY + py) * (ScreenPixelWidth) + screenOffsetX + px) * 4;
                                 int fontOff = ((fOffY + py) * m_FontBuffer.Width + fOffX + px) * 4;

@@ -255,6 +255,8 @@ namespace DCPU16_ASM.Emulator
             /*
              * TODO: once memory standards have been outline, ensure program fits within them! 
              */
+            Array.Clear(m_memory.RAM, 0, 0x10000);
+
             for (int i = 0; i < _machineCode.Count; i++)
             {
                 m_memory.RAM[i] = _machineCode[i];
@@ -575,8 +577,7 @@ namespace DCPU16_ASM.Emulator
                     SetResultValue(A);
                     m_cycles += 3; // seems too cheap
                     break;
-
-                // Boolean Instructions
+                
                 case (ushort)dcpuOpCode.MOD_OP:
                     if (B.Value == 0)
                     {
@@ -589,7 +590,7 @@ namespace DCPU16_ASM.Emulator
 
                     SetResultValue(A);
                     m_cycles += 3; // seems too cheap
-                    break;
+                    break;                
                 case (ushort)dcpuOpCode.SHL_OP:
                     A.Value <<= B.Value;
                     m_registers.O = (ushort)(((A.Value << B.Value) >> 16) & 0xFFFF);
@@ -602,6 +603,8 @@ namespace DCPU16_ASM.Emulator
                     SetResultValue(A);
                     m_cycles += 2;
                     break;
+
+                // Boolean Instructions
                 case (ushort)dcpuOpCode.AND_OP:
                     A.Value &= B.Value;
                     SetResultValue(A);

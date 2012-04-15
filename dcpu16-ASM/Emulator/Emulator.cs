@@ -102,6 +102,8 @@ namespace DCPU16_ASM.Emulator
         /// </summary>
         private Stopwatch m_StopwatchTimer = new Stopwatch();
 
+        private int m_keyCounter = 0;
+
         /// <summary>
         /// Target DCPU-16 Frequence (in khz)
         /// </summary>
@@ -112,6 +114,11 @@ namespace DCPU16_ASM.Emulator
             get { return m_TargetKHZ; }
             set { m_TargetKHZ = value; }
         }
+
+        /// <summary>
+        /// Local copy of Load program, used to clear everything out on reset or restart
+        /// </summary>
+        List<ushort> m_programWords = new List<ushort>();
         
         /// <summary>
         /// Constructor
@@ -138,17 +145,16 @@ namespace DCPU16_ASM.Emulator
                 byte[] byteData = File.ReadAllBytes(_fileName);
 
                 if ((byteData.Length % 2) != 0) return false; // Must be even number of bytes! 
-                List<ushort> programWords = new List<ushort>();
+                m_programWords.Clear();
                 for (int i = 1; i < byteData.Length; i += 2)
                 {
-                    ushort word = (ushort)((byteData[i - 1] << 8) + (byteData[i] & 0xFF));             
-                    programWords.Add(word);
+                    ushort word = (ushort)((byteData[i - 1] << 8) + (byteData[i] & 0xFF));
+                    m_programWords.Add(word);
                 }
-                m_BinaryLength = programWords.Count;
+                m_BinaryLength = m_programWords.Count;
                 m_DCPUComputer.ResetCPURegisters();
-                m_DCPUComputer.SetProgram(ref programWords);                
+                m_DCPUComputer.SetProgram(ref m_programWords);                
                 if(OnExecutePostStepEvent!=null)OnExecutePostStepEvent(ref m_DCPUComputer); 
-                programWords.Clear();
             }
             catch (IOException ioE) // TODO: proper logging! 
             {
@@ -162,6 +168,7 @@ namespace DCPU16_ASM.Emulator
             }
             return true;
         }
+        
 
         /// <summary>
         /// Pause DCPU-16 Thread
@@ -183,6 +190,8 @@ namespace DCPU16_ASM.Emulator
             m_DCPUThread.Join();
 
             if (OnStopEvent != null) OnStopEvent();
+            m_keyCounter = 0;
+            m_DCPUComputer.SetProgram(ref m_programWords);  
         }
 
         /// <summary>
@@ -192,7 +201,9 @@ namespace DCPU16_ASM.Emulator
         {
             if (m_DCPUThread == null) return;
 
-            m_DCPUComputer.ResetCPURegisters();            
+            m_DCPUComputer.ResetCPURegisters();
+            m_keyCounter = 0;
+            m_DCPUComputer.SetProgram(ref m_programWords);
         }
 
         /// <summary>
@@ -215,6 +226,8 @@ namespace DCPU16_ASM.Emulator
             m_DCPUThread.Priority = ThreadPriority.BelowNormal;
             m_DCPUThread.Start();
 
+            m_keyCounter = 0;
+
             m_Running = true;
             if (OnStartEvent != null) OnStopEvent();
         }
@@ -226,17 +239,15 @@ namespace DCPU16_ASM.Emulator
         public void ProcessKeyPress(ushort _keyPress)
         {
             if (m_DCPUComputer.ProgramLoaded != true) return;
-            if (m_DCPUThread == null) return;
- 
-            for (int i = 0; i < 0xF; i++)
-            {
-                if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + i] == 0x0)
-                {
-                    m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + i] = (ushort)_keyPress;
-                    break;
-                }
-            }
+            if (m_DCPUThread == null) return;            
 
+            if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] == 0x0)
+            {
+                m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] = (ushort)_keyPress;
+            }
+            m_keyCounter++;
+
+            if (m_keyCounter > 0xF) m_keyCounter = 0;
         }
 
 
