@@ -45,6 +45,7 @@ namespace DCPU16_ASM.Assembler
         private readonly Dictionary<ushort, string> labelReferences;
         private readonly Dictionary<string, dcpuOpCode> opcodeDictionary;
         private readonly Dictionary<string, ushort> labelAddressDitionary;
+        private readonly Dictionary<ushort, string> labelDataFieldReferences;
         private readonly Dictionary<string, dcpuRegisterCodes> registerDictionary;
 
         public Parser()
@@ -52,6 +53,7 @@ namespace DCPU16_ASM.Assembler
             this.labelAddressDitionary = new Dictionary<string, ushort>();
             this.labelReferences = new Dictionary<ushort, string>();
             this.machineCode = new List<ushort>();
+            this.labelDataFieldReferences = new Dictionary<ushort, string>();
 
             this.opcodeDictionary = new Dictionary<string, dcpuOpCode>
                 {
@@ -142,6 +144,7 @@ namespace DCPU16_ASM.Assembler
                 }
 
                 this.SetLabelAddressReferences();
+                SetDataFieldLabelAddressReferences();
 
                 var count = 1;
 
@@ -301,15 +304,21 @@ namespace DCPU16_ASM.Assembler
 			    else
 			    {
                     var val = (ushort)0;
-                    try
+
+                    if (valStr.Contains("0x") != false)
                     {
-                        val = valStr.Contains("0x") ? Convert.ToUInt16(valStr, 16) : Convert.ToUInt16(valStr, 10);
-                        this.machineCode.Add(val);
+                        val = Convert.ToUInt16(valStr, 16);
                     }
-                    catch (Exception e)
+                    else if (valStr.All(x => char.IsDigit(x)))
                     {
-                        int d = 0;
+                        val = Convert.ToUInt16(valStr, 10);                        
                     }
+                    else
+                    {
+                        this.labelDataFieldReferences.Add((ushort)this.machineCode.Count, valStr);                        
+                    }
+
+                    this.machineCode.Add(val);
 			    }
 			}
 		}
@@ -520,6 +529,21 @@ namespace DCPU16_ASM.Assembler
                 }
 
                 this.machineCode[key] = this.labelAddressDitionary[labelName];
+            }
+        }
+
+        private void SetDataFieldLabelAddressReferences()
+        {
+            foreach (ushort key in labelDataFieldReferences.Keys)
+            {
+                string labelName = labelDataFieldReferences[key];
+
+                if(labelAddressDitionary.ContainsKey(labelName) != true)
+                {
+                    throw new Exception(string.Format("Unknown label '{0}' referenced in data field", labelName));
+                }
+
+                machineCode[key] = labelAddressDitionary[labelName];
             }
         }
 
