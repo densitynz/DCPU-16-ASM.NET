@@ -49,6 +49,7 @@ namespace DCPU16_ASM.Emulator
 
 
         KEYBOARD_START      = 0x9000,
-        KEYBOARD_END        = 0x900F
+        KEYBOARD_END        = 0x900F,
+        KEYBOARD_INDEX      = 0x9010 
     }
 }

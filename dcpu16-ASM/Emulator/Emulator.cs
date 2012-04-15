@@ -253,7 +253,8 @@ namespace DCPU16_ASM.Emulator
             {
                 if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] == 0x0)
                 {
-                    m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] = (ushort)_keyPress;
+                    m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + m_keyCounter] = (ushort)_keyPress;                    
+                    m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_INDEX] = (ushort)m_keyCounter; // Store counter reference @ 0x9100 so dcpu programs can find it.
                 }
                 m_keyCounter++;
 
