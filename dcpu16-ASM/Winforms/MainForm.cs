@@ -220,7 +220,7 @@ namespace DCPU16_ASM.Winforms
         private void asemblerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AssemblerForm asmDialog = new AssemblerForm();
-            asmDialog.ShowDialog(this);
+            asmDialog.Show(this);
         }
 
         /// <summary>

@@ -262,7 +262,7 @@ namespace DCPU16_ASM.Emulator
             }
             else
             {
-                for (int i = 0; i < 0x10; i++)
+                for (int i = 0; i < 0x10; i++)                
                 {
                     if (m_DCPUComputer.Memory.RAM[(int)dcpuMemoryLayout.KEYBOARD_START + i] == 0x0)
                     {
@@ -302,7 +302,7 @@ namespace DCPU16_ASM.Emulator
                     long totalTicks = ticksPerInstruction * (m_DCPUComputer.CycleCount - lastCycles);
 
                     if (elapsedTicks < totalTicks)
-                    {
+                    { 
                         while (true)
                         {
                             elapsedTicks = m_StopwatchTimer.Elapsed.Ticks;
@@ -310,11 +310,11 @@ namespace DCPU16_ASM.Emulator
                                 elapsedTicks > totalTicks) break;
 
                             /**
-                             * Using spinwait vs Sleep doesn't make a lick of differences. While other emulators seem to be
-                             * fixing this via Batch processing of instructions (so wait times are longer). I think that'll
-                             * come back to bite if future 'virtual hardware' requires precise timings (And we of course will
-                             * have to emulate that else people will write incorrect code). 
-                             */                            
+                                * Using spinwait vs Sleep doesn't make a lick of differences. While other emulators seem to be
+                                * fixing this via Batch processing of instructions (so wait times are longer). I think that'll
+                                * come back to bite if future 'virtual hardware' requires precise timings (And we of course will
+                                * have to emulate that else people will write incorrect code). 
+                                */
                             Thread.SpinWait((int)(totalTicks - elapsedTicks));
                         }
                     }

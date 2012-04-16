@@ -47,6 +47,7 @@ namespace DCPU16_ASM.Assembler
         private readonly Dictionary<string, ushort> labelAddressDitionary;
         private readonly Dictionary<ushort, string> labelDataFieldReferences;
         private readonly Dictionary<string, dcpuRegisterCodes> registerDictionary;
+        private bool dataNextLine = false;
 
         public Parser()
         {
@@ -115,6 +116,7 @@ namespace DCPU16_ASM.Assembler
         }
 
         public string MessageOuput { get; private set; }
+        public int LineCounter { get; private set; }        
 
         public ushort[] Parse(string[] lines)
         {
@@ -126,6 +128,8 @@ namespace DCPU16_ASM.Assembler
 
                 foreach (var line in lines)
                 {
+                    LineCounter++;
+
                     var currentLine = line.Trim();
 
                     if (currentLine.Length < 1 || line[0] == ';')
@@ -160,7 +164,7 @@ namespace DCPU16_ASM.Assembler
             }
             catch (Exception ex)
             {
-                this.AddMessageLine(string.Format("{0}", ex.Message));
+                this.AddMessageLine(string.Format("Line {0}: {1}",LineCounter, ex.Message));
                 return null;
             }
         }
@@ -183,6 +187,12 @@ namespace DCPU16_ASM.Assembler
         {
             line = line.ToLower().Trim();
 
+            if (dataNextLine != false)
+            {
+                dataNextLine = this.ParseDat(line);
+                return;
+            }
+
             if (line[0] == ':')
             {
                 var remaiderLineContentIndex = this.ParseLabel(line);
@@ -199,13 +209,13 @@ namespace DCPU16_ASM.Assembler
                     return;
                 }
             }
-            
+
             var tokens = this.Tokenize(line);
             var token = tokens[0].Trim();
 
             if (token.ToLower() == "dat")
             {
-                this.ParseDat(line);
+                dataNextLine = this.ParseDat(line);
                 return;
             }
 
@@ -253,12 +263,14 @@ namespace DCPU16_ASM.Assembler
             return tokens.Where(t => t.Trim() != string.Empty).ToArray();
         }
 		
-		private void ParseDat(string line)
+		private bool ParseDat(string line)
         {
             var dataFields = new List<string>();
 
-            foreach (var field in line.Substring(3, line.Length - 3).Trim().Split(','))
+            var lineData = dataNextLine != true ? line.Substring(3, line.Length - 3).Trim() : line.Trim();
+            foreach (var field in lineData.Split(','))
             {
+                if (field.Trim() == string.Empty) continue;
                 if (dataFields.Count == 0)
                 {
                     dataFields.Add(field);
@@ -286,12 +298,14 @@ namespace DCPU16_ASM.Assembler
             }
 
 			GenerateInstructionsForDataFields(dataFields);
+
+            return line.EndsWith(",") ? true : false;
         }
 
 		private void GenerateInstructionsForDataFields(IList<string> dataFields)
-		{
+		{            
 			foreach (var dat in dataFields)
-			{
+			{                
 			    var valStr = dat.Trim();
 			    if (valStr.IndexOf('"') > -1)
 			    {
@@ -311,7 +325,7 @@ namespace DCPU16_ASM.Assembler
                     }
                     else if (valStr.All(x => char.IsDigit(x)))
                     {
-                        val = Convert.ToUInt16(valStr, 10);                        
+                        val = Convert.ToUInt16(valStr, 10);                      
                     }
                     else
                     {
@@ -384,7 +398,7 @@ namespace DCPU16_ASM.Assembler
             }
             else
             {
-                if (clearedParameter.StartsWith("[")  && clearedParameter.EndsWith("]"))
+                if ((clearedParameter.StartsWith("[") || clearedParameter.StartsWith("("))  && (clearedParameter.EndsWith("]") || clearedParameter.EndsWith(")")))
                 {
 					clearedParameter = clearedParameter.Substring(1, clearedParameter.Length - 2).Replace(" ", string.Empty);
 						
@@ -499,12 +513,12 @@ namespace DCPU16_ASM.Assembler
         	    opcodeParamResult.LabelName = clearedParameter;
         	    return opcodeParamResult;
         	}
-        	
-        	ushort maxValue = Convert.ToUInt16("0x1F", 16);
+
+            ushort maxValue = 0x1F;
         		
         	if (literalValue < maxValue)
         	{
-        	    opcodeParamResult.Param = Convert.ToUInt16("0x20", 16);
+                opcodeParamResult.Param = 0x20;
         	    opcodeParamResult.Param += literalValue;
         	}
         	else

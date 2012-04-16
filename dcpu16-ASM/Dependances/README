@@ -1,0 +1,8 @@
+Extra dependancies you'll need to get to compile the code
+______________________________________________________________
+
+
+FastColorTextBox (LGPL licensed) 
+- http://www.codeproject.com/Articles/161871/Fast-Colored-TextBox-for-syntax-highlighting
+*NOTE: you will need to recompile the source, as the provided binary is for .NET 2.0 and We're using 3.5 for this project
+

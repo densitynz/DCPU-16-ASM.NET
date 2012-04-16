@@ -22,6 +22,9 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+// Quick code editor. 
+// Please note that the focus of this project is not really editing code.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,8 +32,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using System.IO;
 using DCPU16_ASM.Assembler;
+
+using FastColoredTextBoxNS;
 
 namespace DCPU16_ASM.Winforms
 {
@@ -48,6 +54,14 @@ namespace DCPU16_ASM.Winforms
         /// Has any code been modified
         /// </summary>
         private bool m_modified = false;
+
+        private TextStyle BlueStyle = new TextStyle(Brushes.Blue, null, FontStyle.Regular);
+        
+        private TextStyle MagentaStyle = new TextStyle(Brushes.Magenta, null, FontStyle.Regular);
+        private TextStyle GreenStyle = new TextStyle(Brushes.Green, null, FontStyle.Italic);
+        private TextStyle BrownStyle = new TextStyle(Brushes.Brown, null, FontStyle.Italic);
+        private TextStyle MaroonStyle = new TextStyle(Brushes.Maroon, null, FontStyle.Regular);
+        private TextStyle RedStyle = new TextStyle(Brushes.Red, null, FontStyle.Regular);
 
         /// <summary>
         /// Constructor
@@ -87,7 +101,7 @@ namespace DCPU16_ASM.Winforms
             {
                 try
                 {
-                    File.WriteAllText(saveFileDialog1.FileName, codeTextBox.Text);
+                    File.WriteAllText(saveFileDialog1.FileName, ColorCodeTextBox.Text);
                     m_fileName = saveFileDialog1.FileName;
                     m_modified = false;
                     this.Text = string.Format("Assembler - {0}", m_fileName);
@@ -110,9 +124,13 @@ namespace DCPU16_ASM.Winforms
             {
                 m_fileName = openFileDialog1.FileName;
 
-                codeTextBox.Text = File.ReadAllText(m_fileName);
+                ColorCodeTextBox.Text = File.ReadAllText(m_fileName);
 
-                this.Text = string.Format("Assembler - {0}", m_fileName);
+                this.Text = string.Format("DCPU-16 ASM.NET Code Editor - {0}", m_fileName);
+                ColorCodeTextBox.Selection.Start = Place.Empty;
+                ColorCodeTextBox.DoCaretVisible();
+                ColorCodeTextBox.IsChanged = false;
+                ColorCodeTextBox.ClearUndo();
             }
         }
 
@@ -123,14 +141,14 @@ namespace DCPU16_ASM.Winforms
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
-            if (codeTextBox.Text.Trim() == "")
+            if (ColorCodeTextBox.Text.Trim() == "")
             {                
                 MessageBox.Show("Nothing to compile", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             var assemble = new Parser();
-            var lines = codeTextBox.Text.Split('\n');
+            var lines = ColorCodeTextBox.Text.Split('\n');
             ushort[] machineCode = assemble.Parse(lines);
             if (machineCode == null)
             {
@@ -151,25 +169,6 @@ namespace DCPU16_ASM.Winforms
             textBox1.Text = assemble.MessageOuput;
             MessageBox.Show(string.Format("Code successfully compiled to\n\n'{0}'", output), Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.None);
         }
-        /*
-            return;
-            if (codeTextBox.Text.Trim() == "")
-            {                
-                MessageBox.Show("Nothing to compile", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            CDCPU16Assemble Assemble = new CDCPU16Assemble();
-            Assemble.SetFileName(m_fileName);
-            string[] lines = codeTextBox.Text.Split('\n');
-            if (Assemble.Assemble(ref lines) != true)
-            {
-                textBox1.Text = Assemble.MessageOuput;
-                MessageBox.Show("Issue compiling code, check the 'Messages' box", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            textBox1.Text = Assemble.MessageOuput;
-            MessageBox.Show(string.Format("Code successfully compiled to\n\n'{0}'",Assemble.SavedFilename), Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.None);
-        }*/
 
 
         /// <summary>
@@ -181,9 +180,9 @@ namespace DCPU16_ASM.Winforms
         {
             m_modified = true;
             if(m_fileName.Trim() != "")
-                this.Text = string.Format("Assembler - *MODIFIED* {0}", m_fileName);
+                this.Text = string.Format("DCPU-16 ASM.NET Code Editor - *MODIFIED* {0}", m_fileName);
             else
-                this.Text = string.Format("Assembler - *MODIFIED* Untitled");
+                this.Text = string.Format("DCPU-16 ASM.NET Code Editor - *MODIFIED* Untitled");
         }
 
         /// <summary>
@@ -202,8 +201,9 @@ namespace DCPU16_ASM.Winforms
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AssemblerForm_Load(object sender, EventArgs e)
-        {            
-            this.Text = string.Format("Assembler - Untitled");
+        {
+            this.Text = string.Format("DCPU-16 ASM.NET Code Editor - Untitled");
+
         }
 
         /// <summary>
@@ -215,6 +215,31 @@ namespace DCPU16_ASM.Winforms
         {
             textBox1.Text = "";
             MessageBox.Show("Message box cleared", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ColorCodeTextBox_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        ///  On text changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ColorCodeTextBox_TextChanged(object sender, FastColoredTextBoxNS.TextChangedEventArgs e)
+        {            
+            e.ChangedRange.ClearStyle(BlueStyle, MagentaStyle, GreenStyle, BrownStyle,RedStyle);
+            
+            e.ChangedRange.SetStyle(BrownStyle, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'"); // strings            
+            e.ChangedRange.SetStyle(GreenStyle, @";.*$", RegexOptions.Multiline); // comments            
+            e.ChangedRange.SetStyle(MagentaStyle, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b"); // numbers
+
+            // dcpu instructions (yes I suck at regex)
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(\bset\b|\badd\b|\bsub\b|\bmul\b|\bdiv\b|\bmod\b|\bshl\b|\bshr\b|\band\b|\bbor\b|\bxor\b|\bife\b|\bifn\b|\bifg\b|\bifb\b|\bjsr\b|\bdat\b|\bSET\b|\bADD\b|\bSUB\b|\bMUL\b|\bDIV\b|\bMOD\b|\bSHL\b|\bSHR\b|\bAND\b|\bBOR\b|\bXOR\b|\bIFE\b|\bIFN\b|\bIFG\b|\bIFB\b|\bJSR\b|\bDAT\b)");
+
+            // dcpu registers
+            e.ChangedRange.SetStyle(RedStyle, @"\b(\ba\b|\bb\b|\bc\b|\bx\b|\by\b|\bz\b|\bi\b|\bj\b|\bpop\b|\bpeek\b|\bpush\b|\bpc\b|\bsp\b|\bo\b|\bA\b|\bB\b|\bC\b|\bX|\bY\b|\bZ\b|\bI\b|\bJ\b|\bPOP\b|\bPEEK\b|\bPUSH\b|\bPC\b|\bSP\b|\bO\b)");
         }
     }
 }

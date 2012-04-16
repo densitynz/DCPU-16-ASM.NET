@@ -35,7 +35,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.codeTextBox = new System.Windows.Forms.TextBox();
+            this.ColorCodeTextBox = new FastColoredTextBoxNS.FastColoredTextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -55,9 +55,9 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 493);
+            this.panel1.Location = new System.Drawing.Point(0, 481);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(861, 42);
+            this.panel1.Size = new System.Drawing.Size(849, 42);
             this.panel1.TabIndex = 0;
             // 
             // button4
@@ -95,7 +95,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(777, 7);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(762, 7);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -106,40 +107,45 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.codeTextBox);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.ColorCodeTextBox);
+            this.groupBox1.Location = new System.Drawing.Point(3, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(861, 365);
+            this.groupBox1.Size = new System.Drawing.Size(843, 321);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Code View";
             // 
-            // codeTextBox
+            // ColorCodeTextBox
             // 
-            this.codeTextBox.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.codeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeTextBox.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.codeTextBox.Location = new System.Drawing.Point(3, 16);
-            this.codeTextBox.MaxLength = 500000;
-            this.codeTextBox.Multiline = true;
-            this.codeTextBox.Name = "codeTextBox";
-            this.codeTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.codeTextBox.Size = new System.Drawing.Size(855, 346);
-            this.codeTextBox.TabIndex = 0;
-            this.codeTextBox.TabStop = false;
-            this.codeTextBox.Text = "; DCPU-16 Assembly code\r\n; Write your test code in here. \r\n\r\n:loopForever \r\n\tSET " +
-    "PC loopForever";
-            this.codeTextBox.WordWrap = false;
-            this.codeTextBox.TextChanged += new System.EventHandler(this.codeTextBox_TextChanged);
+            this.ColorCodeTextBox.AutoScrollMinSize = new System.Drawing.Size(25, 15);
+            this.ColorCodeTextBox.BackBrush = null;
+            this.ColorCodeTextBox.CommentPrefix = ";";
+            this.ColorCodeTextBox.CurrentLineColor = System.Drawing.Color.Thistle;
+            this.ColorCodeTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.ColorCodeTextBox.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.ColorCodeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ColorCodeTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ColorCodeTextBox.IndentBackColor = System.Drawing.Color.Transparent;
+            this.ColorCodeTextBox.Location = new System.Drawing.Point(3, 16);
+            this.ColorCodeTextBox.Name = "ColorCodeTextBox";
+            this.ColorCodeTextBox.Paddings = new System.Windows.Forms.Padding(0);
+            this.ColorCodeTextBox.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.ColorCodeTextBox.ServiceLinesColor = System.Drawing.Color.LightGray;
+            this.ColorCodeTextBox.Size = new System.Drawing.Size(837, 302);
+            this.ColorCodeTextBox.TabIndex = 1;
+            this.ColorCodeTextBox.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.ColorCodeTextBox_TextChanged);
+            this.ColorCodeTextBox.Load += new System.EventHandler(this.ColorCodeTextBox_Load);
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(0, 339);
+            this.groupBox2.Location = new System.Drawing.Point(0, 327);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(861, 154);
+            this.groupBox2.Size = new System.Drawing.Size(849, 154);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Messages";
@@ -155,7 +161,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(855, 135);
+            this.textBox1.Size = new System.Drawing.Size(843, 135);
             this.textBox1.TabIndex = 0;
             this.textBox1.TabStop = false;
             this.textBox1.WordWrap = false;
@@ -170,7 +176,7 @@
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
@@ -188,23 +194,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(861, 535);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(849, 523);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "AssemblerForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Assembler";
+            this.Text = "DCPU-16 ASM.NET Code Editor";
             this.Load += new System.EventHandler(this.AssemblerForm_Load);
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -219,7 +220,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox codeTextBox;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox1;
@@ -227,5 +227,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private FastColoredTextBoxNS.FastColoredTextBox ColorCodeTextBox;
     }
 }

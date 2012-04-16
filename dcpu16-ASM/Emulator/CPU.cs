@@ -486,7 +486,6 @@ namespace DCPU16_ASM.Emulator
             return m_memory.RAM[m_registers.PC++];
         }
 
-        static int dd = 0;
         /// <summary>
         /// Execute a DCPU-16 Instruction
         /// </summary>
@@ -494,7 +493,6 @@ namespace DCPU16_ASM.Emulator
         {
             if (m_programLoaded != true) return;
 
-            dd++;
             ushort programWord = ReadNextWord();
             ushort opCode   = (ushort)((int)programWord & 0xF);
             ushort opP1     = (ushort)((int)(programWord >> 4) & 0x3F);     // A = Dest
