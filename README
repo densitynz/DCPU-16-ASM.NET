@@ -1,4 +1,5 @@
 DCPU-16 ASM.NET
+https://github.com/densitynz/DCPU-16-ASM.NET
  
 Copyright (c) 2012 Tim "DensitY" Hancock (densitynz@orcon.net.nz)
 
@@ -14,6 +15,10 @@ This project's core objectives are:
 
 All sub v1.0 commits here will be in-development commits. Parts may/may not work. 
 
+=== Binary download ====
+
+https://github.com/downloads/densitynz/DCPU-16-ASM.NET/DCPU16-ASM.NET_v0.6.0_Win32-Bin.zip
+
 === Usage: ===
 
 Use the Assembler menu to load code and create binaries. On the main form use 
@@ -25,6 +30,7 @@ key input to the DCPU-16 Program.
 
 Current TODOs:
 * Implement Future DCPU-16 Standards 
+* Proper lexer for parsing Dcpu ASM. 
 * compile time mathmatical expressions in literal fields. 
 * HUGE clean up of the code, its a mess!
 
