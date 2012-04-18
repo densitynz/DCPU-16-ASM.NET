@@ -26,6 +26,7 @@
 // Please note that the focus of this project is not really editing code.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -33,6 +34,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Linq;
 using System.IO;
 using DCPU16_ASM.Assembler;
 
@@ -146,6 +148,7 @@ namespace DCPU16_ASM.Winforms
                 MessageBox.Show("Nothing to compile", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+
 
             var assemble = new Parser();
             var lines = ColorCodeTextBox.Text.Split('\n');

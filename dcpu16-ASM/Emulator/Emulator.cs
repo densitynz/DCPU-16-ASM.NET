@@ -29,6 +29,8 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
 
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace DCPU16_ASM.Emulator
 {
@@ -176,7 +178,50 @@ namespace DCPU16_ASM.Emulator
             }
             return true;
         }
-        
+
+
+        /// <summary>
+        /// Load font into DCPU-16's Video memory
+        /// 
+        /// Based on Notch's Specs
+        /// </summary>
+        /// <param name="_fontBytes"></param>
+        public void LoadFontIntoVideoMemory(Bitmap _fontBuffer)
+        {
+            BitmapData fontData = _fontBuffer.LockBits(new Rectangle(0, 0, _fontBuffer.Width, _fontBuffer.Height),
+                ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+
+            unsafe
+            {
+                IntPtr fontScan = fontData.Scan0;
+
+                for (int c = 0; c < _fontBuffer.Width; c++)
+                {
+                    int charOffset = (int)dcpuMemoryLayout.VIDEO_CHARSET_START + c * 2;
+                    int xOffset = (c % 32) * DisplayConstants.FontWidth;
+                    int yOffset = (c / 32) * DisplayConstants.FontHeight;
+
+                    m_DCPUComputer.Memory.RAM[charOffset] = '\0';
+                    m_DCPUComputer.Memory.RAM[charOffset + 1] = '\0';
+
+                    for (int x = 0; x < DisplayConstants.FontWidth; x++)
+                    {
+                        int bitPixel = 0;
+                        for (int y = 0; y < DisplayConstants.FontHeight; y++)
+                        {
+                            int fontscanOffset = ((xOffset + x) + (yOffset + y) * 128);
+                            int fontPixel = *((int*)(void*)fontScan + fontscanOffset);
+                            if ((fontPixel & 0xFF) > 128) bitPixel |= 1 << y;       
+                        }
+
+                        m_DCPUComputer.Memory.RAM[charOffset + x  / 2] |= (ushort)(bitPixel << (x + 1 & 1) * DisplayConstants.FontHeight);
+                    }
+
+                }
+            }
+            _fontBuffer.UnlockBits(fontData);
+
+        }
 
         /// <summary>
         /// Pause DCPU-16 Thread

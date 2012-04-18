@@ -81,12 +81,11 @@
             this.FontimageList = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label18 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
-            this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -95,7 +94,6 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -176,10 +174,9 @@
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 24);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(970, 151);
+            this.groupBox1.Size = new System.Drawing.Size(435, 297);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "DCPU-16 Registers and Cycle Counter";
@@ -187,7 +184,7 @@
             // SetCpuFreqLabel
             // 
             this.SetCpuFreqLabel.AutoSize = true;
-            this.SetCpuFreqLabel.Location = new System.Drawing.Point(730, 34);
+            this.SetCpuFreqLabel.Location = new System.Drawing.Point(180, 226);
             this.SetCpuFreqLabel.Name = "SetCpuFreqLabel";
             this.SetCpuFreqLabel.Size = new System.Drawing.Size(46, 13);
             this.SetCpuFreqLabel.TabIndex = 40;
@@ -196,7 +193,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(647, 34);
+            this.label15.Location = new System.Drawing.Point(97, 226);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(84, 13);
             this.label15.TabIndex = 39;
@@ -204,7 +201,7 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(780, 27);
+            this.trackBar1.Location = new System.Drawing.Point(230, 219);
             this.trackBar1.Maximum = 1200;
             this.trackBar1.Minimum = 25;
             this.trackBar1.Name = "trackBar1";
@@ -217,7 +214,7 @@
             // CpuFreqLabel
             // 
             this.CpuFreqLabel.AutoSize = true;
-            this.CpuFreqLabel.Location = new System.Drawing.Point(742, 75);
+            this.CpuFreqLabel.Location = new System.Drawing.Point(98, 151);
             this.CpuFreqLabel.Name = "CpuFreqLabel";
             this.CpuFreqLabel.Size = new System.Drawing.Size(34, 13);
             this.CpuFreqLabel.TabIndex = 37;
@@ -226,7 +223,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(678, 75);
+            this.label14.Location = new System.Drawing.Point(34, 151);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 13);
             this.label14.TabIndex = 36;
@@ -234,7 +231,7 @@
             // 
             // cycleCounttextBox
             // 
-            this.cycleCounttextBox.Location = new System.Drawing.Point(733, 96);
+            this.cycleCounttextBox.Location = new System.Drawing.Point(89, 172);
             this.cycleCounttextBox.Name = "cycleCounttextBox";
             this.cycleCounttextBox.ReadOnly = true;
             this.cycleCounttextBox.Size = new System.Drawing.Size(100, 20);
@@ -244,7 +241,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(664, 99);
+            this.label13.Location = new System.Drawing.Point(20, 175);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(67, 13);
             this.label13.TabIndex = 34;
@@ -429,7 +426,7 @@
             // 
             // RegOtextBox
             // 
-            this.RegOtextBox.Location = new System.Drawing.Point(527, 96);
+            this.RegOtextBox.Location = new System.Drawing.Point(304, 193);
             this.RegOtextBox.Name = "RegOtextBox";
             this.RegOtextBox.ReadOnly = true;
             this.RegOtextBox.Size = new System.Drawing.Size(100, 20);
@@ -438,7 +435,7 @@
             // 
             // RegSPtextBox
             // 
-            this.RegSPtextBox.Location = new System.Drawing.Point(527, 72);
+            this.RegSPtextBox.Location = new System.Drawing.Point(304, 169);
             this.RegSPtextBox.Name = "RegSPtextBox";
             this.RegSPtextBox.ReadOnly = true;
             this.RegSPtextBox.Size = new System.Drawing.Size(100, 20);
@@ -447,7 +444,7 @@
             // 
             // RegPCtextBox
             // 
-            this.RegPCtextBox.Location = new System.Drawing.Point(527, 47);
+            this.RegPCtextBox.Location = new System.Drawing.Point(304, 144);
             this.RegPCtextBox.Name = "RegPCtextBox";
             this.RegPCtextBox.ReadOnly = true;
             this.RegPCtextBox.Size = new System.Drawing.Size(100, 20);
@@ -457,7 +454,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(469, 99);
+            this.label11.Location = new System.Drawing.Point(246, 196);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(52, 13);
             this.label11.TabIndex = 10;
@@ -466,7 +463,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(447, 75);
+            this.label10.Location = new System.Drawing.Point(224, 172);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(74, 13);
             this.label10.TabIndex = 9;
@@ -475,7 +472,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(432, 50);
+            this.label9.Location = new System.Drawing.Point(209, 147);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(89, 13);
             this.label9.TabIndex = 8;
@@ -487,7 +484,7 @@
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(0, 619);
+            this.groupBox2.Location = new System.Drawing.Point(0, 321);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(970, 54);
             this.groupBox2.TabIndex = 2;
@@ -529,10 +526,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.BinaryDumptextBox);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox3.Location = new System.Drawing.Point(641, 175);
+            this.groupBox3.Location = new System.Drawing.Point(605, 30);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(329, 444);
+            this.groupBox3.Size = new System.Drawing.Size(353, 291);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "DCPU-16 Binary Dump";
@@ -546,7 +542,7 @@
             this.BinaryDumptextBox.Name = "BinaryDumptextBox";
             this.BinaryDumptextBox.ReadOnly = true;
             this.BinaryDumptextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.BinaryDumptextBox.Size = new System.Drawing.Size(323, 425);
+            this.BinaryDumptextBox.Size = new System.Drawing.Size(347, 272);
             this.BinaryDumptextBox.TabIndex = 0;
             this.BinaryDumptextBox.TabStop = false;
             this.BinaryDumptextBox.WordWrap = false;
@@ -573,32 +569,40 @@
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pictureBox1.Location = new System.Drawing.Point(6, 44);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
+            this.pictureBox1.Size = new System.Drawing.Size(128, 96);
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.checkBox2);
             this.groupBox5.Controls.Add(this.checkBox1);
             this.groupBox5.Controls.Add(this.label18);
             this.groupBox5.Controls.Add(this.button4);
-            this.groupBox5.Controls.Add(this.label17);
             this.groupBox5.Controls.Add(this.label16);
-            this.groupBox5.Controls.Add(this.pictureBox2);
             this.groupBox5.Controls.Add(this.pictureBox1);
-            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox5.Location = new System.Drawing.Point(0, 175);
+            this.groupBox5.Location = new System.Drawing.Point(441, 30);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(641, 444);
+            this.groupBox5.Size = new System.Drawing.Size(158, 291);
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DCPU-16 Text Display";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(6, 264);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(149, 17);
+            this.checkBox1.TabIndex = 42;
+            this.checkBox1.Text = "Use Keyboard Ring Buffer";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(7, 256);
+            this.label18.Location = new System.Drawing.Point(7, 213);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(137, 13);
             this.label18.TabIndex = 41;
@@ -606,7 +610,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(6, 189);
+            this.button4.Location = new System.Drawing.Point(6, 146);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(128, 64);
             this.button4.TabIndex = 9;
@@ -615,49 +619,31 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(240, 25);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(168, 13);
-            this.label17.TabIndex = 8;
-            this.label17.Text = "Blind people Resolution (384x384)";
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(7, 25);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(141, 13);
+            this.label16.Size = new System.Drawing.Size(135, 13);
             this.label16.TabIndex = 7;
-            this.label16.Text = "Native Resolution (128x128)";
+            this.label16.Text = "Native Resolution (128x96)";
             // 
-            // pictureBox2
+            // checkBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.pictureBox2.Location = new System.Drawing.Point(243, 44);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(384, 384);
-            this.pictureBox2.TabIndex = 6;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(15, 284);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(149, 17);
-            this.checkBox1.TabIndex = 42;
-            this.checkBox1.Text = "Use Keyboard Ring Buffer";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(6, 241);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(122, 17);
+            this.checkBox2.TabIndex = 43;
+            this.checkBox2.Text = "Ascii Arrow Mapping";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(970, 673);
+            this.ClientSize = new System.Drawing.Size(970, 375);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -682,7 +668,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -741,11 +726,10 @@
         private System.Windows.Forms.ImageList FontimageList;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }

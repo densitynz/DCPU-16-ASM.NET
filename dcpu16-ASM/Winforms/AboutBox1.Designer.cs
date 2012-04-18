@@ -121,9 +121,8 @@
             this.textBoxDescription.Size = new System.Drawing.Size(400, 126);
             this.textBoxDescription.TabIndex = 23;
             this.textBoxDescription.TabStop = false;
-            this.textBoxDescription.Text = "This software is licensed under the MIT license. \r\n\r\nHowever you can also license" +
-    " it under the following licenses of your choosing.\r\n\r\n- BSD\r\n- ZLib\r\n- MS-PL\r\n- " +
-    "GSLv2 ";
+            this.textBoxDescription.Text = "This software is licensed under the MIT license. \r\n\r\nFeedback to https://github.c" +
+    "om/densitynz/DCPU-16-ASM.NET";
             // 
             // okButton
             // 

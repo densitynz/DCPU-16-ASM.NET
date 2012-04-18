@@ -45,11 +45,32 @@ namespace DCPU16_ASM.Emulator
         /// Ending memory location for DCPU-16's Text mode 
         /// Frame buffer
         /// </summary>
-        VIDEO_TEXT_END      = 0x81FF,
+        VIDEO_TEXT_END      = 0x817F, // Resolution is 32x12 chars
 
+        /// <summary>
+        /// Character set start
+        /// </summary>
+        VIDEO_CHARSET_START = 0x8180,
+        /// <summary>
+        /// Character set end position
+        /// </summary>
+        VIDEO_CHARSET_END   = 0x827F,
+        /// <summary>
+        /// Bottom lines 12-16
+        /// </summary>
+        VIDEO_MISC_DATA     = 0x8280,
 
+        /// <summary>
+        /// Keyboard Starting memory address
+        /// </summary>
         KEYBOARD_START      = 0x9000,
+        /// <summary>
+        /// Keyboard ending addres
+        /// </summary>
         KEYBOARD_END        = 0x900F,
+        /// <summary>
+        /// Keyboard ring buffer index 
+        /// </summary>
         KEYBOARD_INDEX      = 0x9010 
     }
 }

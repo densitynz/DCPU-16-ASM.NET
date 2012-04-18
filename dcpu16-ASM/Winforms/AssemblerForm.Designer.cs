@@ -113,7 +113,7 @@
             this.groupBox1.Controls.Add(this.ColorCodeTextBox);
             this.groupBox1.Location = new System.Drawing.Point(3, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(843, 321);
+            this.groupBox1.Size = new System.Drawing.Size(843, 347);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Code View";
@@ -134,7 +134,7 @@
             this.ColorCodeTextBox.Paddings = new System.Windows.Forms.Padding(0);
             this.ColorCodeTextBox.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.ColorCodeTextBox.ServiceLinesColor = System.Drawing.Color.LightGray;
-            this.ColorCodeTextBox.Size = new System.Drawing.Size(837, 302);
+            this.ColorCodeTextBox.Size = new System.Drawing.Size(837, 328);
             this.ColorCodeTextBox.TabIndex = 1;
             this.ColorCodeTextBox.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.ColorCodeTextBox_TextChanged);
             this.ColorCodeTextBox.Load += new System.EventHandler(this.ColorCodeTextBox_Load);
@@ -143,9 +143,9 @@
             // 
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(0, 327);
+            this.groupBox2.Location = new System.Drawing.Point(0, 353);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(849, 154);
+            this.groupBox2.Size = new System.Drawing.Size(849, 128);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Messages";
@@ -161,7 +161,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(843, 135);
+            this.textBox1.Size = new System.Drawing.Size(843, 109);
             this.textBox1.TabIndex = 0;
             this.textBox1.TabStop = false;
             this.textBox1.WordWrap = false;

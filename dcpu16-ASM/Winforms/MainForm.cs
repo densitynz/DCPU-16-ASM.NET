@@ -39,14 +39,6 @@ namespace DCPU16_ASM.Winforms
 
     public partial class MainForm : Form
     {
-        // TODO: these need to be shifted to a better location.
-        private const int ScreenTextWidth = 32;
-        private const int ScreenTextHeight = 16;
-        private const int FontWidth = 4;
-        private const int FontHeight = 8;        
-
-        private const int ScreenPixelWidth = ScreenTextWidth * FontWidth;
-        private const int ScreenPixelHeight = ScreenTextHeight * FontHeight;
 
         /// <summary>
         /// DCPU local buffer. 
@@ -108,6 +100,8 @@ namespace DCPU16_ASM.Winforms
         /// </summary>
         private Bitmap m_FontBuffer;
 
+        private UserWindowForm m_gameWindow = new UserWindowForm();
+
         /// <summary>
         /// Our text color map
         /// EGA color goodness
@@ -147,7 +141,9 @@ namespace DCPU16_ASM.Winforms
             m_CpuDoublebuffer.Registers.GP = new ushort[8];
             m_CpuDoublebuffer.CycleCount = 0;
 
-            m_FrameBuffer = new Bitmap(ScreenPixelWidth, ScreenPixelHeight);
+            DisplayConstants.GenerateColorMaps();
+
+            m_FrameBuffer = new Bitmap(DisplayConstants.ScreenPixelWidth, DisplayConstants.ScreenPixelHeight);
             LoadFontFromImagelist();
 
             checkBox1.AutoCheck = false;
@@ -173,8 +169,10 @@ namespace DCPU16_ASM.Winforms
                 m_FrameBuffer.Dispose();
                 m_FrameBuffer = null;
             }
-            m_FrameBuffer = new Bitmap(ScreenPixelWidth, ScreenPixelHeight);
+            m_FrameBuffer = new Bitmap(DisplayConstants.ScreenPixelWidth, DisplayConstants.ScreenPixelHeight);
         }
+
+
         /// <summary>
         /// Main Menu
         /// 
@@ -204,6 +202,9 @@ namespace DCPU16_ASM.Winforms
                     MessageBox.Show(errorMessage);
                     return;
                 }
+
+                m_DPUEmulator.LoadFontIntoVideoMemory(m_FontBuffer);
+
                 m_cycleCount = m_lastCycleCount = 0;
                 m_CpuDoublebuffer.KeyIndex = 0;
                 BinaryMemoryDump();
@@ -362,7 +363,6 @@ namespace DCPU16_ASM.Winforms
                 DrawToFrameBuffer();
 
                 pictureBox1.Refresh();
-                pictureBox2.Refresh();
             }
 
         }
@@ -446,15 +446,6 @@ namespace DCPU16_ASM.Winforms
             if(m_FrameBuffer != null) g.DrawImage(m_FrameBuffer, 0, 0,pictureBox1.Width,pictureBox1.Height);
         }
 
-        private void pictureBox2_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-
-            if (m_FrameBuffer != null) g.DrawImage(m_FrameBuffer, 0, 0, pictureBox2.Width, pictureBox2.Height);
-
-        }
         //----------------------------------------------------------
         // Text mode Drawing code. 
         //----------------------------------------------------------
@@ -464,7 +455,7 @@ namespace DCPU16_ASM.Winforms
         /// </summary>
         private void DrawToFrameBuffer()
         {
-            BitmapData Data = m_FrameBuffer.LockBits(new Rectangle(0, 0, ScreenPixelWidth, ScreenPixelHeight), 
+            BitmapData Data = m_FrameBuffer.LockBits(new Rectangle(0, 0, DisplayConstants.ScreenPixelWidth, DisplayConstants.ScreenPixelHeight), 
                         ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             BitmapData fontData = m_FontBuffer.LockBits(new Rectangle(0, 0, m_FontBuffer.Width, m_FontBuffer.Height),
                         ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
@@ -482,44 +473,34 @@ namespace DCPU16_ASM.Winforms
                 IntPtr bmpScan = Data.Scan0;
                 IntPtr fontScan = fontData.Scan0;
 
-                // Slow font kerneling 
-                for (int ty = 0; ty < ScreenTextHeight; ty++)                
+                // updated font
+                for (int ty = 0; ty < DisplayConstants.ScreenTextHeight; ty++)                
                 {
-                    int screenOffsetY = (ty * FontHeight);
+                    int screenOffsetY = (ty * DisplayConstants.FontHeight);
 
-                    for (int tx = 0; tx < ScreenTextWidth; tx++)
+                    for (int tx = 0; tx < DisplayConstants.ScreenTextWidth; tx++)
                     {
-                        int screenOffsetX = (tx * FontWidth);
-                        
-                        int tff = ty * ScreenTextWidth + tx;
+                        int screenOffsetX = (tx * DisplayConstants.FontWidth);
+
+                        int tff = ty * DisplayConstants.ScreenTextWidth + tx;
 
                         ushort charData = m_CpuDoublebuffer.Memory.RAM[(int)dcpuMemoryLayout.VIDEO_TEXT_START + tff];
                         byte c = (byte)(charData & 0xFF);       // character
-                        int b = (int)((charData >> 8) & 0xF);   // background Color
-                        int f = (int)((charData >> 12) & 0xF);  // charcter Color       
-
-                        // calculate pixel position of character in font. 
-                        // image is 128x32, so 128/4 = 32. 
-                        int fOffX = (c % 32) * FontWidth;
-                        int fOffY = (c / 32) * FontHeight;
-
-                        for (int py = 0; py < FontHeight; py++)                        
-                        {
-                            for (int px = 0; px < FontWidth; px++)
+                        int cIndex = (int)((charData >> 8) & 0xFF);   // Color index  
+                        int fontOff = (int)dcpuMemoryLayout.VIDEO_CHARSET_START + c * 2;
+                        int baseColor = DisplayConstants.BaseColor[cIndex];
+                        int addColor = DisplayConstants.OffsetColor[cIndex];
+                        for (int px = 0; px < DisplayConstants.FontWidth; px++)
+                        {                            
+                            int fontBits = (m_CpuDoublebuffer.Memory.RAM[(int)fontOff + (px >> 1)] >> (px + 1 & 1) * DisplayConstants.FontHeight) & 0xFF;
+                            for (int py = 0; py < DisplayConstants.FontHeight; py++)                        
                             {
-                                int screenOff = ((screenOffsetY + py) * (ScreenPixelWidth) + screenOffsetX + px) * 4;
-                                int fontOff = ((fOffY + py) * m_FontBuffer.Width + fOffX + px) * 4;
+                                int screenOff = ((screenOffsetY + py) * (DisplayConstants.ScreenPixelWidth) + screenOffsetX + px) * 4;
+                                int displayColor = baseColor + addColor * ((fontBits >> py) & 1);
 
-                                uint fontPixel = (uint)(*((byte*)(void*)fontScan + fontOff + 0) +
-                                                (*((byte*)(void*)fontScan + fontOff + 1) << 8) +
-                                                (*((byte*)(void*)fontScan + fontOff + 2) << 16));
-
-                                fontPixel = (b == 0 && f == 0 && c != 0) ? fontPixel :
-                                    (fontPixel != 0 && c != 0) ? fontPixel = m_TextColorMap[f] : fontPixel = m_TextColorMap[b];
-
-                                *((byte*)(void*)bmpScan + screenOff + 0) = (byte)(fontPixel & 0xFF);
-                                *((byte*)(void*)bmpScan + screenOff + 1) = (byte)((fontPixel >> 8) & 0xFF);
-                                *((byte*)(void*)bmpScan + screenOff + 2) = (byte)((fontPixel >> 16) & 0xFF);
+                                *((byte*)(void*)bmpScan + screenOff + 0) = (byte)(displayColor & 0xFF);
+                                *((byte*)(void*)bmpScan + screenOff + 1) = (byte)((displayColor >> 8) & 0xFF);
+                                *((byte*)(void*)bmpScan + screenOff + 2) = (byte)((displayColor >> 16) & 0xFF);
                                 *((byte*)(void*)bmpScan + screenOff + 3) = 0xFF;
                             }
                         }
@@ -552,10 +533,11 @@ namespace DCPU16_ASM.Winforms
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
-            UserWindowForm gameWindow = new UserWindowForm();
+            //UserWindowForm gameWindow = new UserWindowForm();
+            m_gameWindow = new UserWindowForm();
             MainForm tmp = this;
-            gameWindow.FeedReferences(ref m_FrameBuffer, ref tmp);
-            gameWindow.ShowDialog(this);
+            m_gameWindow.FeedReferences(ref m_FrameBuffer, ref tmp);
+            m_gameWindow.ShowDialog(this);
         }
 
         /// <summary>
@@ -579,6 +561,14 @@ namespace DCPU16_ASM.Winforms
 
             // reset program
             button3_Click(sender, e);
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (m_gameWindow == null) return;
+
+            m_gameWindow.SetArrayKeyMapping(checkBox2.Checked != false ? UserWindowForm.arrowMapType.ASCII : UserWindowForm.arrowMapType.NONE);
+
         }
     }
 }
