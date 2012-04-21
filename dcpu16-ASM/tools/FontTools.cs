@@ -26,6 +26,9 @@
 
 using System;
 using System.IO;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -130,6 +133,63 @@ namespace DCPU16_ASM.Tools
 
         }
 
+
+        /// <summary>
+        /// Import from Image file
+        /// </summary>
+        /// <param name="_fileName"></param>
+        /// <returns></returns>
+        public bool ImportFromImage(string _fileName, out string _error)
+        {
+            _error = string.Empty;
+            if (File.Exists(_fileName) != true)
+            {
+                _error = string.Format("Image file doesn't exist");
+                return false;
+            }
+                
+            Bitmap image = new Bitmap(_fileName);
+            if (image.Width != 128 || image.Height != 32)
+            {
+                _error = string.Format("Image must be 128x32 in resolution");
+                return false;
+            }
+
+            BitmapData fontData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
+            ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+
+            unsafe 
+            {
+                IntPtr fontScan = fontData.Scan0;
+
+                for (int c = 0; c < image.Width; c++)
+                {
+                    int charOffset = c * 2;
+                    int xOffset = (c % 32) * FontConstants.FontWidth;
+                    int yOffset = (c / 32) * FontConstants.FontHeight;
+
+                    m_fontCharacters[charOffset] = '\0';
+                    m_fontCharacters[charOffset + 1] = '\0';
+
+                    for (int x = 0; x < FontConstants.FontWidth; x++)
+                    {
+                        int bitPixel = 0;
+                        for (int y = 0; y < FontConstants.FontHeight; y++)
+                        {
+                            int fontscanOffset = ((xOffset + x) + (yOffset + y) * 128);
+                            int fontPixel = *((int*)(void*)fontScan + fontscanOffset);
+                            if ((fontPixel & 0xFF) > 128) bitPixel |= 1 << y;
+                        }
+
+                        m_fontCharacters[charOffset + x / 2] |= (ushort)(bitPixel << (x + 1 & 1) * FontConstants.FontHeight);
+                    }
+
+                }
+            }
+            image.UnlockBits(fontData);
+
+            return true;
+        }
 
         /// <summary>
         /// Load our Font character set from disk
