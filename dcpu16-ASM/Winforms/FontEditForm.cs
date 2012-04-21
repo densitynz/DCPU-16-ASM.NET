@@ -398,6 +398,8 @@ namespace DCPU16_ASM.Winforms
             {
                 return;
             }
+
+            m_FontSet.Clear();
         }
 
         /// <summary>
@@ -413,6 +415,26 @@ namespace DCPU16_ASM.Winforms
             {
                 MessageBox.Show(string.Format("Font dumped to assembly file\n\n'{0}'", saveAsmDialog.FileName),Globals.ProgramName,MessageBoxButtons.OK,MessageBoxIcon.Information);
             }
+        }
+
+        /// <summary>
+        /// Import Image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void importImage128x32ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openImageDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            string error = string.Empty;
+
+            if (m_FontSet.ImportFromImage(openImageDialog.FileName, out error) != true)
+            {
+                MessageBox.Show(error, Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            MessageBox.Show("Successfully imported", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

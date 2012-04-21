@@ -57,6 +57,9 @@
             this.saveFontDialog = new System.Windows.Forms.SaveFileDialog();
             this.saveAsmDialog = new System.Windows.Forms.SaveFileDialog();
             this.label3 = new System.Windows.Forms.Label();
+            this.importToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.importImage128x32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openImageDialog = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -90,7 +93,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
-            this.importToolStripMenuItem});
+            this.importToolStripMenuItem,
+            this.importToolStripMenuItem1});
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -305,6 +309,25 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "I\'m guessing high on the cards is a Screen Editor";
             // 
+            // importToolStripMenuItem1
+            // 
+            this.importToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importImage128x32ToolStripMenuItem});
+            this.importToolStripMenuItem1.Name = "importToolStripMenuItem1";
+            this.importToolStripMenuItem1.Size = new System.Drawing.Size(55, 20);
+            this.importToolStripMenuItem1.Text = "&Import";
+            // 
+            // importImage128x32ToolStripMenuItem
+            // 
+            this.importImage128x32ToolStripMenuItem.Name = "importImage128x32ToolStripMenuItem";
+            this.importImage128x32ToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.importImage128x32ToolStripMenuItem.Text = "Import I&mage (128x32)";
+            this.importImage128x32ToolStripMenuItem.Click += new System.EventHandler(this.importImage128x32ToolStripMenuItem_Click);
+            // 
+            // openImageDialog
+            // 
+            this.openImageDialog.Filter = "Bitmap Files|*.bmp|Png Files|*.png";
+            // 
             // FontEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -370,5 +393,8 @@
         private System.Windows.Forms.ToolStripMenuItem exportToDCPU16AssemblyToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveAsmDialog;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem importImage128x32ToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openImageDialog;
     }
 }
