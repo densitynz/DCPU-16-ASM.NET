@@ -33,6 +33,7 @@ using System.Windows.Forms;
 using System.IO;
 
 using DCPU16_ASM.Emulator;
+using DCPU16_ASM.Tools;
 
 namespace DCPU16_ASM.Emulator
 {
@@ -43,11 +44,9 @@ namespace DCPU16_ASM.Emulator
     {        
         public static int ScreenTextWidth = 32;
         public static int ScreenTextHeight = 12;
-        public static int FontWidth = 4;
-        public static int FontHeight = 8;
 
-        public static int ScreenPixelWidth = ScreenTextWidth * FontWidth;
-        public static int ScreenPixelHeight = ScreenTextHeight * FontHeight;
+        public static int ScreenPixelWidth = ScreenTextWidth * FontConstants.FontWidth;
+        public static int ScreenPixelHeight = ScreenTextHeight * FontConstants.FontHeight;
 
         public static int[] BaseColor = new int[256];
         public static int[] OffsetColor = new int[256];

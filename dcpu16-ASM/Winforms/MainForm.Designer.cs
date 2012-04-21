@@ -34,9 +34,12 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadCompiledBinaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.asemblerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutDCPU16ASMNETToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.assemblerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.fontEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.SetCpuFreqLabel = new System.Windows.Forms.Label();
@@ -81,11 +84,12 @@
             this.FontimageList = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label18 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -100,7 +104,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.asemblerToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -112,6 +116,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadCompiledBinaryToolStripMenuItem,
+            this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -131,13 +136,6 @@
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // asemblerToolStripMenuItem
-            // 
-            this.asemblerToolStripMenuItem.Name = "asemblerToolStripMenuItem";
-            this.asemblerToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
-            this.asemblerToolStripMenuItem.Text = "&Assembler";
-            this.asemblerToolStripMenuItem.Click += new System.EventHandler(this.asemblerToolStripMenuItem_Click);
-            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -152,6 +150,35 @@
             this.aboutDCPU16ASMNETToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.aboutDCPU16ASMNETToolStripMenuItem.Text = "A&bout DCPU-16 ASM.NET";
             this.aboutDCPU16ASMNETToolStripMenuItem.Click += new System.EventHandler(this.aboutDCPU16ASMNETToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.assemblerToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.fontEditorToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // assemblerToolStripMenuItem
+            // 
+            this.assemblerToolStripMenuItem.Name = "assemblerToolStripMenuItem";
+            this.assemblerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.assemblerToolStripMenuItem.Text = "&Assembler";
+            this.assemblerToolStripMenuItem.Click += new System.EventHandler(this.assemblerToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+            // 
+            // fontEditorToolStripMenuItem
+            // 
+            this.fontEditorToolStripMenuItem.Name = "fontEditorToolStripMenuItem";
+            this.fontEditorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fontEditorToolStripMenuItem.Text = "&Font Editor";
+            this.fontEditorToolStripMenuItem.Click += new System.EventHandler(this.fontEditorToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -589,6 +616,17 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DCPU-16 Text Display";
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(6, 241);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(122, 17);
+            this.checkBox2.TabIndex = 43;
+            this.checkBox2.Text = "Ascii Arrow Mapping";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
@@ -628,16 +666,10 @@
             this.label16.TabIndex = 7;
             this.label16.Text = "Native Resolution (128x96)";
             // 
-            // checkBox2
+            // toolStripMenuItem1
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(6, 241);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(122, 17);
-            this.checkBox2.TabIndex = 43;
-            this.checkBox2.Text = "Ascii Arrow Mapping";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(188, 6);
             // 
             // MainForm
             // 
@@ -679,7 +711,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadCompiledBinaryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem asemblerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutDCPU16ASMNETToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -731,5 +762,10 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assemblerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem fontEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     }
 }

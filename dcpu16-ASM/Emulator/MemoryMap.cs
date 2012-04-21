@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// Memory map/layout definitions.
+// Memory map/layout definitions, dcpu double buffering
 
 using System;
 using System.Collections.Generic;
@@ -72,5 +72,33 @@ namespace DCPU16_ASM.Emulator
         /// Keyboard ring buffer index 
         /// </summary>
         KEYBOARD_INDEX      = 0x9010 
+    }
+
+
+    /// <summary>
+    /// DCPU buffer. 
+    /// 
+    /// A copy of dcpu data currently running in the dcpu thread. updated 
+    /// every 16ms if needed. 
+    /// </summary>
+    public class cpuDoubleBuffer
+    {
+        /// <summary>
+        /// DCPU memory
+        /// </summary>
+        public cpuMemory Memory;
+        /// <summary>
+        /// DCPU Registers
+        /// </summary>
+        public cpuRegisters Registers;
+        /// <summary>
+        /// Cyclce counter
+        /// </summary>
+        public long CycleCount;
+
+        /// <summary>
+        /// Keyboard cylinder index
+        /// </summary>
+        public int KeyIndex = 0;
     }
 }

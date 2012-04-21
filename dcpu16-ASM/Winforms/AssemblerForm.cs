@@ -149,6 +149,13 @@ namespace DCPU16_ASM.Winforms
                 return;
             }
 
+            /*CDCPULexer lexer = new CDCPULexer();
+            string Error = "";
+            List<CDCPULexerToken> tokens = lexer.TokenizeFileString(ColorCodeTextBox.Text, out Error);
+
+            textBox1.Text = Error;
+
+            return; */
 
             var assemble = new Parser();
             var lines = ColorCodeTextBox.Text.Split('\n');

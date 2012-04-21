@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -53,10 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembler\Generator.cs" />
+    <Compile Include="Assembler\Lexer.cs" />
     <Compile Include="Assembler\OpcodeParamResult.cs" />
     <Compile Include="Assembler\Parser.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="Emulator\CPU.cs" />
+    <Compile Include="Emulator\Display.cs" />
     <Compile Include="Emulator\Emulator.cs" />
     <Compile Include="Emulator\IO.cs" />
     <Compile Include="Emulator\MemoryMap.cs" />
@@ -65,6 +68,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Tools\FontTools.cs" />
     <Compile Include="Winforms\AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +80,12 @@
     </Compile>
     <Compile Include="Winforms\AssemblerForm.Designer.cs">
       <DependentUpon>AssemblerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Winforms\FontEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Winforms\FontEditForm.Designer.cs">
+      <DependentUpon>FontEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Winforms\UserWindowForm.cs">
       <SubType>Form</SubType>
@@ -108,6 +118,9 @@
     <EmbeddedResource Include="Winforms\AssemblerForm.resx">
       <DependentUpon>AssemblerForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Winforms\FontEditForm.resx">
+      <DependentUpon>FontEditForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Winforms\UserWindowForm.resx">
       <DependentUpon>UserWindowForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -118,6 +131,7 @@
   <ItemGroup>
     <Content Include="Todo.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

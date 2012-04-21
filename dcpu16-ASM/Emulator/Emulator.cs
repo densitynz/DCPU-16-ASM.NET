@@ -32,6 +32,8 @@ using System.Threading;
 using System.Drawing.Imaging;
 using System.Drawing;
 
+using DCPU16_ASM.Tools;
+
 namespace DCPU16_ASM.Emulator
 {
     // Event handlers
@@ -198,23 +200,23 @@ namespace DCPU16_ASM.Emulator
                 for (int c = 0; c < _fontBuffer.Width; c++)
                 {
                     int charOffset = (int)dcpuMemoryLayout.VIDEO_CHARSET_START + c * 2;
-                    int xOffset = (c % 32) * DisplayConstants.FontWidth;
-                    int yOffset = (c / 32) * DisplayConstants.FontHeight;
+                    int xOffset = (c % 32) * FontConstants.FontWidth;
+                    int yOffset = (c / 32) * FontConstants.FontHeight;
 
                     m_DCPUComputer.Memory.RAM[charOffset] = '\0';
                     m_DCPUComputer.Memory.RAM[charOffset + 1] = '\0';
 
-                    for (int x = 0; x < DisplayConstants.FontWidth; x++)
+                    for (int x = 0; x < FontConstants.FontWidth; x++)
                     {
                         int bitPixel = 0;
-                        for (int y = 0; y < DisplayConstants.FontHeight; y++)
+                        for (int y = 0; y < FontConstants.FontHeight; y++)
                         {
                             int fontscanOffset = ((xOffset + x) + (yOffset + y) * 128);
                             int fontPixel = *((int*)(void*)fontScan + fontscanOffset);
                             if ((fontPixel & 0xFF) > 128) bitPixel |= 1 << y;       
                         }
 
-                        m_DCPUComputer.Memory.RAM[charOffset + x  / 2] |= (ushort)(bitPixel << (x + 1 & 1) * DisplayConstants.FontHeight);
+                        m_DCPUComputer.Memory.RAM[charOffset + x  / 2] |= (ushort)(bitPixel << (x + 1 & 1) * FontConstants.FontHeight);
                     }
 
                 }
