@@ -18,7 +18,7 @@ All sub v1.0 commits here will be in-development commits. Parts may/may not work
 
 === Binary download ====
 
-https://github.com/downloads/densitynz/DCPU-16-ASM.NET/DCPU16-ASM.NET_v0.6.2_Win32-Bin.zip
+https://github.com/downloads/densitynz/DCPU-16-ASM.NET/DCPU16-ASM.NET_v0.6.3_Win32-Bin.zip
 
 === Usage: ===
 
@@ -28,13 +28,6 @@ Finally hit "launch user window" to open up a bigger window that'll also allow
 key input to the DCPU-16 Program. 
 
 ==============
-
-Current TODOs:
-* Implement Future DCPU-16 Standards 
-* Proper lexer for parsing Dcpu ASM. 
-* compile time mathmatical expressions in literal fields. 
-* HUGE clean up of the code, its a mess!
-
 
 Special Thanks:
 https://github.com/lodle/NotchCpu 
