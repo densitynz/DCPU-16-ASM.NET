@@ -31,6 +31,6 @@ namespace DCPU16_ASM
     public static class Globals
     {
         public static String ProgramName = "DCPU-16 ASM.NET Assembler/Emulator";
-        public static String ProgramVersion = "v0.6.2 Alpha";
+        public static String ProgramVersion = "v0.6.3 Alpha";
     }
 }

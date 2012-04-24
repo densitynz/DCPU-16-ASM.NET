@@ -205,6 +205,15 @@ namespace DCPU16_ASM.Winforms
         }
 
         /// <summary>
+        /// Update ascii Code text
+        /// </summary>
+        private void UpdateAsciiCodeText()
+        {
+            AsciiCodeTextBox.Text = string.Format("{0}", (char)m_FontCharIndex);
+            HexCodeTextBox.Text = string.Format("0x{0:X4}", m_FontCharIndex);
+        }
+
+        /// <summary>
         /// Picturebox Mouse Move
         /// </summary>
         /// <param name="sender"></param>
@@ -248,6 +257,9 @@ namespace DCPU16_ASM.Winforms
         {
             m_xGridStep = (int)Math.Floor((double)((pictureBox1.Width - 1) / FontConstants.FontWidth));
             m_yGridStep = (int)Math.Floor((double)((pictureBox1.Height - 1) / FontConstants.FontHeight));
+
+            m_FontCharIndex = 0;
+            UpdateAsciiCodeText();
         }
 
         /// <summary>
@@ -385,6 +397,8 @@ namespace DCPU16_ASM.Winforms
             int selectTileOriginY = (int)(((float)e.Y - ((float)e.Y % yGridStep)) / yGridStep);
 
             m_FontCharIndex = selectTileOriginY * 32 + selectTileOriginX;
+
+            UpdateAsciiCodeText();
         }
 
         /// <summary>
