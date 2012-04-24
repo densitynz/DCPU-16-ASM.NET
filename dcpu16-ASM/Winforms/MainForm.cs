@@ -566,6 +566,7 @@ namespace DCPU16_ASM.Winforms
             {
                 fontEditor.SetDcpuRef(ref m_CpuDoublebuffer);
             }
+            fontEditor.SetBaseFont(ref m_FontBuffer);
             fontEditor.ShowDialog(this);
         }
     }

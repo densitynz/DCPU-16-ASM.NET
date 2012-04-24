@@ -69,6 +69,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.AsciiCodeHoverTextBox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -219,6 +220,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.AsciiCodeHoverTextBox);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.AsciiCharHoverTextBox);
@@ -362,12 +364,14 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+            this.pictureBox1.MouseEnter += new System.EventHandler(this.pictureBox1_MouseEnter);
+            this.pictureBox1.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             // 
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 33;
+            this.timer1.Interval = 16;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // openFontDialog
@@ -426,6 +430,16 @@
             this.label7.Size = new System.Drawing.Size(60, 13);
             this.label7.TabIndex = 8;
             this.label7.Text = "Ascii Code:";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(508, 186);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(160, 23);
+            this.button3.TabIndex = 10;
+            this.button3.Text = "Clear Character Set";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // FontEditForm
             // 
@@ -507,5 +521,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox AsciiCharHoverTextBox;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button3;
     }
 }

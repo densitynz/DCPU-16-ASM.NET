@@ -58,6 +58,7 @@ namespace DCPU16_ASM.Winforms
         private CFontCharSet m_FontSet = new CFontCharSet();
         private int m_FontCharIndex = 0; // max 128!
         private int m_HoverCharIndex = 0;
+        private bool m_ShowEditorGrid = false;
 
         private Bitmap m_FontCharsetBitmap = null;
 
@@ -77,6 +78,19 @@ namespace DCPU16_ASM.Winforms
             if (_dcpu == null) return;
 
             m_dcpuRef = _dcpu;
+        }
+
+        /// <summary>
+        /// Base font.
+        /// </summary>
+        /// <param name="_base"></param>
+        public void SetBaseFont(ref Bitmap _base)
+        {
+            if (_base == null) return;
+
+            if (_base.Width != 128 || _base.Height != 32) return;
+
+            m_FontSet.ImportFromBitmap(_base);
         }
 
         /// <summary>
@@ -149,7 +163,7 @@ namespace DCPU16_ASM.Winforms
         {
             Graphics g = e.Graphics;
 
-            g.Clear(Color.LightSteelBlue);
+            g.Clear(Color.LightSteelBlue);            
 
             DrawFont(ref g);
 
@@ -164,21 +178,24 @@ namespace DCPU16_ASM.Winforms
         {
             if (g == null) return;
 
-            for (int x = 0; x <= FontConstants.FontWidth; x++)
+            if(m_ShowEditorGrid != false)
             {
-                g.DrawLine(new Pen(Brushes.Black), x * m_xGridStep, 0, x * m_xGridStep, pictureBox1.Height);
-            }
-            for (int y = 0; y <= FontConstants.FontHeight; y++)
-            {
-                g.DrawLine(new Pen(Brushes.Black),0,y*m_yGridStep,pictureBox1.Width,y*m_yGridStep);
-            }
+                for (int x = 0; x <= FontConstants.FontWidth; x++)
+                {
+                    g.DrawLine(new Pen(Brushes.Black), x * m_xGridStep, 0, x * m_xGridStep, pictureBox1.Height);
+                }
+                for (int y = 0; y <= FontConstants.FontHeight; y++)
+                {
+                    g.DrawLine(new Pen(Brushes.Black),0,y*m_yGridStep,pictureBox1.Width,y*m_yGridStep);
+                }
 
-            int selectTileOriginX = (m_MouseX - (m_MouseX % m_xGridStep)) / m_xGridStep;
-            int selectTileOriginY = (m_MouseY - (m_MouseY % m_yGridStep)) / m_yGridStep;
-            selectTileOriginX = selectTileOriginX >= FontConstants.FontWidth ? FontConstants.FontWidth-1 : selectTileOriginX;
-            selectTileOriginY = selectTileOriginY >= FontConstants.FontHeight ? FontConstants.FontHeight - 1 : selectTileOriginY;
+                int selectTileOriginX = (m_MouseX - (m_MouseX % m_xGridStep)) / m_xGridStep;
+                int selectTileOriginY = (m_MouseY - (m_MouseY % m_yGridStep)) / m_yGridStep;
+                selectTileOriginX = selectTileOriginX >= FontConstants.FontWidth ? FontConstants.FontWidth-1 : selectTileOriginX;
+                selectTileOriginY = selectTileOriginY >= FontConstants.FontHeight ? FontConstants.FontHeight - 1 : selectTileOriginY;
 
-            g.DrawRectangle(new Pen(Brushes.LightGreen), selectTileOriginX * m_xGridStep, selectTileOriginY * m_yGridStep, m_xGridStep, m_yGridStep);
+                g.DrawRectangle(new Pen(Brushes.LightGreen), selectTileOriginX * m_xGridStep, selectTileOriginY * m_yGridStep, m_xGridStep, m_yGridStep);
+            }
         }
 
         /// <summary>
@@ -211,7 +228,7 @@ namespace DCPU16_ASM.Winforms
         private void UpdateSelectedAsciiCodeText()
         {
             AsciiCodeTextBox.Text = string.Format("{0}", (char)m_FontCharIndex);
-            HexCodeTextBox.Text = string.Format("0x{0:X4}", m_FontCharIndex);
+            HexCodeTextBox.Text = string.Format("0x{0:X2}", m_FontCharIndex);
         }
 
         /// <summary>
@@ -220,7 +237,7 @@ namespace DCPU16_ASM.Winforms
         private void HoverAsciiCodeText()
         {
             AsciiCharHoverTextBox.Text = string.Format("{0}", (char)m_HoverCharIndex);
-            AsciiCodeHoverTextBox.Text = string.Format("0x{0:X4}", m_HoverCharIndex);
+            AsciiCodeHoverTextBox.Text = string.Format("0x{0:X2}", m_HoverCharIndex);
         }
 
         /// <summary>
@@ -231,7 +248,7 @@ namespace DCPU16_ASM.Winforms
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {            
             m_MouseX = e.X;
-            m_MouseY = e.Y;
+            m_MouseY = e.Y;            
         }
 
         /// <summary>
@@ -488,6 +505,31 @@ namespace DCPU16_ASM.Winforms
             }
 
             MessageBox.Show("Successfully imported", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// Clear Character set button. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to clear this Character set?", Globals.ProgramName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
+            {
+                return;
+            }
+
+            m_FontSet.Clear();
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            m_ShowEditorGrid = false;
+        }
+
+        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        {
+            m_ShowEditorGrid = true;
         }
 
 
