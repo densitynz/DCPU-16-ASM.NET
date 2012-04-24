@@ -65,6 +65,10 @@
             this.saveFontDialog = new System.Windows.Forms.SaveFileDialog();
             this.saveAsmDialog = new System.Windows.Forms.SaveFileDialog();
             this.openImageDialog = new System.Windows.Forms.OpenFileDialog();
+            this.AsciiCharHoverTextBox = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.AsciiCodeHoverTextBox = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -215,6 +219,10 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.AsciiCodeHoverTextBox);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.AsciiCharHoverTextBox);
+            this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.pictureBox2);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
@@ -228,11 +236,12 @@
             // 
             this.pictureBox2.Location = new System.Drawing.Point(3, 19);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(672, 191);
+            this.pictureBox2.Size = new System.Drawing.Size(672, 156);
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
             this.pictureBox2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseClick);
+            this.pictureBox2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseMove);
             // 
             // label2
             // 
@@ -382,6 +391,42 @@
             // 
             this.openImageDialog.Filter = "Bitmap Files|*.bmp|Png Files|*.png";
             // 
+            // AsciiCharHoverTextBox
+            // 
+            this.AsciiCharHoverTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.AsciiCharHoverTextBox.Location = new System.Drawing.Point(72, 186);
+            this.AsciiCharHoverTextBox.Name = "AsciiCharHoverTextBox";
+            this.AsciiCharHoverTextBox.ReadOnly = true;
+            this.AsciiCharHoverTextBox.Size = new System.Drawing.Size(136, 20);
+            this.AsciiCharHoverTextBox.TabIndex = 7;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 189);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(57, 13);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "Ascii Char:";
+            // 
+            // AsciiCodeHoverTextBox
+            // 
+            this.AsciiCodeHoverTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.AsciiCodeHoverTextBox.Location = new System.Drawing.Point(282, 186);
+            this.AsciiCodeHoverTextBox.Name = "AsciiCodeHoverTextBox";
+            this.AsciiCodeHoverTextBox.ReadOnly = true;
+            this.AsciiCodeHoverTextBox.Size = new System.Drawing.Size(136, 20);
+            this.AsciiCodeHoverTextBox.TabIndex = 9;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(219, 189);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(60, 13);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "Ascii Code:";
+            // 
             // FontEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -406,6 +451,7 @@
             this.menuStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -457,5 +503,9 @@
         private System.Windows.Forms.TextBox AsciiCodeTextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox AsciiCodeHoverTextBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox AsciiCharHoverTextBox;
+        private System.Windows.Forms.Label label6;
     }
 }

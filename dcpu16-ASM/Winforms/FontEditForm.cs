@@ -57,6 +57,7 @@ namespace DCPU16_ASM.Winforms
 
         private CFontCharSet m_FontSet = new CFontCharSet();
         private int m_FontCharIndex = 0; // max 128!
+        private int m_HoverCharIndex = 0;
 
         private Bitmap m_FontCharsetBitmap = null;
 
@@ -207,10 +208,19 @@ namespace DCPU16_ASM.Winforms
         /// <summary>
         /// Update ascii Code text
         /// </summary>
-        private void UpdateAsciiCodeText()
+        private void UpdateSelectedAsciiCodeText()
         {
             AsciiCodeTextBox.Text = string.Format("{0}", (char)m_FontCharIndex);
             HexCodeTextBox.Text = string.Format("0x{0:X4}", m_FontCharIndex);
+        }
+
+        /// <summary>
+        /// Hover ascii code
+        /// </summary>
+        private void HoverAsciiCodeText()
+        {
+            AsciiCharHoverTextBox.Text = string.Format("{0}", (char)m_HoverCharIndex);
+            AsciiCodeHoverTextBox.Text = string.Format("0x{0:X4}", m_HoverCharIndex);
         }
 
         /// <summary>
@@ -259,7 +269,7 @@ namespace DCPU16_ASM.Winforms
             m_yGridStep = (int)Math.Floor((double)((pictureBox1.Height - 1) / FontConstants.FontHeight));
 
             m_FontCharIndex = 0;
-            UpdateAsciiCodeText();
+            UpdateSelectedAsciiCodeText();
         }
 
         /// <summary>
@@ -364,6 +374,23 @@ namespace DCPU16_ASM.Winforms
                                     *((byte*)(void*)charsetScan + offset + 3) = (byte)0xFF;
                                 }
                             }
+                            else if (i == m_HoverCharIndex)
+                            {
+                                if (bitSet != 0)
+                                {
+                                    *((byte*)(void*)charsetScan + offset + 0) = (byte)0xFF;
+                                    *((byte*)(void*)charsetScan + offset + 1) = (byte)0xFF;
+                                    *((byte*)(void*)charsetScan + offset + 2) = (byte)0xFF;
+                                    *((byte*)(void*)charsetScan + offset + 3) = (byte)0xFF;
+                                }
+                                else
+                                {
+                                    *((byte*)(void*)charsetScan + offset + 0) = (byte)0x00;
+                                    *((byte*)(void*)charsetScan + offset + 1) = (byte)0x7F;
+                                    *((byte*)(void*)charsetScan + offset + 2) = (byte)0x3F;
+                                    *((byte*)(void*)charsetScan + offset + 3) = (byte)0xFF;
+                                }
+                            }
                             else
                             {
                                 if (bitSet != 0)
@@ -398,7 +425,19 @@ namespace DCPU16_ASM.Winforms
 
             m_FontCharIndex = selectTileOriginY * 32 + selectTileOriginX;
 
-            UpdateAsciiCodeText();
+            UpdateSelectedAsciiCodeText();
+        }
+
+        private void pictureBox2_MouseMove(object sender, MouseEventArgs e)
+        {
+            float xGridStep = (float)((float)FontConstants.FontWidth * ((float)pictureBox2.Width / (float)m_FontCharsetBitmap.Width));
+            float yGridStep = (float)((float)FontConstants.FontHeight * ((float)pictureBox2.Height / (float)m_FontCharsetBitmap.Height));
+            int selectTileOriginX = (int)(((float)e.X - ((float)e.X % xGridStep)) / xGridStep);
+            int selectTileOriginY = (int)(((float)e.Y - ((float)e.Y % yGridStep)) / yGridStep);
+
+            m_HoverCharIndex = selectTileOriginY * 32 + selectTileOriginX;
+
+            HoverAsciiCodeText();
         }
 
         /// <summary>
@@ -450,5 +489,7 @@ namespace DCPU16_ASM.Winforms
 
             MessageBox.Show("Successfully imported", Globals.ProgramName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+
     }
 }
